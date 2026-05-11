@@ -1,4 +1,5 @@
 import { spawn } from 'node:child_process'
+import { existsSync } from 'node:fs'
 import { copyFile, cp } from 'node:fs/promises'
 import { join } from 'path'
 import { memoryLock } from '@activepieces/server-utils'
@@ -80,6 +81,13 @@ export async function startDevPieceWatcher(app: FastifyInstance): Promise<void> 
     const pieceInfos: PieceInfo[] = resolvedInfos.filter((info): info is PieceInfo => info !== null)
 
     if (pieceInfos.length === 0) return
+
+    // chokidar runs with `ignoreInitial: true`, so a piece that has never been built
+    // would otherwise stay un-built (and 404 from the API) until its source files change.
+    const unbuiltPieces = pieceInfos.filter(p => !existsSync(join(p.pieceDirectory, 'dist')))
+    if (unbuiltPieces.length > 0) {
+        await buildPieces(app, unbuiltPieces)
+    }
 
     const rebuilding = new Set<string>()
     const debounceTimers = new Map<string, ReturnType<typeof setTimeout>>()

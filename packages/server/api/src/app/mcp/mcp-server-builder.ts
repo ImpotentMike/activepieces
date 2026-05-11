@@ -37,11 +37,11 @@ export async function buildMcpServer({ mcp, userId, log, resolveProjectMcp }: {
     const projectId = mcp.projectId
 
     const server = new McpServer({
-        name: 'Activepieces',
-        title: 'Activepieces',
+        name: 'PromptFlow',
+        title: 'PromptFlow',
         version: '1.0.0',
         websiteUrl: 'https://activepieces.com',
-        description: 'Automation and workflow MCP server by Activepieces',
+        description: 'Automation and workflow MCP server by PromptFlow',
         icons: [
             {
                 src: 'https://cdn.activepieces.com/brand/logo.svg',

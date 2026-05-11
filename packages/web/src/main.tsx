@@ -4,6 +4,7 @@ import * as ReactDOM from 'react-dom/client';
 
 import './i18n';
 import App from './app/app';
+import { ThemeIterationSwitcher } from './components/dev/theme-iteration-switcher';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement,
@@ -11,5 +12,6 @@ const root = ReactDOM.createRoot(
 root.render(
   <StrictMode>
     <App />
+    <ThemeIterationSwitcher />
   </StrictMode>,
 );

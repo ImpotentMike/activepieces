@@ -51,7 +51,7 @@ export const aiProviderService = (log: FastifyBaseLogger) => ({
                 auth: await encryptUtils.encryptObject({}),
                 config: {},
                 provider: AIProviderName.ACTIVEPIECES,
-                displayName: 'Activepieces',
+                displayName: 'PromptFlow',
                 platformId,
             })
         }
@@ -247,7 +247,7 @@ export const aiProviderService = (log: FastifyBaseLogger) => ({
                 auth: await encryptUtils.encryptObject({}),
                 config: {},
                 provider: AIProviderName.ACTIVEPIECES,
-                displayName: 'Activepieces',
+                displayName: 'PromptFlow',
                 platformId,
             })
         }
@@ -305,7 +305,7 @@ async function enrichWithKeysIfNeeded(aiProvider: AIProviderSchema, platformId: 
         id: aiProvider.id,
         platformId,
         provider: AIProviderName.ACTIVEPIECES,
-        displayName: 'Activepieces',
+        displayName: 'PromptFlow',
         config: {},
         auth: await encryptUtils.encryptObject(rawAuth),
     })
