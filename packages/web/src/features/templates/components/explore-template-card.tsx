@@ -16,9 +16,14 @@ export const ExploreTemplateCard = React.memo(
   ({ template, onTemplateSelect }: TemplateCardProps) => {
     const displayTags = template.tags.slice(0, 2);
     const hasFlows = template.flows && template.flows.length > 0;
-    const { gradient } = useGradientFromPieces(
+    const { gradient: pieceGradient } = useGradientFromPieces(
       hasFlows ? template.flows![0]?.trigger : undefined,
     );
+
+    /* Theme-aware gradient: secondary-200 → tertiary-200 for a clearly visible
+       pastel strip that makes each theme instantly recognizable. */
+    const themedGradient =
+      'linear-gradient(135deg, hsl(var(--secondary-color-200)), hsl(var(--tertiary-200)))';
 
     return (
       <Card
@@ -64,7 +69,7 @@ export const ExploreTemplateCard = React.memo(
         <div
           className="h-16 flex items-center px-4 rounded-b-lg transition-all duration-300"
           style={{
-            background: gradient || 'transparent',
+            background: themedGradient || pieceGradient || 'transparent',
           }}
         >
           {hasFlows && template.flows![0]?.trigger && (

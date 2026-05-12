@@ -1,6 +1,5 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-import { Button } from '@/components/ui/button';
 import {
   Carousel,
   CarouselContent,
@@ -39,17 +38,20 @@ const CarouselContentWithButtons = ({
           const isSelected = selectedCategory === category;
           return (
             <CarouselItem key={category} className="basis-auto pl-2">
-              <Button
-                variant="outline"
+              <button
                 onClick={() => onCategorySelect(category)}
-                className={`px-4 py-1.5 h-auto whitespace-nowrap transition-colors ${
-                  isSelected
-                    ? 'bg-black text-white border-black hover:!bg-black hover:!text-white'
-                    : 'bg-transparent hover:!bg-sidebar-accent hover:!text-sidebar-accent-foreground border-none'
-                }`}
+                className="px-4 py-1.5 h-auto whitespace-nowrap transition-all duration-200 text-sm font-medium rounded-none border-0 bg-transparent relative"
+                style={{
+                  color: isSelected
+                    ? '#111827'
+                    : '#6b7280',
+                  borderBottom: isSelected
+                    ? '2px solid hsl(var(--primary))'
+                    : '2px solid transparent',
+                }}
               >
                 {category}
-              </Button>
+              </button>
             </CarouselItem>
           );
         })}

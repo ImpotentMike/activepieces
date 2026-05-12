@@ -61,33 +61,43 @@ export function ThemeProvider({
       : theme;
     root.classList.remove('light', 'dark');
     document.title = branding.websiteName;
-    document.documentElement.style.setProperty(
-      '--primary',
-      colorsUtils.hexToHslString(branding.colors.primary.default),
-    );
+
+    // Only apply default branding colors if we aren't using a custom PromptFlow theme
+    const hasCustomTheme = root.hasAttribute('data-pf-theme');
+
+    if (!hasCustomTheme) {
+      document.documentElement.style.setProperty(
+        '--primary',
+        colorsUtils.hexToHslString(branding.colors.primary.default),
+      );
+    }
 
     setFavicon(branding.logos.favIconUrl);
     switch (resolvedTheme) {
       case 'light': {
-        document.documentElement.style.setProperty(
-          '--primary-100',
-          colorsUtils.hexToHslString(branding.colors.primary.light),
-        );
-        document.documentElement.style.setProperty(
-          '--primary-300',
-          colorsUtils.hexToHslString(branding.colors.primary.dark),
-        );
+        if (!hasCustomTheme) {
+          document.documentElement.style.setProperty(
+            '--primary-100',
+            colorsUtils.hexToHslString(branding.colors.primary.light),
+          );
+          document.documentElement.style.setProperty(
+            '--primary-300',
+            colorsUtils.hexToHslString(branding.colors.primary.dark),
+          );
+        }
         break;
       }
       case 'dark': {
-        document.documentElement.style.setProperty(
-          '--primary-100',
-          colorsUtils.hexToHslString(branding.colors.primary.dark),
-        );
-        document.documentElement.style.setProperty(
-          '--primary-300',
-          colorsUtils.hexToHslString(branding.colors.primary.light),
-        );
+        if (!hasCustomTheme) {
+          document.documentElement.style.setProperty(
+            '--primary-100',
+            colorsUtils.hexToHslString(branding.colors.primary.dark),
+          );
+          document.documentElement.style.setProperty(
+            '--primary-300',
+            colorsUtils.hexToHslString(branding.colors.primary.light),
+          );
+        }
         break;
       }
       default:

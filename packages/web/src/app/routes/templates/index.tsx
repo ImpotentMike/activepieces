@@ -96,9 +96,15 @@ const TemplatesPage = () => {
     isShowingOfficialTemplates && selectedCategory !== 'All';
 
   return (
-    <div>
+    <div
+      className="min-h-screen transition-colors duration-300"
+      style={{ backgroundColor: 'var(--pf-page-bg, white)' }}
+    >
       <div>
-        <div className="sticky top-0 z-10 bg-background">
+        <div
+          className="sticky top-0 z-10 transition-colors duration-300"
+          style={{ backgroundColor: 'var(--pf-page-bg, white)' }}
+        >
           <PageHeader
             showSidebarToggle={true}
             className="static"
@@ -112,8 +118,19 @@ const TemplatesPage = () => {
                   ></SearchInput>
                   <div className="flex flex-row justify-end w-[50%]">
                     <Button
-                      variant="outline"
-                      className="gap-2 h-full"
+                      className="gap-2 h-full text-white transition-colors duration-200"
+                      style={{
+                        backgroundColor: 'hsl(var(--primary))',
+                        borderColor: 'hsl(var(--primary))',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor =
+                          'hsl(var(--primary-700))';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor =
+                          'hsl(var(--primary))';
+                      }}
                       onClick={() => createFlow()}
                       disabled={isCreateFlowPending}
                     >

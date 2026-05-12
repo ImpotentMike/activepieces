@@ -25,6 +25,7 @@ const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(
         className={cn(
           'grow flex items-center gap-2 w-full bg-background px-3 box-border',
           inputClass,
+          'focus-within:border-[hsl(var(--primary-500))] focus-within:ring-2 focus-within:ring-[hsl(var(--primary-500))]'
         )}
       >
         <Search className="size-4 shrink-0 opacity-50"></Search>
