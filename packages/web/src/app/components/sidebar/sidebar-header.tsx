@@ -48,7 +48,9 @@ export const AppSidebarHeader = () => {
   if (isCollapsed) {
     return (
       <SidebarHeader>
-        <div className="flex items-center justify-center">{brandMark}</div>
+        <div className="flex min-h-14 items-center justify-center">
+          {brandMark}
+        </div>
       </SidebarHeader>
     );
   }
@@ -61,7 +63,7 @@ export const AppSidebarHeader = () => {
 
   return (
     <SidebarHeader>
-      <div className="flex w-full items-center justify-between gap-2">
+      <div className="flex min-h-14 w-full items-center justify-between gap-2">
         {showSwitcher ? (
           <PlatformSwitcher>
             <SidebarMenuButton
