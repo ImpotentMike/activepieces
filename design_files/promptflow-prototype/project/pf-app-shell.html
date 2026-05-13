@@ -1,0 +1,1568 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>[PF] App Shell — MyDS composition</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+<style>
+/* ============================================================
+   MyDS tokens (inlined from PromptFlow Design System
+   colors_and_type.css). Single source of truth — do not
+   introduce new tokens.
+   ============================================================ */
+:root {
+  /* gray (zinc) */
+  --gray-50:#FAFAFA; --gray-100:#F4F4F5; --gray-200:#E4E4E7;
+  --gray-300:#D4D4D8; --gray-400:#A1A1AA; --gray-500:#71717A;
+  --gray-600:#52525B; --gray-700:#3F3F46; --gray-800:#27272A;
+  --gray-900:#18181B; --gray-950:#09090B;
+
+  /* primary (brand blue) */
+  --primary-50:#EFF6FF; --primary-100:#DBEAFE; --primary-200:#C2D5FF;
+  --primary-300:#96B7FF; --primary-500:#3A75F6;
+  --primary-600:#2563EB; --primary-700:#1D4ED8; --primary-800:#1E40AF;
+  --primary-900:#1E3A8A; --primary-950:#172554;
+
+  /* semantic */
+  --danger-100:#FEE2E2; --danger-500:#EF4444; --danger-600:#DC2626; --danger-700:#B91C1C;
+  --success-100:#DCFCE7; --success-500:#22C55E; --success-600:#16A34A; --success-700:#15803D;
+  --warning-100:#FEF3C7; --warning-500:#F59E0B; --warning-600:#D97706; --warning-700:#B45309;
+
+  --bg-canvas: var(--gray-50);
+  --txt-1: var(--gray-900);
+  --txt-2: var(--gray-700);
+  --txt-3: var(--gray-500);
+  --otl-divider: var(--gray-200);
+
+  --radius-xs:4px; --radius-s:6px; --radius-m:8px; --radius-l:12px; --radius-full:9999px;
+
+  --shadow-button:  0 1px 3px 0 rgba(0,0,0,0.07);
+  --shadow-card:    0 1px 3px 0 rgba(0,0,0,0.05);
+  --shadow-context: 0 12px 50px 0 rgba(0,0,0,0.10), 0 2px 6px 0 rgba(0,0,0,0.05);
+  --shadow-inset-button:
+    inset 0 1px 0 0 rgba(255,255,255,0.25),
+    inset 0 -1px 0 0 rgba(24,24,27,0.25);
+
+  --fr-primary: 0 0 0 3px rgba(37,99,235,0.35);
+
+  --font-sans:  "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Poppins", "Inter", system-ui, sans-serif;
+  --font-mono:  "Roboto Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  /* ===== App Shell layout tokens (proposed, locked in below) ===== */
+  --shell-sidebar-w: 264px;
+  --shell-sidebar-collapsed-w: 64px;
+  --shell-header-top-h: 48px;    /* breadcrumb row */
+  --shell-header-title-h: 64px;  /* title + action row */
+  --shell-tabs-h: 44px;          /* project tabs row */
+  --shell-content-max: 1440px;
+  --shell-content-gutter: 32px;
+  --shell-content-min: 960px;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--txt-1);
+  background: var(--bg-canvas);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============================================================
+   Page chrome (the documentation page, not the component)
+   ============================================================ */
+.doc {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 48px 32px 96px;
+}
+.doc-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  color: var(--txt-3);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.doc-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 32px;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  margin: 0 0 8px;
+}
+.doc-subtitle {
+  color: var(--txt-2);
+  font-size: 15px;
+  max-width: 740px;
+  margin: 0 0 40px;
+}
+
+.frame { margin-bottom: 40px; }
+.frame-caption {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding: 0 4px;
+}
+.frame-caption .num {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--txt-3);
+  letter-spacing: 0.3px;
+}
+.frame-caption .label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--txt-1);
+  letter-spacing: -0.005em;
+}
+.frame-caption .note {
+  font-size: 12.5px;
+  color: var(--txt-3);
+  flex: 1;
+}
+
+/* The window-frame that wraps each rendered shell so it feels like a screen */
+.viewport {
+  background: var(--gray-100);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-l);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+}
+.viewport-chrome {
+  height: 28px;
+  background: var(--gray-100);
+  border-bottom: 1px solid var(--gray-200);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 12px;
+}
+.viewport-chrome .dot {
+  width: 9px; height: 9px; border-radius: 9999px;
+  background: var(--gray-300);
+}
+.viewport-chrome .url {
+  flex: 1;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--txt-3);
+}
+.viewport-body {
+  display: flex;
+  height: 620px;
+  background: var(--bg-canvas);
+}
+
+/* ============================================================
+   [PF] App Shell — the component itself
+   ============================================================ */
+
+/* ----- Sidebar ----- */
+.shell-sidebar {
+  width: var(--shell-sidebar-w);
+  flex-shrink: 0;
+  background: #fff;
+  border-right: 1px solid var(--otl-divider);
+  display: flex;
+  flex-direction: column;
+  transition: width 180ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.shell-sidebar--collapsed {
+  width: var(--shell-sidebar-collapsed-w);
+}
+
+.shell-brand {
+  height: 56px;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  gap: 10px;
+  border-bottom: 1px solid var(--otl-divider);
+}
+.shell-brand__logo {
+  width: 26px; height: 26px;
+  border-radius: 6px;
+  background: var(--primary-700);
+  color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: -0.02em;
+  flex-shrink: 0;
+}
+.shell-brand__wordmark {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 16px;
+  letter-spacing: -0.01em;
+  color: var(--txt-1);
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.shell-brand__toggle {
+  width: 28px; height: 28px;
+  display: flex; align-items: center; justify-content: center;
+  border: none; background: transparent;
+  color: var(--txt-3);
+  border-radius: var(--radius-s);
+  cursor: pointer;
+}
+.shell-brand__toggle:hover { background: var(--gray-100); color: var(--txt-1); }
+
+.shell-sidebar--collapsed .shell-brand__wordmark,
+.shell-sidebar--collapsed .shell-brand__toggle { display: none; }
+.shell-sidebar--collapsed .shell-brand { justify-content: center; padding: 0; }
+
+.shell-nav {
+  flex: 1;
+  padding: 12px 8px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-height: 0;
+}
+.shell-nav__item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  border-radius: var(--radius-s);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--txt-2);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  font-family: inherit;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.shell-nav__item:hover { background: var(--gray-100); color: var(--txt-1); }
+.shell-nav__item:focus-visible { outline: none; box-shadow: var(--fr-primary); }
+.shell-nav__item--active {
+  background: var(--primary-50);
+  color: var(--primary-800);
+  font-weight: 600;
+}
+.shell-nav__item--active:hover { background: var(--primary-50); }
+.shell-nav__icon {
+  width: 18px; height: 18px;
+  flex-shrink: 0;
+  color: currentColor;
+}
+.shell-nav__label {
+  flex: 1;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.shell-nav__chev {
+  width: 14px; height: 14px;
+  color: var(--txt-3);
+  transition: transform 140ms ease-out;
+}
+.shell-nav__chev--open { transform: rotate(90deg); }
+
+.shell-sidebar--collapsed .shell-nav { padding: 12px 8px; align-items: stretch; overflow: visible; }
+.shell-sidebar--collapsed { overflow: visible; }
+.shell-sidebar--collapsed .shell-nav__item { padding: 10px; justify-content: center; gap: 0; overflow: visible; }
+.shell-sidebar--collapsed .shell-nav__label,
+.shell-sidebar--collapsed .shell-nav__chev,
+.shell-sidebar--collapsed .shell-nav__badge { display: none; }
+
+/* Tooltip for collapsed nav items */
+.shell-nav__tip {
+  position: absolute;
+  left: calc(100% + 10px);
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--gray-900);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 6px 10px;
+  border-radius: var(--radius-m);
+  box-shadow: var(--shadow-context);
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 120ms ease-out;
+  z-index: 10;
+}
+.shell-nav__tip::before {
+  content: "";
+  position: absolute;
+  right: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 4px solid transparent;
+  border-right-color: var(--gray-900);
+}
+.shell-sidebar--collapsed .shell-nav__item:hover .shell-nav__tip,
+.shell-sidebar--collapsed .shell-nav__item:focus-visible .shell-nav__tip { opacity: 1; }
+.shell-sidebar:not(.shell-sidebar--collapsed) .shell-nav__tip { display: none; }
+.shell-nav__tip--persistent { opacity: 1 !important; }
+
+/* Sub-items under Projects */
+.shell-nav__sub {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  margin: 2px 0 6px 6px;
+  padding-left: 18px;
+  border-left: 1px solid var(--gray-200);
+  max-height: 220px;
+  overflow-y: auto;
+}
+.shell-nav__sub .shell-nav__item {
+  padding: 6px 10px;
+  font-size: 13px;
+  font-weight: 500;
+}
+.shell-nav__sub .shell-nav__item--active {
+  background: var(--primary-50);
+  color: var(--primary-800);
+}
+.shell-sidebar--collapsed .shell-nav__sub { display: none; }
+
+.shell-nav__badge {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--txt-3);
+  background: var(--gray-100);
+  padding: 1px 6px;
+  border-radius: 9999px;
+}
+.shell-nav__item--active .shell-nav__badge {
+  background: #fff;
+  color: var(--primary-800);
+}
+
+/* User block at bottom */
+.shell-bottom {
+  border-top: 1px solid var(--otl-divider);
+  padding: 10px 8px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.shell-bottom .shell-nav__item { padding: 8px 12px; }
+
+.shell-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 8px 6px;
+  margin-top: 4px;
+  border-top: 1px solid var(--gray-100);
+}
+.shell-user__avatar {
+  width: 32px; height: 32px;
+  border-radius: 9999px;
+  background: var(--gray-700);
+  color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 600;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+.shell-user__body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+}
+.shell-user__name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--txt-1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.shell-user__role {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 500;
+  color: var(--gray-600);
+  background: var(--gray-100);
+  padding: 1px 6px;
+  border-radius: var(--radius-xs);
+  margin-top: 2px;
+}
+.shell-user__role--superadmin {
+  background: var(--primary-100);
+  color: var(--primary-800);
+}
+.shell-sidebar--collapsed .shell-user__body { display: none; }
+.shell-sidebar--collapsed .shell-user { justify-content: center; padding: 10px 0 6px; }
+
+/* ----- Main column ----- */
+.shell-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-canvas);
+}
+
+/* ----- Header ----- */
+.shell-header {
+  background: #fff;
+  border-bottom: 1px solid var(--otl-divider);
+  flex-shrink: 0;
+}
+.shell-header__crumbs {
+  height: var(--shell-header-top-h);
+  display: flex;
+  align-items: center;
+  padding: 0 32px;
+  gap: 8px;
+  border-bottom: 1px solid var(--gray-100);
+  font-size: 13px;
+  color: var(--txt-3);
+}
+.shell-header__crumbs a,
+.shell-header__crumbs .crumb {
+  color: var(--txt-2);
+  text-decoration: none;
+  cursor: pointer;
+  border-radius: 4px;
+  padding: 3px 6px;
+  margin: 0 -6px;
+}
+.shell-header__crumbs a:hover { background: var(--gray-100); color: var(--txt-1); }
+.shell-header__crumbs .crumb--current {
+  color: var(--txt-1);
+  font-weight: 500;
+  cursor: default;
+  background: transparent;
+}
+.shell-header__crumbs .sep { color: var(--gray-400); padding: 0 2px; user-select: none; }
+.shell-header__crumbs .crumb-long {
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: inline-block;
+  vertical-align: bottom;
+}
+
+.shell-header__main {
+  height: var(--shell-header-title-h);
+  display: flex;
+  align-items: center;
+  padding: 0 32px;
+  gap: 16px;
+}
+.shell-header__title-wrap {
+  flex: 1;
+  min-width: 0;
+}
+.shell-header__title {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 22px;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--txt-1);
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.shell-header__subtitle {
+  font-size: 13px;
+  color: var(--txt-3);
+  margin: 2px 0 0;
+  line-height: 1.4;
+}
+.shell-header__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.shell-header__tabs {
+  height: var(--shell-tabs-h);
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  gap: 4px;
+  border-top: 1px solid var(--gray-100);
+}
+.tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 12px;
+  border: 0;
+  background: transparent;
+  font-size: 13.5px;
+  font-weight: 500;
+  font-family: inherit;
+  color: var(--txt-2);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  height: 100%;
+  white-space: nowrap;
+}
+.tab:hover { color: var(--txt-1); }
+.tab--active {
+  color: var(--primary-700);
+  font-weight: 600;
+  border-bottom-color: var(--primary-600);
+}
+.tab__count {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--txt-3);
+  background: var(--gray-100);
+  padding: 1px 6px;
+  border-radius: 9999px;
+}
+.tab--active .tab__count {
+  background: var(--primary-100);
+  color: var(--primary-800);
+}
+
+/* Buttons (MyDS) */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: var(--radius-m);
+  font-size: 13.5px;
+  font-weight: 500;
+  font-family: inherit;
+  white-space: nowrap;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background 140ms ease-out, border-color 140ms ease-out;
+}
+.btn--primary {
+  background: var(--primary-700);
+  color: #fff;
+  border-color: var(--primary-700);
+  box-shadow: var(--shadow-inset-button), var(--shadow-button);
+}
+.btn--primary:hover { background: var(--primary-800); border-color: var(--primary-800); }
+.btn--secondary {
+  background: #fff;
+  color: var(--txt-1);
+  border-color: var(--gray-300);
+  box-shadow: var(--shadow-button);
+}
+.btn--secondary:hover { background: var(--gray-50); }
+.btn--ghost { background: transparent; color: var(--txt-2); }
+.btn--ghost:hover { background: var(--gray-100); color: var(--txt-1); }
+.btn__icon { width: 14px; height: 14px; }
+
+/* ----- Content area ----- */
+.shell-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--shell-content-gutter);
+}
+.shell-content__inner {
+  max-width: var(--shell-content-max);
+  margin: 0 auto;
+}
+
+/* Placeholder block */
+.placeholder {
+  background: #fff;
+  border: 1px solid var(--otl-divider);
+  border-radius: var(--radius-l);
+  padding: 24px;
+  min-height: 320px;
+  position: relative;
+  background-image:
+    linear-gradient(45deg, var(--gray-100) 25%, transparent 25%, transparent 75%, var(--gray-100) 75%),
+    linear-gradient(45deg, var(--gray-100) 25%, transparent 25%, transparent 75%, var(--gray-100) 75%);
+  background-size: 16px 16px;
+  background-position: 0 0, 8px 8px;
+  background-color: #fff;
+}
+.placeholder__pin {
+  position: absolute;
+  top: 12px; left: 12px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--txt-3);
+  background: #fff;
+  border: 1px solid var(--gray-200);
+  padding: 2px 8px;
+  border-radius: var(--radius-xs);
+}
+
+/* Skeleton loader */
+@keyframes skel {
+  0%   { background-position: -200px 0; }
+  100% { background-position: 200px 0; }
+}
+.skel {
+  background: linear-gradient(90deg, var(--gray-100) 0%, var(--gray-200) 50%, var(--gray-100) 100%);
+  background-size: 400px 100%;
+  border-radius: var(--radius-s);
+  animation: skel 1.4s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .skel { animation: none; background: var(--gray-100); }
+}
+
+/* Empty state placeholder */
+.empty {
+  background: #fff;
+  border: 1px solid var(--otl-divider);
+  border-radius: var(--radius-l);
+  padding: 56px 24px;
+  text-align: center;
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.empty__icon-box {
+  width: 48px; height: 48px;
+  border-radius: var(--radius-m);
+  background: var(--gray-100);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 16px;
+}
+.empty__title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--txt-1);
+  margin: 0 0 6px;
+}
+.empty__body {
+  font-size: 13.5px;
+  color: var(--txt-3);
+  max-width: 360px;
+  margin: 0 0 18px;
+  line-height: 1.55;
+}
+.empty__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.empty__note {
+  position: absolute;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--txt-3);
+  background: var(--warning-100);
+  color: var(--warning-700);
+  padding: 2px 8px;
+  border-radius: var(--radius-xs);
+  margin-top: 8px;
+}
+
+/* Project breadcrumb chip */
+.project-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+  color: var(--txt-1);
+}
+.project-chip__mark {
+  width: 16px; height: 16px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center; justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 700;
+  color: #fff;
+}
+
+/* ============================================================
+   Annotation + layout token reference
+   ============================================================ */
+.docs {
+  margin-top: 56px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+.docs .card {
+  background: #fff;
+  border: 1px solid var(--otl-divider);
+  border-radius: var(--radius-l);
+  box-shadow: var(--shadow-card);
+  padding: 24px;
+}
+.docs h3 {
+  margin: 0 0 12px;
+  font-size: 14px;
+  font-weight: 600;
+}
+.docs .eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--txt-3);
+  margin-bottom: 6px;
+}
+.docs ul {
+  margin: 0; padding: 0; list-style: none;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.docs ul li {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 14px;
+  font-size: 13px;
+  color: var(--txt-2);
+  align-items: baseline;
+}
+.docs ul li .key {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--txt-1);
+}
+.principle {
+  display: inline-block;
+  padding: 1px 7px;
+  border-radius: 4px;
+  background: var(--primary-50);
+  color: var(--primary-800);
+  font-size: 11px;
+  font-weight: 500;
+  margin-right: 4px;
+}
+
+.tokens-table {
+  margin-top: 24px;
+  background: #fff;
+  border: 1px solid var(--otl-divider);
+  border-radius: var(--radius-l);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+.tokens-table h3 {
+  margin: 0;
+  padding: 18px 24px 14px;
+  font-size: 14px;
+  font-weight: 600;
+  border-bottom: 1px solid var(--gray-100);
+}
+.tokens-table h3 .sub {
+  display: block;
+  font-weight: 400;
+  font-size: 12.5px;
+  color: var(--txt-3);
+  margin-top: 2px;
+}
+.tokens-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.tokens-table th {
+  text-align: left;
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--txt-3);
+  padding: 10px 24px;
+  background: #FBFBFC;
+  border-bottom: 1px solid var(--gray-100);
+}
+.tokens-table td {
+  padding: 12px 24px;
+  border-bottom: 1px solid var(--gray-100);
+  color: var(--txt-2);
+}
+.tokens-table tr:last-child td { border-bottom: none; }
+.tokens-table .tok {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--txt-1);
+}
+.tokens-table .val {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--primary-800);
+}
+.tokens-table .rationale {
+  color: var(--txt-3);
+  font-size: 12px;
+}
+
+@media (max-width: 880px) {
+  .docs { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="doc">
+
+  <div class="doc-eyebrow">PromptFlow · MyDS extension · v0.1</div>
+  <h1 class="doc-title">[PF] App Shell</h1>
+  <p class="doc-subtitle">
+    The persistent layout chrome that wraps every PromptFlow screen.
+    Composes the [PromptFlow] Side Nav + page header + content container into one frame.
+    Every other component below the chrome inherits these measurements; locking them down is the precondition for everything else.
+  </p>
+
+  <!-- ====================================================
+       Frame 01 — Default
+       ==================================================== -->
+  <div class="frame">
+    <div class="frame-caption">
+      <span class="num">01</span>
+      <span class="label">Default · Builder role</span>
+      <span class="note">Sidebar expanded, page header with breadcrumb + title + primary action, content area with placeholder.</span>
+    </div>
+    <div class="viewport">
+      <div class="viewport-chrome">
+        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        <span class="url">promptflow.gamuda.tech/dashboard</span>
+      </div>
+      <div class="viewport-body">
+
+        <!-- SIDEBAR -->
+        <aside class="shell-sidebar" aria-label="Primary navigation">
+          <div class="shell-brand">
+            <div class="shell-brand__logo">PF</div>
+            <div class="shell-brand__wordmark">PromptFlow</div>
+            <button class="shell-brand__toggle" aria-label="Collapse sidebar" title="Collapse sidebar">
+              <i data-lucide="panel-left-close" style="width:16px;height:16px"></i>
+            </button>
+          </div>
+          <nav class="shell-nav" aria-label="Sections">
+            <button class="shell-nav__item shell-nav__item--active" aria-current="page">
+              <i data-lucide="layout-grid" class="shell-nav__icon"></i>
+              <span class="shell-nav__label">Dashboard</span>
+            </button>
+            <button class="shell-nav__item">
+              <i data-lucide="library" class="shell-nav__icon"></i>
+              <span class="shell-nav__label">Template Library</span>
+            </button>
+            <button class="shell-nav__item" aria-expanded="true">
+              <i data-lucide="folder" class="shell-nav__icon"></i>
+              <span class="shell-nav__label">Projects</span>
+              <i data-lucide="chevron-right" class="shell-nav__chev shell-nav__chev--open"></i>
+            </button>
+            <div class="shell-nav__sub" role="group" aria-label="Projects">
+              <button class="shell-nav__item">
+                <i data-lucide="circle-dot" class="shell-nav__icon"></i>
+                <span class="shell-nav__label">Trudax</span>
+              </button>
+              <button class="shell-nav__item">
+                <i data-lucide="circle-dot" class="shell-nav__icon"></i>
+                <span class="shell-nav__label">SISS</span>
+              </button>
+              <button class="shell-nav__item">
+                <i data-lucide="circle-dot" class="shell-nav__icon"></i>
+                <span class="shell-nav__label">SpatialQ</span>
+              </button>
+            </div>
+          </nav>
+          <div class="shell-bottom">
+            <div class="shell-user">
+              <div class="shell-user__avatar">AJ</div>
+              <div class="shell-user__body">
+                <div class="shell-user__name">Alex Johnson</div>
+                <span class="shell-user__role">Builder</span>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <!-- MAIN -->
+        <div class="shell-main">
+          <header class="shell-header">
+            <div class="shell-header__crumbs" aria-label="Breadcrumb">
+              <span class="crumb crumb--current">Dashboard</span>
+            </div>
+            <div class="shell-header__main">
+              <div class="shell-header__title-wrap">
+                <h1 class="shell-header__title">Dashboard</h1>
+                <p class="shell-header__subtitle">42 active workflows across 3 projects · last sync 2m ago</p>
+              </div>
+              <div class="shell-header__actions">
+                <button class="btn btn--secondary">
+                  <i data-lucide="filter" class="btn__icon"></i> Filter
+                </button>
+                <button class="btn btn--primary">
+                  <i data-lucide="plus" class="btn__icon"></i> Create workflow
+                </button>
+              </div>
+            </div>
+          </header>
+          <div class="shell-content">
+            <div class="shell-content__inner">
+              <div class="placeholder">
+                <span class="placeholder__pin">page content · max-width 1440px · gutter 32px</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================================================
+       Frame 02 — Collapsed sidebar
+       ==================================================== -->
+  <div class="frame">
+    <div class="frame-caption">
+      <span class="num">02</span>
+      <span class="label">Collapsed sidebar</span>
+      <span class="note">Icon-only sidebar at 64px. Tooltip on hover/focus for each nav item — shown persistent on "Template Library" for documentation.</span>
+    </div>
+    <div class="viewport">
+      <div class="viewport-chrome">
+        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        <span class="url">promptflow.gamuda.tech/dashboard</span>
+      </div>
+      <div class="viewport-body">
+
+        <aside class="shell-sidebar shell-sidebar--collapsed" aria-label="Primary navigation">
+          <div class="shell-brand">
+            <div class="shell-brand__logo">PF</div>
+          </div>
+          <nav class="shell-nav">
+            <button class="shell-nav__item shell-nav__item--active" aria-current="page" aria-label="Dashboard">
+              <i data-lucide="layout-grid" class="shell-nav__icon"></i>
+              <span class="shell-nav__tip">Dashboard</span>
+            </button>
+            <button class="shell-nav__item" aria-label="Template Library">
+              <i data-lucide="library" class="shell-nav__icon"></i>
+              <span class="shell-nav__tip shell-nav__tip--persistent">Template Library</span>
+            </button>
+            <button class="shell-nav__item" aria-label="Projects">
+              <i data-lucide="folder" class="shell-nav__icon"></i>
+              <span class="shell-nav__tip">Projects</span>
+            </button>
+          </nav>
+          <div class="shell-bottom">
+            <div class="shell-user">
+              <div class="shell-user__avatar">AJ</div>
+            </div>
+          </div>
+        </aside>
+
+        <div class="shell-main">
+          <header class="shell-header">
+            <div class="shell-header__crumbs">
+              <span class="crumb crumb--current">Dashboard</span>
+            </div>
+            <div class="shell-header__main">
+              <div class="shell-header__title-wrap">
+                <h1 class="shell-header__title">Dashboard</h1>
+                <p class="shell-header__subtitle">42 active workflows across 3 projects</p>
+              </div>
+              <div class="shell-header__actions">
+                <button class="btn btn--primary">
+                  <i data-lucide="plus" class="btn__icon"></i> Create workflow
+                </button>
+              </div>
+            </div>
+          </header>
+          <div class="shell-content">
+            <div class="shell-content__inner">
+              <div class="placeholder">
+                <span class="placeholder__pin">content gains 200px when sidebar collapses</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================================================
+       Frame 03 — Inside a project
+       ==================================================== -->
+  <div class="frame">
+    <div class="frame-caption">
+      <span class="num">03</span>
+      <span class="label">Inside a project · Trudax</span>
+      <span class="note">Breadcrumb shows project path; header adds project tabs (Workflows / Run History / Project Settings). Sidebar item "Trudax" becomes active.</span>
+    </div>
+    <div class="viewport">
+      <div class="viewport-chrome">
+        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        <span class="url">promptflow.gamuda.tech/projects/trudax/workflows</span>
+      </div>
+      <div class="viewport-body">
+
+        <aside class="shell-sidebar">
+          <div class="shell-brand">
+            <div class="shell-brand__logo">PF</div>
+            <div class="shell-brand__wordmark">PromptFlow</div>
+            <button class="shell-brand__toggle" aria-label="Collapse sidebar">
+              <i data-lucide="panel-left-close" style="width:16px;height:16px"></i>
+            </button>
+          </div>
+          <nav class="shell-nav">
+            <button class="shell-nav__item">
+              <i data-lucide="layout-grid" class="shell-nav__icon"></i>
+              <span class="shell-nav__label">Dashboard</span>
+            </button>
+            <button class="shell-nav__item">
+              <i data-lucide="library" class="shell-nav__icon"></i>
+              <span class="shell-nav__label">Template Library</span>
+            </button>
+            <button class="shell-nav__item" aria-expanded="true">
+              <i data-lucide="folder" class="shell-nav__icon"></i>
+              <span class="shell-nav__label">Projects</span>
+              <i data-lucide="chevron-right" class="shell-nav__chev shell-nav__chev--open"></i>
+            </button>
+            <div class="shell-nav__sub">
+              <button class="shell-nav__item shell-nav__item--active" aria-current="page">
+                <i data-lucide="circle-dot" class="shell-nav__icon"></i>
+                <span class="shell-nav__label">Trudax</span>
+              </button>
+              <button class="shell-nav__item">
+                <i data-lucide="circle-dot" class="shell-nav__icon"></i>
+                <span class="shell-nav__label">SISS</span>
+              </button>
+              <button class="shell-nav__item">
+                <i data-lucide="circle-dot" class="shell-nav__icon"></i>
+                <span class="shell-nav__label">SpatialQ Pilot — Phase 2 (long name truncates here)</span>
+              </button>
+            </div>
+          </nav>
+          <div class="shell-bottom">
+            <div class="shell-user">
+              <div class="shell-user__avatar">AJ</div>
+              <div class="shell-user__body">
+                <div class="shell-user__name">Alex Johnson</div>
+                <span class="shell-user__role">Admin</span>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <div class="shell-main">
+          <header class="shell-header">
+            <div class="shell-header__crumbs">
+              <a>Projects</a>
+              <span class="sep">/</span>
+              <span class="project-chip">
+                <span class="project-chip__mark" style="background:var(--primary-700)">Tr</span>
+                <span class="crumb crumb--current">Trudax</span>
+              </span>
+              <span class="sep">/</span>
+              <span class="crumb crumb--current">Workflows</span>
+            </div>
+            <div class="shell-header__main">
+              <div class="shell-header__title-wrap">
+                <h1 class="shell-header__title">Trudax</h1>
+                <p class="shell-header__subtitle">Internal asset registry · 12 workflows · 4 active connections</p>
+              </div>
+              <div class="shell-header__actions">
+                <button class="btn btn--secondary">
+                  <i data-lucide="settings-2" class="btn__icon"></i> Project settings
+                </button>
+                <button class="btn btn--primary">
+                  <i data-lucide="plus" class="btn__icon"></i> Create workflow
+                </button>
+              </div>
+            </div>
+            <div class="shell-header__tabs" role="tablist" aria-label="Project sections">
+              <button class="tab tab--active" role="tab" aria-selected="true">
+                Workflows <span class="tab__count">12</span>
+              </button>
+              <button class="tab" role="tab" aria-selected="false">
+                Run History <span class="tab__count">1,284</span>
+              </button>
+              <button class="tab" role="tab" aria-selected="false">
+                Project Settings
+              </button>
+            </div>
+          </header>
+          <div class="shell-content">
+            <div class="shell-content__inner">
+              <div class="placeholder">
+                <span class="placeholder__pin">workflows list renders here</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================================================
+       Frame 04 — Superadmin
+       ==================================================== -->
+  <div class="frame">
+    <div class="frame-caption">
+      <span class="num">04</span>
+      <span class="label">Superadmin role</span>
+      <span class="note">Identical to Default but the bottom area surfaces "Superadmin Settings". Hidden for Builder and Admin roles.</span>
+    </div>
+    <div class="viewport">
+      <div class="viewport-chrome">
+        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        <span class="url">promptflow.gamuda.tech/dashboard</span>
+      </div>
+      <div class="viewport-body">
+
+        <aside class="shell-sidebar">
+          <div class="shell-brand">
+            <div class="shell-brand__logo">PF</div>
+            <div class="shell-brand__wordmark">PromptFlow</div>
+            <button class="shell-brand__toggle" aria-label="Collapse sidebar">
+              <i data-lucide="panel-left-close" style="width:16px;height:16px"></i>
+            </button>
+          </div>
+          <nav class="shell-nav">
+            <button class="shell-nav__item shell-nav__item--active" aria-current="page">
+              <i data-lucide="layout-grid" class="shell-nav__icon"></i>
+              <span class="shell-nav__label">Dashboard</span>
+            </button>
+            <button class="shell-nav__item">
+              <i data-lucide="library" class="shell-nav__icon"></i>
+              <span class="shell-nav__label">Template Library</span>
+            </button>
+            <button class="shell-nav__item">
+              <i data-lucide="folder" class="shell-nav__icon"></i>
+              <span class="shell-nav__label">Projects</span>
+              <i data-lucide="chevron-right" class="shell-nav__chev"></i>
+            </button>
+          </nav>
+          <div class="shell-bottom">
+            <button class="shell-nav__item">
+              <i data-lucide="shield-check" class="shell-nav__icon"></i>
+              <span class="shell-nav__label">Superadmin Settings</span>
+            </button>
+            <div class="shell-user">
+              <div class="shell-user__avatar" style="background:var(--primary-700)">PR</div>
+              <div class="shell-user__body">
+                <div class="shell-user__name">Priya Ramesh</div>
+                <span class="shell-user__role shell-user__role--superadmin">Superadmin</span>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <div class="shell-main">
+          <header class="shell-header">
+            <div class="shell-header__crumbs">
+              <span class="crumb crumb--current">Dashboard</span>
+            </div>
+            <div class="shell-header__main">
+              <div class="shell-header__title-wrap">
+                <h1 class="shell-header__title">Dashboard</h1>
+                <p class="shell-header__subtitle">Org-wide view · 142 workflows · 11 projects · 28 builders</p>
+              </div>
+              <div class="shell-header__actions">
+                <button class="btn btn--secondary">
+                  <i data-lucide="download" class="btn__icon"></i> Export audit log
+                </button>
+                <button class="btn btn--primary">
+                  <i data-lucide="plus" class="btn__icon"></i> Create workflow
+                </button>
+              </div>
+            </div>
+          </header>
+          <div class="shell-content">
+            <div class="shell-content__inner">
+              <div class="placeholder">
+                <span class="placeholder__pin">org-wide dashboard renders here</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================================================
+       Frame 05 — Loading
+       ==================================================== -->
+  <div class="frame">
+    <div class="frame-caption">
+      <span class="num">05</span>
+      <span class="label">Loading</span>
+      <span class="note">Sidebar is fully rendered; content area shows a skeleton. Header title shows a skeleton bar so the page header height stays constant.</span>
+    </div>
+    <div class="viewport">
+      <div class="viewport-chrome">
+        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        <span class="url">promptflow.gamuda.tech/projects/trudax/run-history</span>
+      </div>
+      <div class="viewport-body">
+
+        <aside class="shell-sidebar">
+          <div class="shell-brand">
+            <div class="shell-brand__logo">PF</div>
+            <div class="shell-brand__wordmark">PromptFlow</div>
+            <button class="shell-brand__toggle" aria-label="Collapse sidebar">
+              <i data-lucide="panel-left-close" style="width:16px;height:16px"></i>
+            </button>
+          </div>
+          <nav class="shell-nav">
+            <button class="shell-nav__item">
+              <i data-lucide="layout-grid" class="shell-nav__icon"></i>
+              <span class="shell-nav__label">Dashboard</span>
+            </button>
+            <button class="shell-nav__item">
+              <i data-lucide="library" class="shell-nav__icon"></i>
+              <span class="shell-nav__label">Template Library</span>
+            </button>
+            <button class="shell-nav__item" aria-expanded="true">
+              <i data-lucide="folder" class="shell-nav__icon"></i>
+              <span class="shell-nav__label">Projects</span>
+              <i data-lucide="chevron-right" class="shell-nav__chev shell-nav__chev--open"></i>
+            </button>
+            <div class="shell-nav__sub">
+              <button class="shell-nav__item shell-nav__item--active" aria-current="page">
+                <i data-lucide="circle-dot" class="shell-nav__icon"></i>
+                <span class="shell-nav__label">Trudax</span>
+              </button>
+              <button class="shell-nav__item">
+                <i data-lucide="circle-dot" class="shell-nav__icon"></i>
+                <span class="shell-nav__label">SISS</span>
+              </button>
+            </div>
+          </nav>
+          <div class="shell-bottom">
+            <div class="shell-user">
+              <div class="shell-user__avatar">AJ</div>
+              <div class="shell-user__body">
+                <div class="shell-user__name">Alex Johnson</div>
+                <span class="shell-user__role">Admin</span>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <div class="shell-main">
+          <header class="shell-header">
+            <div class="shell-header__crumbs">
+              <a>Projects</a>
+              <span class="sep">/</span>
+              <span class="project-chip">
+                <span class="project-chip__mark" style="background:var(--primary-700)">Tr</span>
+                <span>Trudax</span>
+              </span>
+              <span class="sep">/</span>
+              <span class="crumb crumb--current">Run History</span>
+            </div>
+            <div class="shell-header__main">
+              <div class="shell-header__title-wrap">
+                <div class="skel" style="height:24px; width:180px; margin-bottom:8px;"></div>
+                <div class="skel" style="height:14px; width:280px;"></div>
+              </div>
+              <div class="shell-header__actions">
+                <div class="skel" style="height:36px; width:96px; border-radius:var(--radius-m);"></div>
+              </div>
+            </div>
+            <div class="shell-header__tabs">
+              <button class="tab">Workflows</button>
+              <button class="tab tab--active">Run History</button>
+              <button class="tab">Project Settings</button>
+            </div>
+          </header>
+          <div class="shell-content">
+            <div class="shell-content__inner">
+              <div class="placeholder" style="background:#fff; background-image:none; padding:24px; min-height:320px;">
+                <div role="status" aria-live="polite" aria-label="Fetching last 100 runs">
+                  <div class="skel" style="height:14px; width:280px; margin-bottom:18px;"></div>
+                  <div class="skel" style="height:48px; margin-bottom:8px;"></div>
+                  <div class="skel" style="height:48px; margin-bottom:8px;"></div>
+                  <div class="skel" style="height:48px; margin-bottom:8px;"></div>
+                  <div class="skel" style="height:48px; margin-bottom:8px;"></div>
+                  <div class="skel" style="height:48px;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================================================
+       Frame 06 — Empty content
+       ==================================================== -->
+  <div class="frame">
+    <div class="frame-caption">
+      <span class="num">06</span>
+      <span class="label">Empty content</span>
+      <span class="note">Shell unchanged. Content area shows a placeholder for [PF] Empty State — to be designed next. The shell never goes empty; it always carries chrome + header.</span>
+    </div>
+    <div class="viewport">
+      <div class="viewport-chrome">
+        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        <span class="url">promptflow.gamuda.tech/projects/trudax/run-history</span>
+      </div>
+      <div class="viewport-body">
+
+        <aside class="shell-sidebar">
+          <div class="shell-brand">
+            <div class="shell-brand__logo">PF</div>
+            <div class="shell-brand__wordmark">PromptFlow</div>
+            <button class="shell-brand__toggle" aria-label="Collapse sidebar">
+              <i data-lucide="panel-left-close" style="width:16px;height:16px"></i>
+            </button>
+          </div>
+          <nav class="shell-nav">
+            <button class="shell-nav__item">
+              <i data-lucide="layout-grid" class="shell-nav__icon"></i>
+              <span class="shell-nav__label">Dashboard</span>
+            </button>
+            <button class="shell-nav__item">
+              <i data-lucide="library" class="shell-nav__icon"></i>
+              <span class="shell-nav__label">Template Library</span>
+            </button>
+            <button class="shell-nav__item" aria-expanded="true">
+              <i data-lucide="folder" class="shell-nav__icon"></i>
+              <span class="shell-nav__label">Projects</span>
+              <i data-lucide="chevron-right" class="shell-nav__chev shell-nav__chev--open"></i>
+            </button>
+            <div class="shell-nav__sub">
+              <button class="shell-nav__item shell-nav__item--active" aria-current="page">
+                <i data-lucide="circle-dot" class="shell-nav__icon"></i>
+                <span class="shell-nav__label">Trudax</span>
+              </button>
+              <button class="shell-nav__item">
+                <i data-lucide="circle-dot" class="shell-nav__icon"></i>
+                <span class="shell-nav__label">SISS</span>
+              </button>
+            </div>
+          </nav>
+          <div class="shell-bottom">
+            <div class="shell-user">
+              <div class="shell-user__avatar">AJ</div>
+              <div class="shell-user__body">
+                <div class="shell-user__name">Alex Johnson</div>
+                <span class="shell-user__role">Admin</span>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <div class="shell-main">
+          <header class="shell-header">
+            <div class="shell-header__crumbs">
+              <a>Projects</a>
+              <span class="sep">/</span>
+              <span class="project-chip">
+                <span class="project-chip__mark" style="background:var(--primary-700)">Tr</span>
+                <span>Trudax</span>
+              </span>
+              <span class="sep">/</span>
+              <span class="crumb crumb--current">Run History</span>
+            </div>
+            <div class="shell-header__main">
+              <div class="shell-header__title-wrap">
+                <h1 class="shell-header__title">Run History</h1>
+                <p class="shell-header__subtitle">No runs yet for this project.</p>
+              </div>
+            </div>
+            <div class="shell-header__tabs">
+              <button class="tab">Workflows</button>
+              <button class="tab tab--active">Run History</button>
+              <button class="tab">Project Settings</button>
+            </div>
+          </header>
+          <div class="shell-content">
+            <div class="shell-content__inner">
+              <div class="empty" style="position:relative;">
+                <div class="empty__icon-box">
+                  <i data-lucide="activity" style="width:22px;height:22px;color:var(--gray-500)"></i>
+                </div>
+                <h3 class="empty__title">No runs yet</h3>
+                <p class="empty__body">Workflows will appear here once they've been triggered. Set a schedule or run one manually to get started.</p>
+                <button class="btn btn--primary empty__cta">
+                  <i data-lucide="play" class="btn__icon"></i> Run a workflow now
+                </button>
+                <div style="position:absolute; bottom:16px; right:16px;">
+                  <span style="font-family:var(--font-mono); font-size:10.5px; padding:2px 8px; border-radius:var(--radius-xs); background:var(--warning-100); color:var(--warning-700);">placeholder · [PF] Empty State component is next</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================================================
+       Annotation
+       ==================================================== -->
+  <section class="docs" aria-label="Component specification">
+
+    <div class="card">
+      <div class="eyebrow">Purpose</div>
+      <h3>What the shell is and isn't</h3>
+      <p style="font-size:13.5px; color:var(--txt-2); margin:0 0 10px; line-height:1.55">
+        A composition, not a component. Wraps three primitives — [PromptFlow] Side Nav, the page header, the content container — and locks the relationship between them so every screen has consistent chrome.
+      </p>
+      <p style="font-size:13.5px; color:var(--txt-2); margin:0; line-height:1.55">
+        It defines <em>where</em> things go (sidebar left, header top, content centre) and <em>how much room</em> they get (the layout tokens below). It never defines <em>what</em> goes inside the content area — that's the page's job.
+      </p>
+    </div>
+
+    <div class="card">
+      <div class="eyebrow">Props / variants</div>
+      <h3>API surface</h3>
+      <ul>
+        <li><span class="key">sidebarCollapsed</span><span><code>false</code> (default, 264px) · <code>true</code> (64px icon-only). Toggle from the brand row button.</span></li>
+        <li><span class="key">role</span><span><code>"builder"</code> · <code>"admin"</code> · <code>"superadmin"</code>. Only superadmin sees the Superadmin Settings row.</span></li>
+        <li><span class="key">crumbs</span><span>Array of <code>{label, href, kind}</code>. Last item is the current page — never a link.</span></li>
+        <li><span class="key">title</span><span>Page title. Wraps to 2 lines max, then truncates.</span></li>
+        <li><span class="key">subtitle</span><span>Optional 1-line description.</span></li>
+        <li><span class="key">primaryAction</span><span>Optional button slot on the right of the header. One primary action max.</span></li>
+        <li><span class="key">projectTabs</span><span>Optional array. When present, an extra 44px tab row sits below the title row.</span></li>
+        <li><span class="key">state</span><span><code>"ready"</code> · <code>"loading"</code> · <code>"empty"</code>. Drives content slot; chrome stays identical.</span></li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="eyebrow">Accessibility</div>
+      <h3>Keyboard, ARIA, focus</h3>
+      <ul>
+        <li><span class="key">landmarks</span><span><code>&lt;aside aria-label="Primary navigation"&gt;</code>, <code>&lt;header&gt;</code>, <code>&lt;main&gt;</code> — three discoverable regions.</span></li>
+        <li><span class="key">tab order</span><span>Brand → collapse toggle → nav items (top-to-bottom, sub-items inline) → user → breadcrumbs → header actions → project tabs → content.</span></li>
+        <li><span class="key">aria-current</span><span><code>="page"</code> on the active sidebar item and the active breadcrumb.</span></li>
+        <li><span class="key">aria-expanded</span><span>On Projects nav item; reflects whether the sub-list is open.</span></li>
+        <li><span class="key">tooltips</span><span>Collapsed sidebar tooltips appear on hover <em>and</em> keyboard focus. Tooltip is <code>role="tooltip"</code>; nav item carries the source of truth as <code>aria-label</code>.</span></li>
+        <li><span class="key">loading region</span><span>Skeleton has <code>role="status"</code> with a specific <code>aria-label</code> ("Fetching last 100 runs") — not a generic "Loading…".</span></li>
+        <li><span class="key">focus rings</span><span>3px <code>var(--fr-primary)</code> on every interactive element. Never suppressed.</span></li>
+        <li><span class="key">reduced motion</span><span>Sidebar collapse transition and skeleton shimmer respect <code>prefers-reduced-motion</code>.</span></li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="eyebrow">PRD principles served</div>
+      <h3>Design choice → principle</h3>
+      <ul>
+        <li><span class="key">consistent chrome</span><span><span class="principle">Confidence through clarity</span> The shell is identical across Loading, Empty, and Ready. Users always know where they are and what they can do.</span></li>
+        <li><span class="key">no dead-ends</span><span><span class="principle">Zero dead-ends</span> Empty state always offers a next action ("Run a workflow now"). Loading shows a specific label, not a spinner with no information.</span></li>
+        <li><span class="key">tab nav for projects</span><span><span class="principle">Progressive disclosure</span> Workflows / Run History / Project Settings live inside the project, not as top-level nav — surface only what's relevant to where you are.</span></li>
+        <li><span class="key">role-aware</span><span><span class="principle">Trust and safety</span> Superadmin items don't render for Builder/Admin — invisible, not just disabled.</span></li>
+        <li><span class="key">specific copy</span><span><span class="principle">Guided, not technical</span> "Create workflow" not "+ New". "Fetching last 100 runs" not "Loading…". Crumb shows the project mark + name, not a UUID.</span></li>
+        <li><span class="key">predictable widths</span><span><span class="principle">Fast, predictable feedback</span> Layout tokens are fixed: pages don't reflow when content loads.</span></li>
+      </ul>
+    </div>
+
+  </section>
+
+  <!-- ====================================================
+       Layout token reference — the lock-in numbers
+       ==================================================== -->
+  <section class="tokens-table" aria-label="Layout token reference">
+    <h3>
+      Layout token reference
+      <span class="sub">Lock these before building dependent components. All measurements in CSS pixels.</span>
+    </h3>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:30%">Token</th>
+          <th style="width:14%">Value</th>
+          <th>Rationale</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="tok">--shell-sidebar-w</span></td>
+          <td><span class="val">264px</span></td>
+          <td class="rationale">Holds 14px nav labels + 18px icon + 12px gutter + a 2-digit count badge without truncating. Wider than MyDS reference 240 to give Projects sub-items breathing room.</td>
+        </tr>
+        <tr>
+          <td><span class="tok">--shell-sidebar-collapsed-w</span></td>
+          <td><span class="val">64px</span></td>
+          <td class="rationale">18px icon centred in a 40px hit target with 12px gutter on each side. Smallest comfortable touch target.</td>
+        </tr>
+        <tr>
+          <td><span class="tok">--shell-header-top-h</span></td>
+          <td><span class="val">48px</span></td>
+          <td class="rationale">Breadcrumb row. 13px font · 32px horizontal padding. Separated from title row by a 1px <code>gray-100</code> divider.</td>
+        </tr>
+        <tr>
+          <td><span class="tok">--shell-header-title-h</span></td>
+          <td><span class="val">64px</span></td>
+          <td class="rationale">Title (22px) + optional 13px subtitle fit comfortably; 36px primary button has 14px breathing room. Reserved height even when subtitle is absent.</td>
+        </tr>
+        <tr>
+          <td><span class="tok">--shell-tabs-h</span></td>
+          <td><span class="val">44px</span></td>
+          <td class="rationale">Only rendered when project tabs are present. 13.5px label + 10px vertical padding + 2px active underline.</td>
+        </tr>
+        <tr>
+          <td><span class="tok">--shell-content-max</span></td>
+          <td><span class="val">1440px</span></td>
+          <td class="rationale">From PromptFlow Design System README. Tables and dashboards above this width feel scattered; this is the cap.</td>
+        </tr>
+        <tr>
+          <td><span class="tok">--shell-content-gutter</span></td>
+          <td><span class="val">32px</span></td>
+          <td class="rationale">Outer padding around <code>--shell-content-max</code>. Never less than 24px.</td>
+        </tr>
+        <tr>
+          <td><span class="tok">--shell-content-min</span></td>
+          <td><span class="val">960px</span></td>
+          <td class="rationale">Minimum content width at 1280px viewport with expanded sidebar. Below this, components must reflow.</td>
+        </tr>
+        <tr>
+          <td><span class="tok">— derived —</span></td>
+          <td><span class="val">112px</span></td>
+          <td class="rationale">Total page header height without tabs (48 + 64). With project tabs: 156px (48 + 64 + 44).</td>
+        </tr>
+        <tr>
+          <td><span class="tok">— derived —</span></td>
+          <td><span class="val">1280px</span></td>
+          <td class="rationale">Minimum supported viewport. At this width: 264 sidebar + 32 gutter + 960 min content + 32 gutter = 1288 — fits with 8px to spare.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+</div>
+
+<script>
+  // Render Lucide icons.
+  if (window.lucide) {
+    lucide.createIcons({ attrs: { 'stroke-width': 1.7 } });
+  }
+</script>
+</body>
+</html>

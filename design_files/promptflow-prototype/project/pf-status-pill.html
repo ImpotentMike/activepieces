@@ -1,0 +1,967 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>[PF] Status Pill — MyDS component spec</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   MyDS tokens (copied from the loaded design system —
+   colors_and_type.css). Inlined to keep this artifact
+   self-contained. Do not introduce new tokens here.
+   ============================================================ */
+:root {
+  /* gray (zinc) */
+  --gray-50:#FAFAFA; --gray-100:#F4F4F5; --gray-200:#E4E4E7;
+  --gray-300:#D4D4D8; --gray-400:#A1A1AA; --gray-500:#71717A;
+  --gray-600:#52525B; --gray-700:#3F3F46; --gray-800:#27272A;
+  --gray-900:#18181B; --gray-950:#09090B;
+
+  /* primary (brand blue) */
+  --primary-50:#EFF6FF; --primary-100:#DBEAFE; --primary-200:#C2D5FF;
+  --primary-600:#2563EB; --primary-700:#1D4ED8; --primary-800:#1E40AF;
+
+  /* semantic */
+  --danger-100:#FEE2E2; --danger-500:#EF4444; --danger-600:#DC2626; --danger-700:#B91C1C;
+  --success-100:#DCFCE7; --success-500:#22C55E; --success-600:#16A34A; --success-700:#15803D;
+  --warning-100:#FEF3C7; --warning-500:#F59E0B; --warning-600:#D97706; --warning-700:#B45309;
+
+  /* tokens */
+  --bg-canvas: var(--gray-50);
+  --bg-white: #FFFFFF;
+  --txt-1: var(--gray-900);
+  --txt-2: var(--gray-700);
+  --txt-3: var(--gray-500);
+  --otl-divider: var(--gray-200);
+  --radius-m: 8px;
+  --radius-l: 12px;
+  --shadow-card: 0 1px 3px 0 rgba(0,0,0,0.05);
+  --shadow-context: 0 12px 50px 0 rgba(0,0,0,0.10), 0 2px 6px 0 rgba(0,0,0,0.05);
+  --fr-primary: 0 0 0 3px rgba(37,99,235,0.35);
+
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Poppins", "Inter", system-ui, sans-serif;
+  --font-mono: "Roboto Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--txt-1);
+  background: var(--bg-canvas);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============================================================
+   Page layout
+   ============================================================ */
+.page {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 48px 32px 96px;
+}
+.page-header { margin-bottom: 32px; }
+.page-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  color: var(--txt-3);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.page-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 32px;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  margin: 0 0 8px;
+}
+.page-subtitle {
+  color: var(--txt-2);
+  font-size: 15px;
+  max-width: 720px;
+  margin: 0;
+}
+
+.section { margin-bottom: 28px; }
+.section-caption {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 10px;
+  padding: 0 4px;
+}
+.section-caption .num {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 500;
+  color: var(--txt-3);
+}
+.section-caption .label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--txt-2);
+}
+.section-caption .note {
+  font-size: 12px;
+  color: var(--txt-3);
+}
+
+.card {
+  background: var(--bg-white);
+  border: 1px solid var(--otl-divider);
+  border-radius: var(--radius-l);
+  box-shadow: var(--shadow-card);
+}
+.card-grid {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  border-bottom: 1px solid var(--gray-100);
+}
+.card-grid:last-child { border-bottom: none; }
+.card-grid-label {
+  padding: 18px 20px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--txt-3);
+  border-right: 1px solid var(--gray-100);
+  background: #FBFBFC;
+  display: flex;
+  align-items: center;
+}
+.card-grid-body {
+  padding: 18px 24px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px 18px;
+}
+
+.row-label {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--txt-3);
+  letter-spacing: 0.3px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 96px;
+  white-space: nowrap;
+}
+.pill-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+/* ============================================================
+   [PF] Status Pill — the actual component
+   ============================================================ */
+.pf-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 18px;
+  white-space: nowrap;
+  border: 1px solid transparent;
+}
+.pf-pill--sm {
+  padding: 1px 8px;
+  font-size: 11px;
+  line-height: 16px;
+  gap: 5px;
+}
+.pf-pill__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  flex-shrink: 0;
+  background: currentColor;
+}
+.pf-pill--sm .pf-pill__dot { width: 5px; height: 5px; }
+
+/* ---- variants ----
+   Color decisions are documented in the mapping table below. */
+
+/* run-level */
+.pf-pill--running   { background: var(--primary-100); color: var(--primary-800); }
+.pf-pill--running   .pf-pill__dot { background: var(--primary-600); }
+.pf-pill--success   { background: var(--success-100); color: var(--success-700); }
+.pf-pill--success   .pf-pill__dot { background: var(--success-600); }
+.pf-pill--failed    { background: var(--danger-100); color: var(--danger-700); }
+.pf-pill--failed    .pf-pill__dot { background: var(--danger-600); }
+.pf-pill--waiting   { background: var(--warning-100); color: var(--warning-700); }
+.pf-pill--waiting   .pf-pill__dot { background: var(--warning-600); }
+
+/* workflow-level */
+.pf-pill--draft {
+  background: var(--bg-white);
+  color: var(--gray-700);
+  border-color: var(--gray-300);
+}
+.pf-pill--draft .pf-pill__dot { background: var(--gray-400); }
+
+.pf-pill--published { background: var(--success-100); color: var(--success-700); }
+.pf-pill--published .pf-pill__dot { background: var(--success-600); }
+
+.pf-pill--paused    { background: var(--warning-100); color: var(--warning-700); }
+.pf-pill--paused    .pf-pill__dot { background: var(--warning-600); }
+
+.pf-pill--unpublished { background: var(--gray-100); color: var(--gray-600); }
+.pf-pill--unpublished .pf-pill__dot { background: var(--gray-400); }
+
+/* pulse — running + waiting */
+@keyframes pf-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.45; transform: scale(0.85); }
+}
+.pf-pill--running .pf-pill__dot,
+.pf-pill--waiting .pf-pill__dot {
+  animation: pf-pulse 1.4s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .pf-pill--running .pf-pill__dot,
+  .pf-pill--waiting .pf-pill__dot { animation: none; }
+}
+
+/* ============================================================
+   Tooltip — appears on hover for runtime states
+   ============================================================ */
+.pf-tooltip-wrap { position: relative; display: inline-flex; }
+.pf-tooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--gray-900);
+  color: #fff;
+  font-size: 11.5px;
+  line-height: 1.45;
+  font-weight: 400;
+  padding: 7px 10px;
+  border-radius: var(--radius-m);
+  box-shadow: var(--shadow-context);
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 140ms ease-out, transform 140ms ease-out;
+  z-index: 10;
+}
+.pf-tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 4px solid transparent;
+  border-top-color: var(--gray-900);
+}
+.pf-tooltip-wrap:hover .pf-tooltip,
+.pf-tooltip-wrap:focus-within .pf-tooltip {
+  opacity: 1;
+}
+.pf-tooltip--persistent { opacity: 1 !important; }
+
+/* ============================================================
+   In-context demos (table row, step node, page header)
+   ============================================================ */
+.demo-stack { display: flex; flex-direction: column; gap: 20px; padding: 18px 24px; }
+
+.demo-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.demo-table th {
+  text-align: left;
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: var(--txt-3);
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--gray-100);
+  background: var(--gray-50);
+}
+.demo-table td {
+  padding: 12px;
+  border-bottom: 1px solid var(--gray-100);
+  color: var(--txt-2);
+}
+.demo-table tr:last-child td { border-bottom: none; }
+.demo-table .name { color: var(--txt-1); font-weight: 500; }
+.demo-table .mono { font-family: var(--font-mono); font-size: 11.5px; color: var(--txt-3); }
+
+.demo-step {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-m);
+  background: #fff;
+  width: 360px;
+}
+.demo-step__icon {
+  width: 32px; height: 32px; border-radius: 7px;
+  background: var(--primary-100); color: var(--primary-700);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono); font-weight: 600; font-size: 12px;
+  flex-shrink: 0;
+}
+.demo-step__body { flex: 1; min-width: 0; }
+.demo-step__title {
+  font-size: 13px; font-weight: 500; color: var(--txt-1);
+  margin-bottom: 2px;
+}
+.demo-step__sub {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--txt-3);
+}
+
+.demo-page-head {
+  display: flex; align-items: center; gap: 14px;
+  padding: 18px 20px;
+  background: var(--bg-white);
+  border: 1px solid var(--otl-divider);
+  border-radius: var(--radius-l);
+}
+.demo-page-head__title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 20px;
+  color: var(--txt-1);
+  margin: 0;
+}
+.demo-page-head__id {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--txt-3);
+}
+
+/* ============================================================
+   Annotation block
+   ============================================================ */
+.annotation {
+  margin-top: 56px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+.annotation .card { padding: 24px; }
+.annotation h3 {
+  margin: 0 0 12px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  color: var(--txt-1);
+  font-family: var(--font-sans);
+}
+.annotation .eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--txt-3);
+  margin-bottom: 6px;
+}
+.annotation p { font-size: 13.5px; color: var(--txt-2); margin: 0 0 10px; line-height: 1.55; }
+.annotation p:last-child { margin-bottom: 0; }
+.annotation ul {
+  margin: 0; padding: 0; list-style: none;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.annotation ul li {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 12px;
+  font-size: 13px;
+  color: var(--txt-2);
+  align-items: baseline;
+}
+.annotation ul li .key {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--txt-1);
+}
+.annotation .principle {
+  display: inline-block;
+  padding: 1px 7px;
+  border-radius: 4px;
+  background: var(--primary-50, #EFF6FF);
+  color: var(--primary-800);
+  font-size: 11px;
+  font-weight: 500;
+  margin-right: 4px;
+}
+
+/* ============================================================
+   Mapping table
+   ============================================================ */
+.mapping {
+  margin-top: 24px;
+  background: #fff;
+  border: 1px solid var(--otl-divider);
+  border-radius: var(--radius-l);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+.mapping-head {
+  padding: 18px 24px 14px;
+  border-bottom: 1px solid var(--gray-100);
+}
+.mapping-head h3 {
+  margin: 0 0 4px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--txt-1);
+}
+.mapping-head p {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--txt-3);
+}
+.mapping table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+}
+.mapping th {
+  text-align: left;
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--txt-3);
+  padding: 10px 16px;
+  background: #FBFBFC;
+  border-bottom: 1px solid var(--gray-100);
+}
+.mapping td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--gray-100);
+  vertical-align: middle;
+  color: var(--txt-2);
+}
+.mapping tr:last-child td { border-bottom: none; }
+.mapping td.pill-cell { width: 130px; }
+.mapping td.level-cell {
+  width: 100px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--txt-3);
+}
+.mapping td .tok {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--txt-1);
+}
+.mapping td .swatch {
+  display: inline-block;
+  width: 12px; height: 12px;
+  border-radius: 3px;
+  vertical-align: -2px;
+  margin-right: 6px;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.08);
+}
+.mapping td .rationale {
+  display: block;
+  margin-top: 2px;
+  color: var(--txt-3);
+  font-size: 11.5px;
+}
+
+/* small UI helpers */
+.divider {
+  height: 1px;
+  background: var(--gray-100);
+  margin: 18px 24px;
+}
+.legend {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 11.5px;
+  color: var(--txt-3);
+}
+.legend .swatch {
+  display: inline-block;
+  width: 10px; height: 10px;
+  border-radius: 3px;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.08);
+}
+
+@media (max-width: 880px) {
+  .annotation { grid-template-columns: 1fr; }
+  .card-grid { grid-template-columns: 140px 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <header class="page-header">
+    <div class="page-eyebrow">PromptFlow · MyDS extension · v0.1</div>
+    <h1 class="page-title">[PF] Status Pill</h1>
+    <p class="page-subtitle">
+      A compact label that communicates the current state of a workflow or workflow run.
+      Built on MyDS Pill primitive — adds PromptFlow's eight status semantics across two sizes and two dot variants.
+    </p>
+  </header>
+
+  <!-- ====================================================
+       Run-level statuses
+       ==================================================== -->
+  <div class="section" aria-labelledby="sec-run">
+    <div class="section-caption">
+      <span class="num">01</span>
+      <span class="label" id="sec-run">Run-level · Default size</span>
+      <span class="note">Used in run history tables, run detail headers</span>
+    </div>
+    <div class="card">
+
+      <div class="card-grid">
+        <div class="card-grid-label">With dot · default</div>
+        <div class="card-grid-body">
+          <span class="pf-pill pf-pill--running"  role="status" aria-label="Run status: Running"><span class="pf-pill__dot" aria-hidden="true"></span>Running</span>
+          <span class="pf-pill pf-pill--success"  aria-label="Run status: Success"><span class="pf-pill__dot" aria-hidden="true"></span>Success</span>
+          <span class="pf-pill pf-pill--failed"   aria-label="Run status: Failed"><span class="pf-pill__dot" aria-hidden="true"></span>Failed</span>
+          <span class="pf-pill pf-pill--waiting"  role="status" aria-label="Run status: Waiting"><span class="pf-pill__dot" aria-hidden="true"></span>Waiting</span>
+          <span class="legend"><span class="swatch" style="background:var(--primary-600)"></span> dot pulses for live states (Running, Waiting)</span>
+        </div>
+      </div>
+
+      <div class="card-grid">
+        <div class="card-grid-label">Without dot</div>
+        <div class="card-grid-body">
+          <span class="pf-pill pf-pill--running" aria-label="Run status: Running">Running</span>
+          <span class="pf-pill pf-pill--success" aria-label="Run status: Success">Success</span>
+          <span class="pf-pill pf-pill--failed"  aria-label="Run status: Failed">Failed</span>
+          <span class="pf-pill pf-pill--waiting" aria-label="Run status: Waiting">Waiting</span>
+          <span class="legend">For dense layouts where the colour fill is already glanceable</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-caption">
+      <span class="num">02</span>
+      <span class="label">Run-level · Small size</span>
+      <span class="note">Used inside step nodes, dense log lists</span>
+    </div>
+    <div class="card">
+      <div class="card-grid">
+        <div class="card-grid-label">With dot · small</div>
+        <div class="card-grid-body">
+          <span class="pf-pill pf-pill--sm pf-pill--running" aria-label="Run status: Running"><span class="pf-pill__dot" aria-hidden="true"></span>Running</span>
+          <span class="pf-pill pf-pill--sm pf-pill--success" aria-label="Run status: Success"><span class="pf-pill__dot" aria-hidden="true"></span>Success</span>
+          <span class="pf-pill pf-pill--sm pf-pill--failed"  aria-label="Run status: Failed"><span class="pf-pill__dot" aria-hidden="true"></span>Failed</span>
+          <span class="pf-pill pf-pill--sm pf-pill--waiting" aria-label="Run status: Waiting"><span class="pf-pill__dot" aria-hidden="true"></span>Waiting</span>
+        </div>
+      </div>
+      <div class="card-grid">
+        <div class="card-grid-label">Without dot · small</div>
+        <div class="card-grid-body">
+          <span class="pf-pill pf-pill--sm pf-pill--running">Running</span>
+          <span class="pf-pill pf-pill--sm pf-pill--success">Success</span>
+          <span class="pf-pill pf-pill--sm pf-pill--failed">Failed</span>
+          <span class="pf-pill pf-pill--sm pf-pill--waiting">Waiting</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================================================
+       Workflow-level statuses
+       ==================================================== -->
+  <div class="section">
+    <div class="section-caption">
+      <span class="num">03</span>
+      <span class="label">Workflow-level · Default size</span>
+      <span class="note">Used in workflow list, workflow header, templates</span>
+    </div>
+    <div class="card">
+      <div class="card-grid">
+        <div class="card-grid-label">With dot · default</div>
+        <div class="card-grid-body">
+          <span class="pf-pill pf-pill--draft"       aria-label="Workflow status: Draft"><span class="pf-pill__dot" aria-hidden="true"></span>Draft</span>
+          <span class="pf-pill pf-pill--published"   aria-label="Workflow status: Published"><span class="pf-pill__dot" aria-hidden="true"></span>Published</span>
+          <span class="pf-pill pf-pill--paused"      aria-label="Workflow status: Paused"><span class="pf-pill__dot" aria-hidden="true"></span>Paused</span>
+          <span class="pf-pill pf-pill--unpublished" aria-label="Workflow status: Unpublished"><span class="pf-pill__dot" aria-hidden="true"></span>Unpublished</span>
+        </div>
+      </div>
+      <div class="card-grid">
+        <div class="card-grid-label">Without dot</div>
+        <div class="card-grid-body">
+          <span class="pf-pill pf-pill--draft">Draft</span>
+          <span class="pf-pill pf-pill--published">Published</span>
+          <span class="pf-pill pf-pill--paused">Paused</span>
+          <span class="pf-pill pf-pill--unpublished">Unpublished</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-caption">
+      <span class="num">04</span>
+      <span class="label">Workflow-level · Small size</span>
+    </div>
+    <div class="card">
+      <div class="card-grid">
+        <div class="card-grid-label">With dot · small</div>
+        <div class="card-grid-body">
+          <span class="pf-pill pf-pill--sm pf-pill--draft"><span class="pf-pill__dot" aria-hidden="true"></span>Draft</span>
+          <span class="pf-pill pf-pill--sm pf-pill--published"><span class="pf-pill__dot" aria-hidden="true"></span>Published</span>
+          <span class="pf-pill pf-pill--sm pf-pill--paused"><span class="pf-pill__dot" aria-hidden="true"></span>Paused</span>
+          <span class="pf-pill pf-pill--sm pf-pill--unpublished"><span class="pf-pill__dot" aria-hidden="true"></span>Unpublished</span>
+        </div>
+      </div>
+      <div class="card-grid">
+        <div class="card-grid-label">Without dot · small</div>
+        <div class="card-grid-body">
+          <span class="pf-pill pf-pill--sm pf-pill--draft">Draft</span>
+          <span class="pf-pill pf-pill--sm pf-pill--published">Published</span>
+          <span class="pf-pill pf-pill--sm pf-pill--paused">Paused</span>
+          <span class="pf-pill pf-pill--sm pf-pill--unpublished">Unpublished</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================================================
+       Tooltip on hover (and persistent demo)
+       ==================================================== -->
+  <div class="section">
+    <div class="section-caption">
+      <span class="num">05</span>
+      <span class="label">Tooltip · runtime context</span>
+      <span class="note">Hover any pill below; runtime states surface specific context.</span>
+    </div>
+    <div class="card">
+      <div class="card-grid">
+        <div class="card-grid-label">Hover to reveal</div>
+        <div class="card-grid-body">
+
+          <span class="pf-tooltip-wrap" tabindex="0">
+            <span class="pf-pill pf-pill--running"><span class="pf-pill__dot" aria-hidden="true"></span>Running</span>
+            <span class="pf-tooltip" role="tooltip">Step 4 of 6 · started 2m 14s ago</span>
+          </span>
+
+          <span class="pf-tooltip-wrap" tabindex="0">
+            <span class="pf-pill pf-pill--waiting"><span class="pf-pill__dot" aria-hidden="true"></span>Waiting</span>
+            <span class="pf-tooltip" role="tooltip">Waiting for CMU officer approval since 3:42pm</span>
+          </span>
+
+          <span class="pf-tooltip-wrap" tabindex="0">
+            <span class="pf-pill pf-pill--failed"><span class="pf-pill__dot" aria-hidden="true"></span>Failed</span>
+            <span class="pf-tooltip" role="tooltip">Step 3 timed out after 30s · connection trudax_prod</span>
+          </span>
+
+          <span class="pf-tooltip-wrap" tabindex="0">
+            <span class="pf-pill pf-pill--paused"><span class="pf-pill__dot" aria-hidden="true"></span>Paused</span>
+            <span class="pf-tooltip" role="tooltip">Schedule paused by alex@gamuda.tech on Apr 28</span>
+          </span>
+
+        </div>
+      </div>
+
+      <div class="card-grid">
+        <div class="card-grid-label">Persistent (demo)</div>
+        <div class="card-grid-body" style="padding-top:40px">
+          <span class="pf-tooltip-wrap">
+            <span class="pf-pill pf-pill--waiting"><span class="pf-pill__dot" aria-hidden="true"></span>Waiting</span>
+            <span class="pf-tooltip pf-tooltip--persistent" role="tooltip">Waiting for CMU officer approval since 3:42pm</span>
+          </span>
+          <span class="legend">Tooltip shown for documentation. Real usage: hover or keyboard focus only.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================================================
+       In-context demos
+       ==================================================== -->
+  <div class="section">
+    <div class="section-caption">
+      <span class="num">06</span>
+      <span class="label">In context</span>
+      <span class="note">Where the pill appears across the product</span>
+    </div>
+    <div class="card">
+
+      <!-- page header -->
+      <div class="demo-stack">
+        <div class="demo-page-head">
+          <h2 class="demo-page-head__title">Nightly Trudax → SpatialQ sync</h2>
+          <span class="demo-page-head__id">wf_3f9a2c</span>
+          <div style="flex:1"></div>
+          <span class="pf-pill pf-pill--published"><span class="pf-pill__dot" aria-hidden="true"></span>Published</span>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- workflow list table -->
+      <div style="padding: 0 24px 18px">
+        <table class="demo-table">
+          <thead>
+            <tr>
+              <th>Workflow</th>
+              <th>Last run</th>
+              <th>Run status</th>
+              <th>Workflow status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><div class="name">Nightly Trudax → SpatialQ sync</div><div class="mono">wf_3f9a2c</div></td>
+              <td>2m ago</td>
+              <td><span class="pf-pill pf-pill--running"><span class="pf-pill__dot" aria-hidden="true"></span>Running</span></td>
+              <td><span class="pf-pill pf-pill--published"><span class="pf-pill__dot" aria-hidden="true"></span>Published</span></td>
+            </tr>
+            <tr>
+              <td><div class="name">CMU permit approval</div><div class="mono">wf_8c01e4</div></td>
+              <td>14m ago</td>
+              <td><span class="pf-pill pf-pill--waiting"><span class="pf-pill__dot" aria-hidden="true"></span>Waiting</span></td>
+              <td><span class="pf-pill pf-pill--published"><span class="pf-pill__dot" aria-hidden="true"></span>Published</span></td>
+            </tr>
+            <tr>
+              <td><div class="name">Vendor invoice OCR</div><div class="mono">wf_c360af</div></td>
+              <td>22m ago</td>
+              <td><span class="pf-pill pf-pill--success"><span class="pf-pill__dot" aria-hidden="true"></span>Success</span></td>
+              <td><span class="pf-pill pf-pill--published"><span class="pf-pill__dot" aria-hidden="true"></span>Published</span></td>
+            </tr>
+            <tr>
+              <td><div class="name">Weekly KPI digest</div><div class="mono">wf_b04211</div></td>
+              <td>Apr 28</td>
+              <td><span class="pf-pill pf-pill--failed"><span class="pf-pill__dot" aria-hidden="true"></span>Failed</span></td>
+              <td><span class="pf-pill pf-pill--paused"><span class="pf-pill__dot" aria-hidden="true"></span>Paused</span></td>
+            </tr>
+            <tr>
+              <td><div class="name">Lead enrichment</div><div class="mono">wf_ff2c01</div></td>
+              <td>—</td>
+              <td><span style="color:var(--txt-3); font-size:12.5px">No runs yet</span></td>
+              <td><span class="pf-pill pf-pill--draft"><span class="pf-pill__dot" aria-hidden="true"></span>Draft</span></td>
+            </tr>
+            <tr>
+              <td><div class="name">Old onboarding email</div><div class="mono">wf_009d22</div></td>
+              <td>Mar 12</td>
+              <td><span style="color:var(--txt-3); font-size:12.5px">—</span></td>
+              <td><span class="pf-pill pf-pill--unpublished"><span class="pf-pill__dot" aria-hidden="true"></span>Unpublished</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- step nodes -->
+      <div class="demo-stack" style="flex-direction:row; flex-wrap:wrap; gap:14px;">
+        <div class="demo-step">
+          <div class="demo-step__icon">01</div>
+          <div class="demo-step__body">
+            <div class="demo-step__title">Fetch updated assets</div>
+            <div class="demo-step__sub">trudax · GET /assets</div>
+          </div>
+          <span class="pf-pill pf-pill--sm pf-pill--success"><span class="pf-pill__dot" aria-hidden="true"></span>Success</span>
+        </div>
+        <div class="demo-step">
+          <div class="demo-step__icon">02</div>
+          <div class="demo-step__body">
+            <div class="demo-step__title">Classify with AI</div>
+            <div class="demo-step__sub">claude · sonnet-4-5</div>
+          </div>
+          <span class="pf-pill pf-pill--sm pf-pill--running"><span class="pf-pill__dot" aria-hidden="true"></span>Running</span>
+        </div>
+        <div class="demo-step">
+          <div class="demo-step__icon">03</div>
+          <div class="demo-step__body">
+            <div class="demo-step__title">Officer approval</div>
+            <div class="demo-step__sub">manual · CMU reviewer</div>
+          </div>
+          <span class="pf-pill pf-pill--sm pf-pill--waiting"><span class="pf-pill__dot" aria-hidden="true"></span>Waiting</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ====================================================
+       Annotation block
+       ==================================================== -->
+  <section class="annotation" aria-label="Component specification">
+
+    <div class="card">
+      <div class="eyebrow">Purpose</div>
+      <h3>What it is, where it goes</h3>
+      <p>
+        A glanceable, non-interactive label that resolves status in under half a second.
+        Appears wherever a workflow or run is listed: the Workflows table, Run History,
+        the Workflow Builder header, the Run Detail timeline, and template cards.
+      </p>
+      <p>
+        Eight semantic states across two scopes — <span class="key" style="font-family:var(--font-mono);font-size:12px">workflow</span>
+        (Draft, Published, Paused, Unpublished) and <span class="key" style="font-family:var(--font-mono);font-size:12px">run</span>
+        (Running, Success, Failed, Waiting).
+      </p>
+    </div>
+
+    <div class="card">
+      <div class="eyebrow">Props / variants</div>
+      <h3>API surface</h3>
+      <ul>
+        <li><span class="key">status</span><span>One of the 8 semantic values. Required.</span></li>
+        <li><span class="key">size</span><span><code>"md"</code> (default, 18px line) · <code>"sm"</code> (16px line, for step nodes &amp; dense lists)</span></li>
+        <li><span class="key">withDot</span><span><code>true</code> (default) · <code>false</code> for layouts where the fill is glanceable enough on its own</span></li>
+        <li><span class="key">tooltip</span><span>Optional string. Shown on hover/focus. Used for runtime context (e.g. "Waiting for CMU officer approval since 3:42pm").</span></li>
+        <li><span class="key">aria-label</span><span>Auto-prefixed with the scope: "Run status: Running", "Workflow status: Draft".</span></li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="eyebrow">Accessibility</div>
+      <h3>WCAG AA, screen-reader notes</h3>
+      <ul>
+        <li><span class="key">contrast</span><span>All fg/bg pairs meet WCAG AA (≥4.5:1 for the 12px label). Verified against MyDS 700-on-100 pairings.</span></li>
+        <li><span class="key">colour ≠ sole cue</span><span>Status text is always present. The dot reinforces but never replaces the label.</span></li>
+        <li><span class="key">live regions</span><span><code>role="status"</code> on Running and Waiting so SR users hear state transitions politely.</span></li>
+        <li><span class="key">motion</span><span>Pulse respects <code>prefers-reduced-motion</code> — animation is suppressed entirely.</span></li>
+        <li><span class="key">tooltip focus</span><span>Wrapper is <code>tabindex="0"</code> so keyboard users can reach tooltip content; tooltip has <code>role="tooltip"</code>.</span></li>
+        <li><span class="key">label</span><span>Pill carries <code>aria-label</code> with scope prefix so context is read aloud even when surrounded by other pills.</span></li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="eyebrow">PRD principles served</div>
+      <h3>Design choice → principle</h3>
+      <ul>
+        <li><span class="key">no icons inside</span><span><span class="principle">Confidence through clarity</span> Plain text is the only thing that needs to be read; the dot is colour-only redundancy.</span></li>
+        <li><span class="key">no truncation</span><span><span class="principle">Fast, predictable feedback</span> Labels chosen to fit the widest expected size — never let layout hide status.</span></li>
+        <li><span class="key">pulse on Running, Waiting</span><span><span class="principle">Visual transparency</span> Live states look live; the user sees the system <em>doing</em> something.</span></li>
+        <li><span class="key">tooltip on runtime</span><span><span class="principle">Progressive disclosure</span> Specific runtime context (which step, since when, blocked on whom) is one hover away — not in the table by default.</span></li>
+        <li><span class="key">non-interactive</span><span><span class="principle">Trust and safety</span> Pills never trigger an action by themselves — actions live in the row menu and detail view.</span></li>
+        <li><span class="key">plain language</span><span><span class="principle">Guided, not technical</span> "Success", "Failed", "Waiting" — not "200 OK", "exec_err", "blocked_on_input".</span></li>
+        <li><span class="key">Draft outlined</span><span><span class="principle">Confidence through clarity</span> The ghost/outlined treatment signals "not yet committed" — visually distinct from Unpublished (was-live).</span></li>
+      </ul>
+    </div>
+
+  </section>
+
+  <!-- ====================================================
+       Colour-to-status mapping table
+       ==================================================== -->
+  <section class="mapping" aria-label="Colour token mapping">
+    <div class="mapping-head">
+      <h3>Colour-to-status mapping</h3>
+      <p>MyDS tokens consumed by each status. Use this when rebuilding in Figma.</p>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Pill</th>
+          <th>Scope</th>
+          <th>Background</th>
+          <th>Text</th>
+          <th>Dot</th>
+          <th>Rationale</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <tr>
+          <td class="pill-cell"><span class="pf-pill pf-pill--running"><span class="pf-pill__dot" aria-hidden="true"></span>Running</span></td>
+          <td class="level-cell">run</td>
+          <td><span class="swatch" style="background:var(--primary-100)"></span><span class="tok">primary-100</span></td>
+          <td><span class="swatch" style="background:var(--primary-800)"></span><span class="tok">primary-800</span></td>
+          <td><span class="swatch" style="background:var(--primary-600)"></span><span class="tok">primary-600</span></td>
+          <td><span class="rationale">Brand blue = "system is doing work right now"</span></td>
+        </tr>
+
+        <tr>
+          <td class="pill-cell"><span class="pf-pill pf-pill--success"><span class="pf-pill__dot" aria-hidden="true"></span>Success</span></td>
+          <td class="level-cell">run</td>
+          <td><span class="swatch" style="background:var(--success-100)"></span><span class="tok">success-100</span></td>
+          <td><span class="swatch" style="background:var(--success-700)"></span><span class="tok">success-700</span></td>
+          <td><span class="swatch" style="background:var(--success-600)"></span><span class="tok">success-600</span></td>
+          <td><span class="rationale">MyDS success token, no modification</span></td>
+        </tr>
+
+        <tr>
+          <td class="pill-cell"><span class="pf-pill pf-pill--failed"><span class="pf-pill__dot" aria-hidden="true"></span>Failed</span></td>
+          <td class="level-cell">run</td>
+          <td><span class="swatch" style="background:var(--danger-100)"></span><span class="tok">danger-100</span></td>
+          <td><span class="swatch" style="background:var(--danger-700)"></span><span class="tok">danger-700</span></td>
+          <td><span class="swatch" style="background:var(--danger-600)"></span><span class="tok">danger-600</span></td>
+          <td><span class="rationale">MyDS danger token, reserved for true failure</span></td>
+        </tr>
+
+        <tr>
+          <td class="pill-cell"><span class="pf-pill pf-pill--waiting"><span class="pf-pill__dot" aria-hidden="true"></span>Waiting</span></td>
+          <td class="level-cell">run</td>
+          <td><span class="swatch" style="background:var(--warning-100)"></span><span class="tok">warning-100</span></td>
+          <td><span class="swatch" style="background:var(--warning-700)"></span><span class="tok">warning-700</span></td>
+          <td><span class="swatch" style="background:var(--warning-600)"></span><span class="tok">warning-600</span></td>
+          <td><span class="rationale">Warning amber = "needs human attention"; pulse distinguishes from Paused</span></td>
+        </tr>
+
+        <tr>
+          <td class="pill-cell"><span class="pf-pill pf-pill--draft"><span class="pf-pill__dot" aria-hidden="true"></span>Draft</span></td>
+          <td class="level-cell">workflow</td>
+          <td><span class="swatch" style="background:#fff"></span><span class="tok">bg-white</span></td>
+          <td><span class="swatch" style="background:var(--gray-700)"></span><span class="tok">gray-700</span></td>
+          <td><span class="swatch" style="background:var(--gray-400)"></span><span class="tok">gray-400</span></td>
+          <td><span class="rationale">Outlined (gray-300 border) — signals "not yet committed". Visually distinct from Unpublished.</span></td>
+        </tr>
+
+        <tr>
+          <td class="pill-cell"><span class="pf-pill pf-pill--published"><span class="pf-pill__dot" aria-hidden="true"></span>Published</span></td>
+          <td class="level-cell">workflow</td>
+          <td><span class="swatch" style="background:var(--success-100)"></span><span class="tok">success-100</span></td>
+          <td><span class="swatch" style="background:var(--success-700)"></span><span class="tok">success-700</span></td>
+          <td><span class="swatch" style="background:var(--success-600)"></span><span class="tok">success-600</span></td>
+          <td><span class="rationale">Reuses Success palette — both mean "live and healthy"</span></td>
+        </tr>
+
+        <tr>
+          <td class="pill-cell"><span class="pf-pill pf-pill--paused"><span class="pf-pill__dot" aria-hidden="true"></span>Paused</span></td>
+          <td class="level-cell">workflow</td>
+          <td><span class="swatch" style="background:var(--warning-100)"></span><span class="tok">warning-100</span></td>
+          <td><span class="swatch" style="background:var(--warning-700)"></span><span class="tok">warning-700</span></td>
+          <td><span class="swatch" style="background:var(--warning-600)"></span><span class="tok">warning-600</span></td>
+          <td><span class="rationale">Shares Warning palette with Waiting; static dot (no pulse) distinguishes</span></td>
+        </tr>
+
+        <tr>
+          <td class="pill-cell"><span class="pf-pill pf-pill--unpublished"><span class="pf-pill__dot" aria-hidden="true"></span>Unpublished</span></td>
+          <td class="level-cell">workflow</td>
+          <td><span class="swatch" style="background:var(--gray-100)"></span><span class="tok">gray-100</span></td>
+          <td><span class="swatch" style="background:var(--gray-600)"></span><span class="tok">gray-600</span></td>
+          <td><span class="swatch" style="background:var(--gray-400)"></span><span class="tok">gray-400</span></td>
+          <td><span class="rationale">Washed gray fill = "was live, now off". Filled fill (vs. Draft's outline) signals it had a prior active state.</span></td>
+        </tr>
+
+      </tbody>
+    </table>
+  </section>
+
+</div>
+
+</body>
+</html>
