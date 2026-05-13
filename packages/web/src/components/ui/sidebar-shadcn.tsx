@@ -26,9 +26,9 @@ import { cn } from '@/lib/utils';
 
 const SIDEBAR_COOKIE_NAME = 'sidebar_state';
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
-const SIDEBAR_WIDTH = '14.375rem';
-const SIDEBAR_WIDTH_MOBILE = '18rem';
-const SIDEBAR_WIDTH_ICON = '3rem';
+const SIDEBAR_WIDTH = '18.75rem';
+const SIDEBAR_WIDTH_MOBILE = '18.75rem';
+const SIDEBAR_WIDTH_ICON = '3.75rem';
 const SIDEBAR_KEYBOARD_SHORTCUT = 'b';
 
 const SidebarContext = React.createContext<SidebarContextProps | null>(null);
@@ -440,7 +440,10 @@ function SidebarHeader({ className, ...props }: React.ComponentProps<'div'>) {
     <div
       data-slot="sidebar-header"
       data-sidebar="header"
-      className={cn('flex flex-col gap-2 p-2', className)}
+      className={cn(
+        'flex flex-col gap-3 px-6 pt-6 pb-0 group-data-[collapsible=icon]:px-3 group-data-[collapsible=icon]:items-center',
+        className,
+      )}
       {...props}
     />
   );
@@ -451,7 +454,10 @@ function SidebarFooter({ className, ...props }: React.ComponentProps<'div'>) {
     <div
       data-slot="sidebar-footer"
       data-sidebar="footer"
-      className={cn('flex flex-col gap-2 p-2', className)}
+      className={cn(
+        'flex flex-col gap-3 px-6 pt-3 pb-4 border-t border-sidebar-border group-data-[collapsible=icon]:px-3 group-data-[collapsible=icon]:items-center',
+        className,
+      )}
       {...props}
     />
   );
@@ -465,7 +471,7 @@ function SidebarSeparator({
     <Separator
       data-slot="sidebar-separator"
       data-sidebar="separator"
-      className={cn('mx-2 w-auto bg-sidebar-border', className)}
+      className={cn('mx-6 w-auto bg-sidebar-border', className)}
       {...props}
     />
   );
@@ -490,7 +496,10 @@ function SidebarGroup({ className, ...props }: React.ComponentProps<'div'>) {
     <div
       data-slot="sidebar-group"
       data-sidebar="group"
-      className={cn('relative flex w-full min-w-0 flex-col p-2', className)}
+      className={cn(
+        'relative flex w-full min-w-0 flex-col gap-2 px-6 py-2 group-data-[collapsible=icon]:px-3 group-data-[collapsible=icon]:items-center',
+        className,
+      )}
       {...props}
     />
   );
@@ -508,8 +517,8 @@ function SidebarGroupLabel({
       data-slot="sidebar-group-label"
       data-sidebar="group-label"
       className={cn(
-        'flex h-7 shrink-0 items-center rounded-md px-2 text-xs font-normal text-sidebar-foreground/70 ring-sidebar-ring outline-hidden transition-[margin,opacity] duration-200 ease-linear focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0',
-        'group-data-[collapsible=icon]:-mt-7 group-data-[collapsible=icon]:opacity-0',
+        'flex h-5 shrink-0 items-center px-0 text-sm font-medium tracking-wide uppercase text-muted-foreground ring-sidebar-ring outline-hidden transition-[margin,opacity] duration-200 ease-linear focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0',
+        'group-data-[collapsible=icon]:-mt-5 group-data-[collapsible=icon]:opacity-0',
         className,
       )}
       {...props}
@@ -576,7 +585,7 @@ function SidebarMenuItem({ className, ...props }: React.ComponentProps<'li'>) {
 }
 
 const sidebarMenuButtonVariants = cva(
-  'peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left text-sm ring-sidebar-ring outline-hidden transition-[width,height,padding] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-active:font-normal data-active:text-sidebar-accent-foreground data-open:hover:bg-sidebar-accent data-open:hover:text-sidebar-accent-foreground group-has-data-[sidebar=menu-action]/menu-item:pr-8 group-data-[collapsible=icon]:size-7! group-data-[collapsible=icon]:p-2! [&>span:last-child]:truncate [&_svg]:size-4 [&_svg]:shrink-0',
+  'peer/menu-button flex w-full items-center gap-1.5 overflow-hidden rounded-lg px-2.5 py-1.5 text-left text-sm font-medium text-sidebar-foreground/80 ring-sidebar-ring outline-hidden transition-[width,height,padding] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-active:font-medium data-active:text-sidebar-accent-foreground data-open:hover:bg-sidebar-accent data-open:hover:text-sidebar-accent-foreground group-has-data-[sidebar=menu-action]/menu-item:pr-8 group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-1.5! [&>span:last-child]:truncate [&_svg]:size-4 [&_svg]:shrink-0',
   {
     variants: {
       variant: {
@@ -586,7 +595,7 @@ const sidebarMenuButtonVariants = cva(
           'bg-background shadow-[0_0_0_1px_hsl(var(--sidebar-border))] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:shadow-[0_0_0_1px_hsl(var(--sidebar-accent))]',
       },
       size: {
-        default: 'h-7 text-sm',
+        default: 'h-8 text-sm',
         sm: 'h-6 text-xs',
         lg: 'h-12 text-sm group-data-[collapsible=icon]:p-0!',
       },

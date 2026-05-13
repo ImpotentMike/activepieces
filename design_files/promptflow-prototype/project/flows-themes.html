@@ -1,0 +1,1772 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>PromptFlow · color theme iterations</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+  :root {
+    /* ---- gray ramp (shared across themes; tweaked per theme below) ---- */
+    --gray-50:  #FAFAFA;
+    --gray-100: #F4F4F5;
+    --gray-200: #E4E4E7;
+    --gray-300: #D4D4D8;
+    --gray-400: #A1A1AA;
+    --gray-500: #71717A;
+    --gray-600: #52525B;
+    --gray-700: #3F3F46;
+    --gray-800: #27272A;
+    --gray-900: #18181B;
+    --gray-950: #09090B;
+
+    /* semantic — shared */
+    --success-500:#10B981;
+    --success-50: #ECFDF5;
+    --warning-500:#F59E0B;
+    --warning-50: #FFFBEB;
+    --danger-500: #EF4444;
+    --danger-50:  #FEF2F2;
+  }
+
+  /* ============================================================
+     THEME A — ACTIVEPIECES (purple / teal / pink) — default
+     ============================================================ */
+  [data-theme="A"] {
+    --primary-50:  #F3EFFE;
+    --primary-100: #E6DEFD;
+    --primary-200: #CDBDFB;
+    --primary-300: #B49CF8;
+    --primary-400: #9A7AF5;
+    --primary-500: #8159F2;
+    --primary-600: #6E41E2;
+    --primary-700: #5832B9;
+    --primary-800: #43258F;
+    --primary-900: #2D1866;
+    --primary-950: #1B0D45;
+
+    --secondary-50:  #E6F8FA;
+    --secondary-100: #C6EFF3;
+    --secondary-200: #8DDFE7;
+    --secondary-300: #4FCED9;
+    --secondary-400: #1FB8C6;
+    --secondary-500: #06A0AE;
+    --secondary-600: #0A8392;
+    --secondary-700: #11697A;
+    --secondary-800: #155164;
+    --secondary-900: #163E4E;
+    --secondary-950: #082431;
+
+    --tertiary-50:  #FCEAEF;
+    --tertiary-100: #F8D2DD;
+    --tertiary-200: #F0A6BA;
+    --tertiary-300: #E7779A;
+    --tertiary-400: #DA4F7E;
+    --tertiary-500: #C42E63;
+    --tertiary-600: #A21E54;
+    --tertiary-700: #7E1644;
+    --tertiary-800: #5C1135;
+    --tertiary-900: #420C26;
+    --tertiary-950: #270512;
+  }
+
+  /* ============================================================
+     THEME B — MyDS (blue / teal / magenta)
+     ============================================================ */
+  [data-theme="B"] {
+    --primary-50:  #EFF6FF;
+    --primary-100: #DBEAFE;
+    --primary-200: #BFDBFE;
+    --primary-300: #93C5FD;
+    --primary-400: #60A5FA;
+    --primary-500: #3B82F6;
+    --primary-600: #2563EB;
+    --primary-700: #1D4ED8;
+    --primary-800: #1E40AF;
+    --primary-900: #1E3A8A;
+    --primary-950: #172554;
+
+    --secondary-50:  #E6F8FA;
+    --secondary-100: #C6EFF3;
+    --secondary-200: #8DDFE7;
+    --secondary-300: #4FCED9;
+    --secondary-400: #1FB8C6;
+    --secondary-500: #06A0AE;
+    --secondary-600: #0A8392;
+    --secondary-700: #11697A;
+    --secondary-800: #155164;
+    --secondary-900: #163E4E;
+    --secondary-950: #082431;
+
+    --tertiary-50:  #FBEAF6;
+    --tertiary-100: #F5D0EC;
+    --tertiary-200: #EAA1D7;
+    --tertiary-300: #DD75C0;
+    --tertiary-400: #CC4DA5;
+    --tertiary-500: #B12E89;
+    --tertiary-600: #8E2070;
+    --tertiary-700: #6E1858;
+    --tertiary-800: #501141;
+    --tertiary-900: #390C2F;
+    --tertiary-950: #20061B;
+  }
+
+  /* ============================================================
+     THEME C — GAMUDA (teal / amber / lavender)
+     ============================================================ */
+  [data-theme="C"] {
+    --primary-50:  #E5F5F0;
+    --primary-100: #C2EBDD;
+    --primary-200: #93DBC2;
+    --primary-300: #5FC7A4;
+    --primary-400: #34B189;
+    --primary-500: #129772;
+    --primary-600: #0E7F5E;
+    --primary-700: #0D664B;
+    --primary-800: #0B4E3A;
+    --primary-900: #08382A;
+    --primary-950: #052119;
+
+    --secondary-50:  #FBF4DD;
+    --secondary-100: #F8E8B5;
+    --secondary-200: #F2D278;
+    --secondary-300: #EAB94A;
+    --secondary-400: #DD9E26;
+    --secondary-500: #C58414;
+    --secondary-600: #9F6B12;
+    --secondary-700: #7C5410;
+    --secondary-800: #5B3D0E;
+    --secondary-900: #3F2A0B;
+    --secondary-950: #221606;
+
+    --tertiary-50:  #F1ECFA;
+    --tertiary-100: #E2D6F4;
+    --tertiary-200: #C8AFEA;
+    --tertiary-300: #AC88DE;
+    --tertiary-400: #8E62D0;
+    --tertiary-500: #7144BD;
+    --tertiary-600: #5832A0;
+    --tertiary-700: #432680;
+    --tertiary-800: #311B5E;
+    --tertiary-900: #1F1240;
+    --tertiary-950: #100722;
+  }
+
+  /* ============================================================
+     THEME D — SLATE (cool slate / blue / magenta-purple)
+     ============================================================ */
+  [data-theme="D"] {
+    --primary-50:  #F3F5F9;
+    --primary-100: #E4E8F0;
+    --primary-200: #C7CFDD;
+    --primary-300: #9FAAC0;
+    --primary-400: #7585A1;
+    --primary-500: #556581;
+    --primary-600: #3F4D67;
+    --primary-700: #2E3B52;
+    --primary-800: #232E41;
+    --primary-900: #18212F;
+    --primary-950: #0E1623;
+
+    --secondary-50:  #E6F2FC;
+    --secondary-100: #C5E2F8;
+    --secondary-200: #87BFEE;
+    --secondary-300: #4DA0E1;
+    --secondary-400: #1F84CF;
+    --secondary-500: #086CB6;
+    --secondary-600: #075691;
+    --secondary-700: #064371;
+    --secondary-800: #053252;
+    --secondary-900: #042438;
+    --secondary-950: #02141F;
+
+    --tertiary-50:  #F4ECFA;
+    --tertiary-100: #E8D5F4;
+    --tertiary-200: #D2AAE9;
+    --tertiary-300: #B97FDA;
+    --tertiary-400: #9E58C9;
+    --tertiary-500: #823BB1;
+    --tertiary-600: #672D90;
+    --tertiary-700: #4F226F;
+    --tertiary-800: #3A1953;
+    --tertiary-900: #261036;
+    --tertiary-950: #15081D;
+  }
+
+  /* ============================================================
+     THEME E — MIDNIGHT (dark mode: cyan / lime / hot pink)
+     ============================================================ */
+  [data-theme="E"] {
+    /* Primary — electric cyan */
+    --primary-50:  #E0F7FF;
+    --primary-100: #BAEBFF;
+    --primary-200: #86DBFF;
+    --primary-300: #4AC6FB;
+    --primary-400: #1FAEEC;
+    --primary-500: #0792D1;
+    --primary-600: #0078AE;
+    --primary-700: #00608A;
+    --primary-800: #004968;
+    --primary-900: #003348;
+    --primary-950: #001D2A;
+
+    /* Secondary — lime signal */
+    --secondary-50:  #F5FCE0;
+    --secondary-100: #E7F7B3;
+    --secondary-200: #D2EE7A;
+    --secondary-300: #B9DF44;
+    --secondary-400: #A0CB1F;
+    --secondary-500: #84AD10;
+    --secondary-600: #698B0D;
+    --secondary-700: #506A0B;
+    --secondary-800: #3A4D08;
+    --secondary-900: #263306;
+    --secondary-950: #131A03;
+
+    /* Tertiary — hot pink */
+    --tertiary-50:  #FFE9F3;
+    --tertiary-100: #FFCDE2;
+    --tertiary-200: #FFA0C7;
+    --tertiary-300: #FB6FA8;
+    --tertiary-400: #EE4286;
+    --tertiary-500: #D02368;
+    --tertiary-600: #A8174F;
+    --tertiary-700: #80103C;
+    --tertiary-800: #5C0B2B;
+    --tertiary-900: #3D071C;
+    --tertiary-950: #20030E;
+
+    /* DARK SURFACES — the only theme that flips the chrome */
+    --bg-app:     #0B0F14;
+    --bg-sidebar: #0F141B;
+    --bg-surface: #131923;
+    --bg-elev:    #1A2230;
+
+    --border:        #232C3B;
+    --border-strong: #2F3B4D;
+    --divider:       #1A2230;
+
+    --text-1: #E6EDF6;
+    --text-2: #A2AEC0;
+    --text-3: #6B7888;
+
+    --accent: var(--primary-400);
+    --accent-hover: var(--primary-300);
+    --accent-soft:   color-mix(in oklab, var(--primary-400) 14%, #0B0F14);
+    --accent-soft-2: color-mix(in oklab, var(--primary-400) 24%, #0B0F14);
+
+    --success-50: color-mix(in oklab, var(--success-500) 14%, #0B0F14);
+    --warning-50: color-mix(in oklab, var(--warning-500) 14%, #0B0F14);
+    --danger-50:  color-mix(in oklab, var(--danger-500)  14%, #0B0F14);
+  }
+
+  /* ===== semantic mappings consumed by the app ===== */
+  [data-theme] {
+    --bg-app: var(--gray-50);
+    --bg-sidebar: #ffffff;
+    --bg-surface: #ffffff;
+    --bg-elev: var(--gray-50);
+
+    --border: var(--gray-200);
+    --border-strong: var(--gray-300);
+    --divider: var(--gray-100);
+
+    --text-1: var(--gray-950);
+    --text-2: var(--gray-600);
+    --text-3: var(--gray-500);
+
+    --accent: var(--primary-600);
+    --accent-hover: var(--primary-700);
+    --accent-soft: var(--primary-50);
+    --accent-soft-2: var(--primary-100);
+    --accent-on: #ffffff;
+    --accent-ring: color-mix(in srgb, var(--primary-500) 35%, transparent);
+
+    --info: var(--secondary-600);
+    --info-soft: var(--secondary-50);
+
+    --highlight: var(--tertiary-600);
+    --highlight-soft: var(--tertiary-50);
+
+    --shadow-sm: 0 1px 2px rgba(15,23,42,0.04), 0 1px 1px rgba(15,23,42,0.03);
+    --shadow-md: 0 4px 12px rgba(15,23,42,0.06), 0 1px 2px rgba(15,23,42,0.04);
+    --shadow-pop: 0 12px 32px rgba(15,23,42,0.10), 0 2px 6px rgba(15,23,42,0.05);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; height: 100%; }
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background: var(--bg-app);
+    color: var(--text-1);
+    font-size: 14px;
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+    transition: background-color 200ms ease;
+  }
+  .mono { font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; }
+  button { font-family: inherit; cursor: pointer; }
+  ::selection { background: var(--accent-soft-2); color: var(--text-1); }
+</style>
+</head>
+<body data-theme="A">
+<div id="root"></div>
+
+<script type="text/babel" data-presets="react">
+const { useState, useEffect, useMemo, useRef } = React;
+
+/* =========================================================
+   THEME REGISTRY
+   ========================================================= */
+const THEMES = [
+  { id: 'A', name: 'Activepieces', sub: 'Purple · Teal · Pink',     swatch: ['#6E41E2','#06A0AE','#C42E63'] },
+  { id: 'B', name: 'MyDS',          sub: 'Blue · Teal · Magenta',    swatch: ['#2563EB','#06A0AE','#B12E89'] },
+  { id: 'C', name: 'Gamuda',        sub: 'Teal · Gold · Coral',      swatch: ['#007A7E','#D29719','#E54A2A'] },
+  { id: 'D', name: 'Slate',         sub: 'Slate · Blue · Plum',      swatch: ['#3F4D67','#086CB6','#823BB1'] },
+  { id: 'E', name: 'Midnight',      sub: 'Dark · Cyan · Lime · Pink', swatch: ['#1FAEEC','#A0CB1F','#EE4286'], dark: true },
+];
+
+/* =========================================================
+   FAKE DATA — Activepieces flows
+   ========================================================= */
+const FLOWS = [
+  { id:'flow_4f2a', name:'New deal → notify sales', folder:'Sales ops',     trigger:'HubSpot · New deal', steps:6,  schedule:'On event',         lastRun:'2m ago',  status:'running' },
+  { id:'flow_8c01', name:'Stripe payouts → ledger', folder:'Finance',       trigger:'Stripe · Payout',    steps:9,  schedule:'On event',         lastRun:'14m ago', status:'success' },
+  { id:'flow_a93b', name:'Nightly Trudax sync',     folder:'Internal · Trudax', trigger:'Schedule · Cron', steps:12, schedule:'0 2 * * *',        lastRun:'Yesterday 02:00', status:'success' },
+  { id:'flow_2d10', name:'SpatialQ asset ingest',   folder:'Internal · SpatialQ', trigger:'Webhook',      steps:7,  schedule:'On event',         lastRun:'1h ago',  status:'failed' },
+  { id:'flow_71fe', name:'Onboard new employee',    folder:'People',        trigger:'Form · Submit',      steps:14, schedule:'On event',         lastRun:'3d ago',  status:'published' },
+  { id:'flow_b042', name:'Weekly KPI digest',       folder:'Leadership',    trigger:'Schedule · Cron',    steps:5,  schedule:'0 8 * * MON',      lastRun:'Apr 28',  status:'paused' },
+  { id:'flow_e518', name:'Support ticket triage',   folder:'Support',       trigger:'Zendesk · Ticket',   steps:8,  schedule:'On event',         lastRun:'7m ago',  status:'running' },
+  { id:'flow_c360', name:'Vendor invoice OCR',      folder:'Finance',       trigger:'Email · Inbound',    steps:11, schedule:'On event',         lastRun:'22m ago', status:'success' },
+  { id:'flow_009d', name:'Compliance audit log',    folder:'Risk',          trigger:'Schedule · Cron',    steps:4,  schedule:'@hourly',          lastRun:'12m ago', status:'success' },
+  { id:'flow_ff2c', name:'Lead enrichment',         folder:'Sales ops',     trigger:'Webhook',            steps:6,  schedule:'On event',         lastRun:'34m ago', status:'disabled' },
+];
+
+const KPI = [
+  { label:'Active flows',  value:'42',     delta:'+3 this week',     tone:'accent' },
+  { label:'Runs (24h)',    value:'1,284',  delta:'↑ 12% vs yest.',   tone:'info' },
+  { label:'Success rate',  value:'98.6%',  delta:'↑ 0.4 pts',        tone:'success' },
+  { label:'Failed (24h)',  value:'17',     delta:'↓ 6 vs yest.',     tone:'danger' },
+];
+
+/* =========================================================
+   ICONS (lucide via createElement after mount)
+   ========================================================= */
+function Icon({ name, size = 16, color, style }) {
+  const ref = useRef(null);
+  useEffect(() => {
+    if (window.lucide && ref.current) {
+      ref.current.innerHTML = '';
+      const el = document.createElement('i');
+      el.setAttribute('data-lucide', name);
+      el.style.width = size + 'px';
+      el.style.height = size + 'px';
+      if (color) el.style.color = color;
+      ref.current.appendChild(el);
+      window.lucide.createIcons({ attrs: { 'stroke-width': 1.6 } });
+    }
+  }, [name, size, color]);
+  return <span ref={ref} style={{ display:'inline-flex', width:size, height:size, ...style }} />;
+}
+
+/* =========================================================
+   THEME TOGGLE — top-right pill
+   ========================================================= */
+function ThemeToggle({ theme, setTheme }) {
+  const [open, setOpen] = useState(false);
+  const current = THEMES.find(t => t.id === theme) || THEMES[0];
+  const idx = THEMES.findIndex(t => t.id === theme);
+  const next = () => setTheme(THEMES[(idx + 1) % THEMES.length].id);
+
+  return (
+    <div style={{ position:'relative' }}>
+      <div style={{
+        fontSize:10, fontWeight:600, color:'var(--text-3)',
+        textTransform:'uppercase', letterSpacing:0.5, padding:'0 4px 6px',
+      }}>Theme iteration</div>
+      <div style={{
+        display:'flex', alignItems:'stretch',
+        background:'var(--bg-elev)',
+        border:'1px solid var(--border)',
+        borderRadius:8,
+        overflow:'hidden',
+      }}>
+        <button onClick={next} style={tt.main} title="Cycle theme">
+          <span style={tt.letter}>{current.id}</span>
+          <span style={{ display:'flex', flexDirection:'column', alignItems:'flex-start', gap:1, flex:1, minWidth:0 }}>
+            <span style={tt.name}>{current.name}</span>
+            <span style={{ ...tt.swatches, marginLeft:0, marginTop:2 }}>
+              {current.swatch.map((c,i) => (
+                <span key={i} style={{
+                  width:9, height:9, borderRadius:2.5,
+                  background:c,
+                  boxShadow:'inset 0 0 0 1px rgba(0,0,0,0.06)',
+                }} />
+              ))}
+            </span>
+          </span>
+          <Icon name="refresh-cw" size={12} />
+        </button>
+        <button onClick={() => setOpen(o => !o)} style={tt.expand} title="Pick theme">
+          <Icon name={open ? 'chevron-down' : 'chevron-up'} size={13} />
+        </button>
+      </div>
+      {open && (
+        <div style={{
+          position:'absolute', left:0, right:0, bottom:'calc(100% + 6px)',
+          background:'var(--bg-surface)',
+          border:'1px solid var(--border)', borderRadius:10,
+          boxShadow:'var(--shadow-pop)', padding:6, zIndex:20,
+        }}>
+          {THEMES.map(t => (
+            <button key={t.id} onClick={() => { setTheme(t.id); setOpen(false); }}
+              style={{
+                display:'flex', alignItems:'center', gap:10, width:'100%',
+                padding:'8px 10px', border:'none', borderRadius:6,
+                background: t.id === theme ? 'var(--accent-soft)' : 'transparent',
+                color:'var(--text-1)', textAlign:'left',
+              }}>
+              <span style={{ ...tt.letter, width:24, height:24, fontSize:11 }}>{t.id}</span>
+              <span style={{ display:'flex', flexDirection:'column', flex:1 }}>
+                <span style={{ fontWeight:600, fontSize:13 }}>{t.name}</span>
+                <span style={{ color:'var(--text-3)', fontSize:11 }}>{t.sub}</span>
+              </span>
+              <span style={{ display:'flex', gap:3 }}>
+                {t.swatch.map((c,i) => (
+                  <span key={i} style={{ width:10, height:10, borderRadius:3, background:c, boxShadow:'inset 0 0 0 1px rgba(0,0,0,0.06)' }} />
+                ))}
+              </span>
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+const tt = {
+  main: { display:'flex', alignItems:'center', gap:8, padding:'7px 8px', background:'transparent', border:'none', color:'var(--text-1)', flex:1, minWidth:0 },
+  letter: { width:26, height:26, borderRadius:5, background:'var(--accent)', color:'var(--accent-on)', display:'flex', alignItems:'center', justifyContent:'center', fontWeight:700, fontSize:11, flexShrink:0 },
+  name: { fontSize:12, fontWeight:600, lineHeight:1, whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis', maxWidth:'100%' },
+  sub:  { fontSize:10.5, color:'var(--text-3)', lineHeight:1 },
+  swatches: { display:'flex', gap:3 },
+  expand: { padding:'0 8px', background:'transparent', border:'none', borderLeft:'1px solid var(--border)', color:'var(--text-2)', display:'flex', alignItems:'center' },
+};
+
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+function Sidebar({ route, setRoute, theme, setTheme }) {
+  const items = [
+    { icon:'layout-dashboard', label:'Overview',  key:'overview' },
+    { icon:'workflow',         label:'Flows',     key:'flows', count: 42 },
+    { icon:'git-fork',         label:'Builder',   key:'builder' },
+    { icon:'compass',          label:'Explore',   key:'explore' },
+    { icon:'play-circle',      label:'Runs',      key:'runs' },
+    { icon:'plug',             label:'Connections', key:'connections' },
+    { icon:'table-2',          label:'Tables',    key:'tables' },
+    { icon:'puzzle',           label:'Pieces',    key:'pieces' },
+    { icon:'tag',              label:'Releases',  key:'releases' },
+  ];
+  const bottom = [
+    { icon:'users',    label:'Team',     key:'team' },
+    { icon:'settings', label:'Settings', key:'settings' },
+  ];
+  return (
+    <aside style={{
+      width:240, flexShrink:0, height:'100vh', position:'sticky', top:0,
+      background:'var(--bg-sidebar)',
+      borderRight:'1px solid var(--border)',
+      display:'flex', flexDirection:'column', padding:'14px 12px',
+    }}>
+      {/* brand */}
+      <div style={{ display:'flex', alignItems:'center', gap:10, padding:'4px 6px 14px' }}>
+        <img src="assets/promptflow-logo.png" alt="PromptFlow" className="pf-logo"
+          style={{ width:32, height:32, objectFit:'contain', display:'block' }} />
+        <div style={{ display:'flex', flexDirection:'column', lineHeight:1 }}>
+          <span style={{ fontWeight:700, fontSize:14, letterSpacing:-0.1 }}>PromptFlow</span>
+          <span style={{ fontSize:10.5, color:'var(--text-3)', marginTop:2 }}>gamuda · production</span>
+        </div>
+      </div>
+
+      {/* project picker */}
+      <button style={{
+        display:'flex', alignItems:'center', gap:8, padding:'8px 10px',
+        background:'var(--bg-elev)', border:'1px solid var(--border)',
+        borderRadius:8, color:'var(--text-1)', fontSize:13, marginBottom:14,
+        justifyContent:'space-between',
+      }}>
+        <span style={{ display:'flex', alignItems:'center', gap:8 }}>
+          <span style={{ width:18, height:18, borderRadius:4, background:'var(--highlight-soft)', color:'var(--highlight)', display:'inline-flex', alignItems:'center', justifyContent:'center', fontSize:10, fontWeight:700 }}>GT</span>
+          <span style={{ fontWeight:500 }}>PromptFlow</span>
+        </span>
+        <Icon name="chevrons-up-down" size={14} />
+      </button>
+
+      <div style={{ flex:1, display:'flex', flexDirection:'column', gap:1 }}>
+        {items.map(it => <NavItem key={it.key} {...it} active={route === it.key} onClick={() => setRoute(it.key)} />)}
+      </div>
+
+      <div style={{ display:'flex', flexDirection:'column', gap:1, paddingTop:8, borderTop:'1px solid var(--divider)' }}>
+        {bottom.map(it => <NavItem key={it.key} {...it} active={route === it.key} onClick={() => setRoute(it.key)} />)}
+      </div>
+
+      {/* theme toggle */}
+      <div style={{ paddingTop:12, marginTop:8, borderTop:'1px solid var(--divider)' }}>
+        <ThemeToggle theme={theme} setTheme={setTheme} />
+      </div>
+
+      {/* user */}
+      <div style={{
+        marginTop:10, padding:'8px 10px', display:'flex', alignItems:'center', gap:9,
+        borderRadius:8, background:'var(--bg-elev)', border:'1px solid var(--border)',
+      }}>
+        <div style={{
+          width:28, height:28, borderRadius:'50%',
+          background:'var(--accent-soft-2)', color:'var(--accent)',
+          display:'flex', alignItems:'center', justifyContent:'center', fontSize:11, fontWeight:700,
+        }}>AM</div>
+        <div style={{ flex:1, lineHeight:1.15 }}>
+          <div style={{ fontSize:12.5, fontWeight:600 }}>Aisha M.</div>
+          <div style={{ fontSize:11, color:'var(--text-3)' }}>Admin</div>
+        </div>
+        <Icon name="more-horizontal" size={14} />
+      </div>
+    </aside>
+  );
+}
+
+function NavItem({ icon, label, active, count, onClick }) {
+  return (
+    <button onClick={onClick} style={{
+      display:'flex', alignItems:'center', gap:10, padding:'7px 10px',
+      borderRadius:7, border:'none',
+      background: active ? 'var(--accent-soft)' : 'transparent',
+      color: active ? 'var(--accent-hover)' : 'var(--text-2)',
+      fontSize:13, fontWeight: active ? 600 : 500,
+      width:'100%', textAlign:'left',
+    }}>
+      <Icon name={icon} size={16} />
+      <span style={{ flex:1 }}>{label}</span>
+      {count != null && (
+        <span style={{
+          fontSize:10.5, fontWeight:600,
+          padding:'1px 6px', borderRadius:999,
+          background: active ? 'var(--accent)' : 'var(--gray-200)',
+          color: active ? 'var(--accent-on)' : 'var(--text-2)',
+        }}>{count}</span>
+      )}
+    </button>
+  );
+}
+
+/* =========================================================
+   STATUS PILL
+   ========================================================= */
+function StatusPill({ status }) {
+  const config = {
+    running:   { dot:'var(--accent)',     bg:'var(--accent-soft)',    fg:'var(--accent-hover)', label:'Running',   pulse:true },
+    success:   { dot:'var(--success-500)',bg:'var(--success-50)',     fg:'#047857',             label:'Succeeded' },
+    failed:    { dot:'var(--danger-500)', bg:'var(--danger-50)',      fg:'#B91C1C',             label:'Failed' },
+    paused:    { dot:'var(--warning-500)',bg:'var(--warning-50)',     fg:'#B45309',             label:'Paused' },
+    published: { dot:'var(--info)',       bg:'var(--info-soft)',      fg:'var(--info)',         label:'Published' },
+    disabled:  { dot:'var(--gray-400)',   bg:'var(--gray-100)',       fg:'var(--gray-600)',     label:'Disabled' },
+  }[status];
+  return (
+    <span style={{
+      display:'inline-flex', alignItems:'center', gap:6,
+      padding:'3px 9px 3px 8px', borderRadius:999,
+      background:config.bg, color:config.fg,
+      fontSize:11.5, fontWeight:600,
+    }}>
+      <span style={{
+        width:7, height:7, borderRadius:'50%', background:config.dot,
+        boxShadow: config.pulse ? `0 0 0 3px ${config.dot}33` : 'none',
+        animation: config.pulse ? 'pulse 1.6s ease-in-out infinite' : 'none',
+      }} />
+      {config.label}
+    </span>
+  );
+}
+
+/* =========================================================
+   TOP BAR
+   ========================================================= */
+function TopBar({ route }) {
+  const label = { flows:'Flows', explore:'Explore' }[route] || 'Overview';
+  return (
+    <header style={{
+      height:56, borderBottom:'1px solid var(--border)',
+      background:'var(--bg-surface)',
+      display:'flex', alignItems:'center', padding:'0 24px', gap:14,
+      position:'sticky', top:0, zIndex:5,
+    }}>
+      <div style={{ display:'flex', alignItems:'center', gap:6, color:'var(--text-3)', fontSize:13 }}>
+        <span>Workspace</span>
+        <Icon name="chevron-right" size={13} />
+        <span style={{ color:'var(--text-2)' }}>PromptFlow</span>
+        <Icon name="chevron-right" size={13} />
+        <span style={{ color:'var(--text-1)', fontWeight:600 }}>{label}</span>
+      </div>
+
+      <div style={{ flex:1 }} />
+
+      <div style={{
+        display:'flex', alignItems:'center', gap:8, padding:'6px 10px',
+        background:'var(--bg-elev)', border:'1px solid var(--border)',
+        borderRadius:8, width:280,
+      }}>
+        <Icon name="search" size={14} color="var(--text-3)" />
+        <input placeholder="Search flows, runs, pieces…" style={{
+          flex:1, background:'transparent', border:'none', outline:'none',
+          fontSize:13, color:'var(--text-1)',
+        }} />
+        <span className="mono" style={{ fontSize:10.5, color:'var(--text-3)', padding:'1px 5px', border:'1px solid var(--border)', borderRadius:4 }}>⌘K</span>
+      </div>
+
+      <button style={iconBtn}><Icon name="bell" size={16} /></button>
+      <button style={iconBtn}><Icon name="life-buoy" size={16} /></button>
+
+      <div style={{
+        display:'flex', alignItems:'center', gap:6, padding:'4px 4px 4px 10px',
+        background:'var(--bg-elev)', border:'1px solid var(--border)', borderRadius:999,
+      }}>
+        <span style={{ fontSize:12, color:'var(--text-2)' }}>prod</span>
+        <span style={{ width:6, height:6, borderRadius:'50%', background:'var(--success-500)' }} />
+        <span style={{ width:24, height:24, borderRadius:'50%', background:'var(--highlight-soft)', color:'var(--highlight)', display:'inline-flex', alignItems:'center', justifyContent:'center', fontSize:10, fontWeight:700 }}>AM</span>
+      </div>
+    </header>
+  );
+}
+const iconBtn = {
+  width:32, height:32, borderRadius:7, border:'1px solid var(--border)',
+  background:'var(--bg-surface)', color:'var(--text-2)',
+  display:'inline-flex', alignItems:'center', justifyContent:'center',
+};
+
+/* =========================================================
+   PAGE — Flows
+   ========================================================= */
+function FlowsPage() {
+  const [selected, setSelected] = useState(new Set());
+  const toggle = id => setSelected(prev => {
+    const n = new Set(prev); n.has(id) ? n.delete(id) : n.add(id); return n;
+  });
+
+  return (
+    <main style={{ flex:1, padding:'28px 32px 64px', maxWidth:1320 }}>
+      {/* page header */}
+      <div style={{ display:'flex', alignItems:'flex-end', justifyContent:'space-between', marginBottom:24 }}>
+        <div>
+          <div style={{ fontSize:11.5, fontWeight:600, color:'var(--text-3)', textTransform:'uppercase', letterSpacing:0.4 }}>Workspace · gamuda</div>
+          <h1 style={{ margin:'4px 0 6px', fontSize:26, fontWeight:700, letterSpacing:-0.2 }}>Flows</h1>
+          <p style={{ margin:0, color:'var(--text-2)', fontSize:13.5 }}>
+            Build, schedule and monitor automated workflows across Trudax, SpatialQ and 200+ pieces.
+          </p>
+        </div>
+        <div style={{ display:'flex', gap:8 }}>
+          <button style={btnGhost}><Icon name="upload" size={14} /> Import</button>
+          <button style={btnSecondary}><Icon name="folder-plus" size={14} /> New folder</button>
+          <button style={btnPrimary}><Icon name="plus" size={14} /> New flow</button>
+        </div>
+      </div>
+
+      {/* KPI tiles */}
+      <div style={{ display:'grid', gridTemplateColumns:'repeat(4, 1fr)', gap:14, marginBottom:24 }}>
+        {KPI.map(k => <KPICard key={k.label} {...k} />)}
+      </div>
+
+      {/* card */}
+      <section style={{
+        background:'var(--bg-surface)', border:'1px solid var(--border)',
+        borderRadius:12, boxShadow:'var(--shadow-sm)', overflow:'hidden',
+      }}>
+        {/* filters bar */}
+        <div style={{
+          display:'flex', alignItems:'center', gap:10,
+          padding:'12px 16px', borderBottom:'1px solid var(--divider)',
+        }}>
+          <Chip active>All <span style={{ color:'var(--text-3)', marginLeft:4 }}>42</span></Chip>
+          <Chip>Running <span style={{ color:'var(--text-3)', marginLeft:4 }}>3</span></Chip>
+          <Chip>Failed <span style={{ color:'var(--text-3)', marginLeft:4 }}>4</span></Chip>
+          <Chip>Paused <span style={{ color:'var(--text-3)', marginLeft:4 }}>2</span></Chip>
+          <Chip>Disabled <span style={{ color:'var(--text-3)', marginLeft:4 }}>6</span></Chip>
+          <div style={{ flex:1 }} />
+          <FilterDropdown icon="folder" label="Any folder" />
+          <FilterDropdown icon="calendar" label="Last 7 days" />
+          <button style={iconBtn}><Icon name="sliders-horizontal" size={14} /></button>
+        </div>
+
+        {/* table */}
+        <div style={{ overflowX:'auto' }}>
+          <table style={{ width:'100%', borderCollapse:'collapse', fontSize:13 }}>
+            <thead>
+              <tr style={{ background:'var(--bg-elev)', color:'var(--text-3)' }}>
+                <Th w={38}><input type="checkbox" /></Th>
+                <Th>Flow</Th>
+                <Th>Folder</Th>
+                <Th>Trigger</Th>
+                <Th align="right">Steps</Th>
+                <Th>Schedule</Th>
+                <Th>Last run</Th>
+                <Th>Status</Th>
+                <Th w={48}></Th>
+              </tr>
+            </thead>
+            <tbody>
+              {FLOWS.map(f => (
+                <tr key={f.id} style={{ borderTop:'1px solid var(--divider)' }}>
+                  <Td><input type="checkbox" checked={selected.has(f.id)} onChange={() => toggle(f.id)} /></Td>
+                  <Td>
+                    <div style={{ display:'flex', flexDirection:'column' }}>
+                      <span style={{ fontWeight:600, color:'var(--text-1)' }}>{f.name}</span>
+                      <span className="mono" style={{ fontSize:11, color:'var(--text-3)' }}>{f.id}</span>
+                    </div>
+                  </Td>
+                  <Td>
+                    <span style={{
+                      display:'inline-flex', alignItems:'center', gap:5,
+                      padding:'2px 7px', borderRadius:5,
+                      background:'var(--highlight-soft)', color:'var(--highlight)',
+                      fontSize:11.5, fontWeight:600,
+                    }}>
+                      <Icon name="folder" size={11} />
+                      {f.folder}
+                    </span>
+                  </Td>
+                  <Td><span style={{ color:'var(--text-2)' }}>{f.trigger}</span></Td>
+                  <Td align="right"><span className="mono" style={{ fontSize:12.5, color:'var(--text-2)' }}>{f.steps}</span></Td>
+                  <Td><span className="mono" style={{ fontSize:12, color:'var(--text-2)' }}>{f.schedule}</span></Td>
+                  <Td><span style={{ color:'var(--text-2)' }}>{f.lastRun}</span></Td>
+                  <Td><StatusPill status={f.status} /></Td>
+                  <Td><button style={iconBtn}><Icon name="more-horizontal" size={14} /></button></Td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* footer */}
+        <div style={{
+          display:'flex', alignItems:'center', justifyContent:'space-between',
+          padding:'10px 16px', borderTop:'1px solid var(--divider)',
+          fontSize:12.5, color:'var(--text-3)',
+        }}>
+          <span>Showing 10 of 42 flows</span>
+          <div style={{ display:'flex', alignItems:'center', gap:6 }}>
+            <button style={iconBtn}><Icon name="chevron-left" size={14} /></button>
+            <span className="mono" style={{ padding:'2px 8px', background:'var(--accent-soft)', color:'var(--accent-hover)', borderRadius:6, fontWeight:600 }}>1</span>
+            <span className="mono" style={{ padding:'2px 8px', color:'var(--text-2)' }}>2</span>
+            <span className="mono" style={{ padding:'2px 8px', color:'var(--text-2)' }}>3</span>
+            <span style={{ color:'var(--text-3)' }}>…</span>
+            <span className="mono" style={{ padding:'2px 8px', color:'var(--text-2)' }}>5</span>
+            <button style={iconBtn}><Icon name="chevron-right" size={14} /></button>
+          </div>
+        </div>
+      </section>
+
+      {/* token strip */}
+      <TokenStrip />
+    </main>
+  );
+}
+
+function KPICard({ label, value, delta, tone }) {
+  const toneColor = {
+    accent:  'var(--accent)',
+    info:    'var(--info)',
+    success: '#047857',
+    danger:  '#B91C1C',
+  }[tone];
+  const toneBg = {
+    accent:  'var(--accent-soft)',
+    info:    'var(--info-soft)',
+    success: 'var(--success-50)',
+    danger:  'var(--danger-50)',
+  }[tone];
+  return (
+    <div style={{
+      background:'var(--bg-surface)', border:'1px solid var(--border)',
+      borderRadius:12, padding:16, boxShadow:'var(--shadow-sm)',
+      display:'flex', flexDirection:'column', gap:8,
+    }}>
+      <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center' }}>
+        <span style={{ fontSize:12, fontWeight:500, color:'var(--text-2)' }}>{label}</span>
+        <span style={{
+          fontSize:10.5, fontWeight:600,
+          padding:'2px 7px', borderRadius:5,
+          background:toneBg, color:toneColor,
+        }}>{delta}</span>
+      </div>
+      <div style={{ fontSize:28, fontWeight:700, letterSpacing:-0.4, color:'var(--text-1)' }}>{value}</div>
+    </div>
+  );
+}
+
+function Chip({ children, active }) {
+  return (
+    <button style={{
+      padding:'5px 11px', borderRadius:7,
+      background: active ? 'var(--accent-soft)' : 'transparent',
+      color:     active ? 'var(--accent-hover)' : 'var(--text-2)',
+      border: active ? '1px solid transparent' : '1px solid var(--border)',
+      fontSize:12.5, fontWeight: active ? 600 : 500,
+      display:'inline-flex', alignItems:'center',
+    }}>{children}</button>
+  );
+}
+
+function FilterDropdown({ icon, label }) {
+  return (
+    <button style={{
+      display:'inline-flex', alignItems:'center', gap:6,
+      padding:'6px 10px', borderRadius:8,
+      background:'var(--bg-surface)', border:'1px solid var(--border)',
+      color:'var(--text-2)', fontSize:12.5,
+    }}>
+      <Icon name={icon} size={13} />
+      {label}
+      <Icon name="chevron-down" size={12} />
+    </button>
+  );
+}
+
+function Th({ children, align, w }) {
+  return (
+    <th style={{
+      textAlign: align || 'left', padding:'10px 14px',
+      fontSize:11, fontWeight:600, textTransform:'uppercase', letterSpacing:0.4,
+      borderBottom:'1px solid var(--divider)', width:w,
+    }}>{children}</th>
+  );
+}
+function Td({ children, align }) {
+  return <td style={{ padding:'12px 14px', textAlign: align || 'left', verticalAlign:'middle' }}>{children}</td>;
+}
+
+const btnPrimary = {
+  display:'inline-flex', alignItems:'center', gap:6, whiteSpace:'nowrap',
+  padding:'8px 12px', borderRadius:8,
+  background:'var(--accent-hover)', color:'var(--accent-on)',
+  border:'1px solid var(--accent-hover)',
+  fontSize:13, fontWeight:600,
+  boxShadow:'inset 0 1px 0 rgba(255,255,255,0.18), inset 0 -1px 0 rgba(0,0,0,0.22), var(--shadow-sm)',
+};
+const btnSecondary = {
+  display:'inline-flex', alignItems:'center', gap:6, whiteSpace:'nowrap',
+  padding:'8px 12px', borderRadius:8,
+  background:'var(--bg-surface)', color:'var(--text-1)',
+  border:'1px solid var(--border)',
+  fontSize:13, fontWeight:500,
+};
+const btnGhost = {
+  display:'inline-flex', alignItems:'center', gap:6,
+  padding:'8px 10px', borderRadius:8,
+  background:'transparent', color:'var(--text-2)',
+  border:'1px solid transparent',
+  fontSize:13, fontWeight:500,
+};
+
+/* =========================================================
+   TOKEN STRIP — shows the live theme's palette in context
+   ========================================================= */
+function TokenStrip() {
+  const sections = [
+    { key:'primary',   label:'Primary' },
+    { key:'secondary', label:'Secondary' },
+    { key:'tertiary',  label:'Tertiary' },
+  ];
+  const stops = ['50','100','200','300','400','500','600','700','800','900','950'];
+  return (
+    <section style={{ marginTop:28 }}>
+      <div style={{ display:'flex', alignItems:'baseline', justifyContent:'space-between', marginBottom:10 }}>
+        <div>
+          <h2 style={{ margin:0, fontSize:15, fontWeight:600 }}>Active theme tokens</h2>
+          <p style={{ margin:'2px 0 0', color:'var(--text-3)', fontSize:12 }}>The three color scales feeding this view. Cycle themes with the toggle in the top-right.</p>
+        </div>
+        <span className="mono" style={{ fontSize:11, color:'var(--text-3)' }}>data-theme</span>
+      </div>
+      <div style={{
+        background:'var(--bg-surface)', border:'1px solid var(--border)',
+        borderRadius:12, padding:16, boxShadow:'var(--shadow-sm)',
+        display:'flex', flexDirection:'column', gap:14,
+      }}>
+        {sections.map(s => (
+          <div key={s.key}>
+            <div style={{
+              display:'flex', alignItems:'center', gap:8, marginBottom:8,
+              fontSize:11, fontWeight:600, color:'var(--text-3)',
+              textTransform:'uppercase', letterSpacing:0.4,
+            }}>
+              <span style={{ width:10, height:10, borderRadius:3, background:`var(--${s.key}-600)` }} />
+              {s.label}
+            </div>
+            <div style={{ display:'grid', gridTemplateColumns:`repeat(${stops.length}, 1fr)`, gap:6 }}>
+              {stops.map(stop => (
+                <div key={stop} style={{
+                  height:38, borderRadius:6,
+                  background:`var(--${s.key}-${stop})`,
+                  color: parseInt(stop,10) >= 500 ? '#fff' : 'var(--text-1)',
+                  display:'flex', alignItems:'flex-end', padding:'4px 6px',
+                  fontSize:10, fontWeight:600,
+                  boxShadow:'inset 0 0 0 1px rgba(0,0,0,0.04)',
+                }}>{stop}</div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/* =========================================================
+   EXPLORE PAGE — template gallery
+   ========================================================= */
+const CATEGORIES = [
+  { key:'all',              label:'All' },
+  { key:'featured',         label:'Featured' },
+  { key:'everyday',         label:'\u2728 Everyday' },
+  { key:'customer-service', label:'Customer Service' },
+  { key:'sales',            label:'Sales' },
+  { key:'engineering',      label:'Engineering' },
+  { key:'finance',          label:'Finance' },
+  { key:'hr',               label:'HR' },
+  { key:'it',               label:'IT' },
+  { key:'legal',            label:'Legal' },
+  { key:'marketing',        label:'Marketing' },
+  { key:'operations',       label:'Operations' },
+  { key:'product',          label:'Product' },
+  { key:'agents',           label:'Agents' },
+];
+
+const TEMPLATE_SECTIONS = [
+  { key:'featured', title:'Featured', items: [
+    { id:'f1', name:'Create Investor Update Deck', desc:'Automatically create, export, and send a polished monthly investor update using real-time data from your core business systems.', save:'$4,500/year', pieces:['sheets','notion'], grad:0 },
+    { id:'f2', name:'Daily Schedule & Task Briefing',  desc:"Sends a simple daily email that summarizes today's weather, calendar schedule, and to-do tasks in one easy-to-read message.", save:'$1,260/year', pieces:['calendar','gmail'], grad:1 },
+    { id:'f3', name:'Sync Notion Databases to Google Calendar', desc:'This flow automatically syncs Notion CRM entries to Google Calendar so your team is always on the same page.', save:'$6,012/year', pieces:['notion','calendar'], grad:2 },
+    { id:'f4', name:'Summarize YouTube Videos to Docs', desc:'This automation pulls Youtube video transcripts, condenses key ideas, and creates a polished document for review.', save:'$5,400/year', pieces:['youtube'], grad:3 },
+    { id:'f5', name:'Daily Task Deadline Reminders', desc:'This automation prevents missed tasks from both Notion and Google Sheets every day, calculating the right window.', save:'$1,590/year', pieces:['sheets','notion','slack'], grad:4 },
+  ]},
+  { key:'everyday', title:'\u2728 Everyday', items: [
+    { id:'e1', name:'Send Slack Alerts for Emails', desc:'Send automatic Slack notifications when Gmail emails match specific filters like subject, sender, or label.', save:'$1,200/year', pieces:['gmail','slack'], grad:0 },
+    { id:'e2', name:'Generate AI Content From Sheet Rows', desc:'Generate AI content automatically from Google Sheets rows and write the results back to the sheet.', save:'$3,000/year', pieces:['sheets'], grad:1 },
+    { id:'e3', name:'Planner assignment autopilot', desc:'Automatically generate an AI context pack when a Planner task is assigned, notify the assignee in Teams, create a brief.', save:'$2,780/year', pieces:['teams','openai'], grad:2 },
+    { id:'e4', name:'Forward Specific Emails Automatically', desc:'Forward Gmail emails containing a keyword automatically to a chosen email address, saving time and avoiding noise.', save:'$700/year', pieces:['gmail'], grad:3 },
+    { id:'e5', name:'Send Sheet Updates to Slack', desc:'Send instant Slack notifications for every new Google Sheets row so your team stays updated automatically.', save:'$1,500/year', pieces:['sheets','slack'], grad:4 },
+  ]},
+  { key:'customer-service', title:'Customer Service', items: [
+    { id:'c1', name:'Create Client Onboarding Documentation', desc:'Auto-generate personalized client onboarding docs from a Typeform intake, store in Notion and notify the team.', save:'$3,200/year', pieces:['typeform','notion','slack'], grad:0 },
+    { id:'c2', name:'Track Jira Ticket Status Counts', desc:'Keep your team aligned with a daily Jira status digest broken down by priority, assignee, and queue.', save:'$1,820/year', pieces:['jira','sheets'], grad:1 },
+    { id:'c3', name:'Create Zendesk Tickets From Typeform Responses', desc:'Instantly convert Typeform submissions into Zendesk tickets with the right tags, priority, and assignee.', save:'$2,400/year', pieces:['typeform','zendesk'], grad:2 },
+    { id:'c4', name:'Extract Text From Images', desc:'This automation instantly converts any uploaded image into clean, structured text using OCR and AI cleanup.', save:'$960/year', pieces:['openai'], grad:3 },
+    { id:'c5', name:'Create Linear Issues From Emails', desc:'Automatically turns inbound support emails into well-formatted Linear issues with the right team and label.', save:'$2,100/year', pieces:['gmail','linear'], grad:4 },
+  ]},
+];
+
+const PIECE_META = {
+  claude:    { label:'Cl', color:'#D97757' },
+  openai:    { label:'AI', color:'#10A37F' },
+  hubspot:   { label:'Hs', color:'#FF7A59' },
+  slack:     { label:'Sk', color:'#611F69' },
+  zendesk:   { label:'Zd', color:'#03363D' },
+  gmail:     { label:'Gm', color:'#EA4335' },
+  sheets:    { label:'Sh', color:'#0F9D58' },
+  calendar:  { label:'Ca', color:'#1A73E8' },
+  notion:    { label:'No', color:'#111111' },
+  youtube:   { label:'Yt', color:'#FF0000' },
+  teams:     { label:'Tm', color:'#4B53BC' },
+  typeform:  { label:'Tf', color:'#262627' },
+  jira:      { label:'Jr', color:'#2684FF' },
+  linear:    { label:'Ln', color:'#5E6AD2' },
+};
+
+function PieceChip({ id, size = 28 }) {
+  const m = PIECE_META[id] || { label:'?', color:'var(--gray-400)' };
+  return (
+    <span title={id} style={{
+      width:size, height:size, borderRadius:7,
+      background:'#fff', color:m.color,
+      display:'inline-flex', alignItems:'center', justifyContent:'center',
+      fontSize: 11, fontWeight:800, letterSpacing:-0.3,
+      boxShadow:'0 1px 2px rgba(16,24,40,0.08), inset 0 0 0 1px rgba(16,24,40,0.06)',
+      flexShrink:0,
+    }}>
+      <span style={{
+        width:size-10, height:size-10, borderRadius:4,
+        background:m.color, color:'#fff',
+        display:'inline-flex', alignItems:'center', justifyContent:'center',
+        fontSize:10, fontWeight:700,
+      }}>{m.label}</span>
+    </span>
+  );
+}
+
+// soft pastel gradient panels — five variants, all token-driven so each theme reshades.
+const CARD_GRADIENTS = [
+  'linear-gradient(135deg, var(--secondary-100) 0%, var(--tertiary-100) 100%)',
+  'linear-gradient(135deg, var(--primary-100)   0%, var(--secondary-100) 100%)',
+  'linear-gradient(135deg, var(--secondary-100) 0%, var(--primary-100)  100%)',
+  'linear-gradient(135deg, var(--tertiary-100)  0%, var(--primary-100)  100%)',
+  'linear-gradient(135deg, var(--primary-100)   0%, var(--tertiary-100) 100%)',
+];
+
+function ExplorePage() {
+  const [active, setActive] = useState('all');
+  const [query, setQuery] = useState('');
+
+  return (
+    <main style={{ flex:1, padding:0, display:'flex', flexDirection:'column', minWidth:0 }}>
+      {/* sticky header — toolbar + category tabs */}
+      <div style={{
+        position:'sticky', top:0, zIndex:5,
+        background:'var(--bg-app)',
+      }}>
+        {/* toolbar */}
+        <div style={{
+          display:'flex', alignItems:'center', gap:12,
+          padding:'14px 28px',
+        }}>
+        <button style={iconBtn} title="Collapse sidebar"><Icon name="panel-left-close" size={16} /></button>
+        <div style={{
+          flex:1, maxWidth:760,
+          display:'flex', alignItems:'center', gap:8,
+          padding:'9px 12px', borderRadius:9,
+          background:'var(--bg-surface)', border:'1px solid var(--border)',
+        }}>
+          <Icon name="search" size={15} color="var(--text-3)" />
+          <input
+            value={query} onChange={e => setQuery(e.target.value)}
+            placeholder="Search templates by name or description"
+            style={{ flex:1, background:'transparent', border:'none', outline:'none', fontSize:13.5, color:'var(--text-1)' }} />
+        </div>
+        <div style={{ flex:1 }} />
+        <button style={{ ...btnPrimary, whiteSpace:'nowrap' }}>
+          <Icon name="plus" size={14} /> Start from scratch
+        </button>
+      </div>
+
+      {/* category tabs */}
+      <div style={{
+        padding:'4px 28px 0', borderBottom:'1px solid var(--border)',
+        overflowX:'auto', whiteSpace:'nowrap',
+      }}>
+        <div style={{ display:'inline-flex', alignItems:'center', gap:4 }}>
+          {CATEGORIES.map(c => {
+            const on = c.key === active;
+            return (
+              <button key={c.key} onClick={() => setActive(c.key)} style={{
+                padding:'12px 14px', border:'none', background:'transparent',
+                color: on ? 'var(--accent-hover)' : 'var(--text-2)',
+                fontSize:13.5, fontWeight: on ? 600 : 500,
+                borderBottom: on ? '2px solid var(--accent)' : '2px solid transparent',
+                cursor:'pointer', marginBottom:-1,
+              }}>{c.label}</button>
+            );
+          })}
+        </div>
+      </div>
+      </div>{/* /sticky header */}
+
+      {/* sections */}
+      <div style={{ padding:'24px 28px 64px', display:'flex', flexDirection:'column', gap:32 }}>
+        {TEMPLATE_SECTIONS
+          .filter(s => active === 'all' || s.key === active)
+          .map(section => {
+            const items = query
+              ? section.items.filter(t => (t.name + ' ' + t.desc).toLowerCase().includes(query.toLowerCase()))
+              : section.items;
+            if (items.length === 0) return null;
+            return (
+              <section key={section.key}>
+                <header style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:14 }}>
+                  <h2 style={{ margin:0, fontSize:18, fontWeight:700, letterSpacing:-0.2, color:'var(--text-1)' }}>{section.title}</h2>
+                  <div style={{ display:'flex', alignItems:'center', gap:10 }}>
+                    <button style={{ background:'transparent', border:'none', color:'var(--text-2)', fontSize:13, fontWeight:500, cursor:'pointer' }}>View all</button>
+                    <span style={{ display:'inline-flex', gap:4 }}>
+                      <button style={iconBtnSmall}><Icon name="chevron-left" size={14} /></button>
+                      <button style={iconBtnSmall}><Icon name="chevron-right" size={14} /></button>
+                    </span>
+                  </div>
+                </header>
+                <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(255px, 1fr))', gap:16 }}>
+                  {items.map(t => <TemplateCard key={t.id} t={t} />)}
+                </div>
+              </section>
+            );
+          })}
+
+        {query && TEMPLATE_SECTIONS.every(s => !s.items.some(t => (t.name + ' ' + t.desc).toLowerCase().includes(query.toLowerCase()))) && (
+          <div style={{
+            border:'1px dashed var(--border-strong)', borderRadius:12,
+            padding:'48px 24px', textAlign:'center', color:'var(--text-2)',
+            background:'var(--bg-surface)',
+          }}>
+            <div style={{
+              width:44, height:44, borderRadius:10, margin:'0 auto 12px',
+              background:'var(--accent-soft)', color:'var(--accent)',
+              display:'flex', alignItems:'center', justifyContent:'center',
+            }}><Icon name="search-x" size={20} /></div>
+            <div style={{ fontWeight:600, color:'var(--text-1)', marginBottom:4 }}>No templates match \u201C{query}\u201D</div>
+            <div style={{ fontSize:12.5 }}>Try a different keyword or start from scratch.</div>
+          </div>
+        )}
+      </div>
+    </main>
+  );
+}
+
+const iconBtnSmall = {
+  width:26, height:26, borderRadius:6,
+  background:'var(--bg-surface)', border:'1px solid var(--border)',
+  color:'var(--text-2)', cursor:'pointer',
+  display:'inline-flex', alignItems:'center', justifyContent:'center',
+};
+
+function TemplateCard({ t }) {
+  return (
+    <div style={{
+      background:'var(--bg-surface)', border:'1px solid var(--border)',
+      borderRadius:12, overflow:'hidden',
+      display:'flex', flexDirection:'column',
+      boxShadow:'var(--shadow-sm)',
+      transition:'border-color 150ms ease, box-shadow 150ms ease, transform 150ms ease',
+      cursor:'pointer',
+    }}
+    onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.boxShadow = 'var(--shadow-md)'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
+    onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.boxShadow = 'var(--shadow-sm)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+    >
+      <div style={{ padding:'18px 18px 14px', display:'flex', flexDirection:'column', gap:10, minHeight:172 }}>
+        <h3 style={{
+          margin:0, fontSize:15, fontWeight:700, color:'var(--text-1)',
+          letterSpacing:-0.15, lineHeight:1.3,
+          display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical', overflow:'hidden',
+        }}>{t.name}</h3>
+        <p style={{
+          margin:0, fontSize:12.5, color:'var(--text-2)', lineHeight:1.5,
+          display:'-webkit-box', WebkitLineClamp:3, WebkitBoxOrient:'vertical', overflow:'hidden',
+          flex:1,
+        }}>{t.desc}</p>
+        <div>
+          <span style={{
+            display:'inline-flex', alignItems:'center', gap:6,
+            padding:'4px 10px 4px 8px', borderRadius:7,
+            background:'var(--success-50)', color:'#047857',
+            fontSize:11.5, fontWeight:500,
+          }}>
+            <Icon name="trending-up" size={12} />
+            <span style={{ color:'var(--text-2)' }}>Save</span>
+            <span className="mono" style={{ fontWeight:700, color:'#047857' }}>{t.save}</span>
+          </span>
+        </div>
+      </div>
+      <div style={{
+        height:74, padding:'0 16px',
+        display:'flex', alignItems:'center', gap:8,
+        background: CARD_GRADIENTS[t.grad % CARD_GRADIENTS.length],
+      }}>
+        {t.pieces.map(p => <PieceChip key={p} id={p} size={32} />)}
+      </div>
+    </div>
+  );
+}
+
+/* =========================================================
+   BUILDER PAGE — flow canvas mockup
+   ========================================================= */
+const BUILDER_NODES = [
+  { id:'trg',  kind:'trigger', icon:'calendar-clock', title:'Schedule',          action:'Every 15 minutes',                 piece:'Schedule',  tint:'primary'   },
+  { id:'s1',   kind:'step',    icon:'database',       title:'Fetch updated assets', action:'GET /assets?updated_since=$cursor', piece:'Trudax',    tint:'secondary' },
+  { id:'s2',   kind:'step',    icon:'sparkles',       title:'Classify with AI',  action:'claude-sonnet · batch of 25',     piece:'AI',         tint:'tertiary'  },
+  { id:'sw',   kind:'branch',  icon:'git-branch',     title:'Route by category', action:'classification.category',          piece:'Branch',     tint:'neutral'   },
+  { id:'s3a',  kind:'step',    icon:'map-pin',        title:'Upsert to SpatialQ',action:'POST /layers/$layer_id/features', piece:'SpatialQ',  tint:'secondary', branch:'site' },
+  { id:'s3b',  kind:'step',    icon:'bell',           title:'Notify reviewers',  action:'#ops-spatialq',                    piece:'Slack',     tint:'neutral',  branch:'review' },
+];
+
+function BuilderPage() {
+  const [selectedId, setSelectedId] = useState('s2');
+  const selected = BUILDER_NODES.find(n => n.id === selectedId) || BUILDER_NODES[0];
+  return (
+    <div style={{ flex:1, display:'flex', flexDirection:'column', minWidth:0, height:'100vh', overflow:'hidden' }}>
+      <BuilderTopBar />
+      <div style={{ flex:1, display:'flex', minHeight:0 }}>
+        <AiChatPanel />
+        <BuilderCanvas selectedId={selectedId} onSelect={setSelectedId} />
+        <BuilderConfigPanel node={selected} />
+      </div>
+    </div>
+  );
+}
+
+/* ----- AI chat column ----- */
+const CHAT_TURNS = [
+  { who:'user',      text:'Sync Trudax assets into SpatialQ every 15 minutes, but only for ones that look like construction sites.' },
+  { who:'assistant', text:"Got it. I'll set up a 4-step flow:" , plan:[
+    { piece:'Schedule', tint:'primary',   action:'Trigger every 15 minutes' },
+    { piece:'Trudax',   tint:'secondary', action:'Fetch updated assets since last cursor' },
+    { piece:'AI',       tint:'tertiary',  action:'Classify each asset · construction site vs. other' },
+    { piece:'SpatialQ', tint:'secondary', action:'Upsert classified=site into layer feature collection' },
+  ]},
+  { who:'tool', text:'Created flow scaffold · 4 steps applied to canvas' },
+  { who:'user',      text:'Add a Slack notification when classification confidence is below 0.6.' },
+  { who:'assistant', text:"Added a router after Classify. Low-confidence rows go to a #ops-spatialq Slack message; the rest flow to SpatialQ. You can tune the threshold in the router properties." },
+  { who:'tool', text:'Inserted Router · 2 branches' },
+];
+
+function AiChatPanel() {
+  return (
+    <aside style={{
+      width:320, flexShrink:0, height:'100%',
+      background:'var(--bg-surface)', borderRight:'1px solid var(--border)',
+      display:'flex', flexDirection:'column', minHeight:0,
+    }}>
+      {/* header */}
+      <div style={{
+        height:46, flexShrink:0, padding:'0 12px 0 14px',
+        display:'flex', alignItems:'center', gap:8,
+        borderBottom:'1px solid var(--divider)',
+      }}>
+        <span style={{
+          width:24, height:24, borderRadius:6,
+          background:'var(--tertiary-100)', color:'var(--tertiary-700)',
+          display:'inline-flex', alignItems:'center', justifyContent:'center',
+        }}><Icon name="sparkles" size={13} /></span>
+        <div style={{ flex:1, minWidth:0 }}>
+          <div style={{ fontSize:12.5, fontWeight:600, color:'var(--text-1)' }}>Flow assistant</div>
+          <div style={{ fontSize:10.5, color:'var(--text-3)' }}>claude-sonnet-4-5 · ready</div>
+        </div>
+        <button style={{ ...iconBtn, width:26, height:26 }} title="History"><Icon name="history" size={13} /></button>
+        <button style={{ ...iconBtn, width:26, height:26 }} title="Close"><Icon name="panel-left-close" size={13} /></button>
+      </div>
+
+      {/* messages */}
+      <div style={{ flex:1, overflowY:'auto', padding:'14px 12px', display:'flex', flexDirection:'column', gap:14 }}>
+        {CHAT_TURNS.map((t,i) => <ChatTurn key={i} t={t} />)}
+        <div style={{ display:'flex', alignItems:'center', gap:6, fontSize:11, color:'var(--text-3)', paddingLeft:30 }}>
+          <span style={{ width:6, height:6, borderRadius:'50%', background:'var(--accent)', animation:'pulse 1.4s infinite' }} />
+          Thinking · drafting test inputs
+        </div>
+      </div>
+
+      {/* suggestion chips */}
+      <div style={{ padding:'8px 12px 0', display:'flex', flexWrap:'wrap', gap:6 }}>
+        <SuggestChip icon="zap"     label="Suggest a trigger" />
+        <SuggestChip icon="bug"     label="Find errors" />
+        <SuggestChip icon="bookmark" label="Save as template" />
+      </div>
+
+      {/* input */}
+      <div style={{ padding:12 }}>
+        <div style={{
+          border:'1px solid var(--border)', borderRadius:10, background:'var(--bg-app)',
+          padding:'9px 10px 8px', display:'flex', flexDirection:'column', gap:8,
+        }}>
+          <div style={{ fontSize:12.5, color:'var(--text-3)', minHeight:34, lineHeight:1.45 }}>
+            Ask the assistant to add steps, debug the last run, or rewrite a prompt&hellip;
+          </div>
+          <div style={{ display:'flex', alignItems:'center', gap:6 }}>
+            <button style={chatIconBtn}><Icon name="paperclip" size={13} /></button>
+            <button style={chatIconBtn}><Icon name="at-sign"  size={13} /></button>
+            <button style={{ ...chatIconBtn, display:'inline-flex', alignItems:'center', gap:4, padding:'0 8px', width:'auto' }}>
+              <Icon name="sparkles" size={11} /> <span style={{ fontSize:11 }}>sonnet</span>
+              <Icon name="chevron-down" size={10} />
+            </button>
+            <div style={{ flex:1 }} />
+            <button style={{
+              width:28, height:28, borderRadius:7, border:'none',
+              background:'var(--accent)', color:'var(--accent-on)',
+              display:'inline-flex', alignItems:'center', justifyContent:'center',
+              boxShadow:'inset 0 1px 0 rgba(255,255,255,0.2)',
+            }}><Icon name="arrow-up" size={14} /></button>
+          </div>
+        </div>
+        <div style={{ marginTop:6, fontSize:10.5, color:'var(--text-3)', textAlign:'center' }}>
+          The assistant edits the live canvas. <span style={{ color:'var(--accent-hover)', cursor:'pointer' }}>Undo last action</span>
+        </div>
+      </div>
+    </aside>
+  );
+}
+
+const chatIconBtn = {
+  width:24, height:24, borderRadius:5, border:'none',
+  background:'transparent', color:'var(--text-3)',
+  display:'inline-flex', alignItems:'center', justifyContent:'center',
+  cursor:'pointer',
+};
+
+function SuggestChip({ icon, label }) {
+  return (
+    <button style={{
+      display:'inline-flex', alignItems:'center', gap:5,
+      padding:'4px 9px', borderRadius:999, fontSize:11, fontWeight:500,
+      background:'var(--bg-app)', border:'1px solid var(--border)',
+      color:'var(--text-2)', cursor:'pointer', whiteSpace:'nowrap',
+    }}>
+      <Icon name={icon} size={11} /> {label}
+    </button>
+  );
+}
+
+function ChatTurn({ t }) {
+  if (t.who === 'user') {
+    return (
+      <div style={{ display:'flex', justifyContent:'flex-end' }}>
+        <div style={{
+          maxWidth:'82%', padding:'8px 11px', borderRadius:'12px 12px 4px 12px',
+          background:'var(--accent-soft)', color:'var(--text-1)',
+          border:'1px solid color-mix(in oklab, var(--accent) 18%, transparent)',
+          fontSize:12.5, lineHeight:1.5,
+        }}>{t.text}</div>
+      </div>
+    );
+  }
+  if (t.who === 'tool') {
+    return (
+      <div style={{ display:'flex', alignItems:'center', gap:8, paddingLeft:30 }}>
+        <span style={{
+          width:18, height:18, borderRadius:5,
+          background:'var(--success-50)', color:'#047857',
+          display:'inline-flex', alignItems:'center', justifyContent:'center',
+        }}><Icon name="check" size={11} /></span>
+        <span style={{ fontSize:11, color:'var(--text-2)', fontStyle:'italic' }}>{t.text}</span>
+      </div>
+    );
+  }
+  return (
+    <div style={{ display:'flex', gap:8 }}>
+      <span style={{
+        width:22, height:22, borderRadius:6, flexShrink:0,
+        background:'var(--tertiary-100)', color:'var(--tertiary-700)',
+        display:'inline-flex', alignItems:'center', justifyContent:'center',
+      }}><Icon name="sparkles" size={12} /></span>
+      <div style={{ flex:1, minWidth:0 }}>
+        <div style={{ fontSize:12.5, color:'var(--text-1)', lineHeight:1.55 }}>{t.text}</div>
+        {t.plan && (
+          <div style={{ marginTop:8, display:'flex', flexDirection:'column', gap:5 }}>
+            {t.plan.map((p,i) => {
+              const { bg, fg } = tintColors(p.tint);
+              return (
+                <div key={i} style={{
+                  display:'flex', alignItems:'center', gap:8,
+                  padding:'6px 8px', borderRadius:7,
+                  background:'var(--bg-app)', border:'1px solid var(--border)',
+                }}>
+                  <span style={{
+                    width:9, height:9, borderRadius:2, background:fg, flexShrink:0,
+                  }} />
+                  <span style={{ fontSize:11, fontWeight:600, color:'var(--text-1)' }}>{p.piece}</span>
+                  <span style={{ fontSize:11, color:'var(--text-3)', flex:1, minWidth:0, whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>{p.action}</span>
+                </div>
+              );
+            })}
+            <div style={{ display:'flex', gap:6, marginTop:2 }}>
+              <button style={{ ...btnPrimary, padding:'5px 10px', fontSize:11.5 }}>
+                <Icon name="check" size={11} /> Apply to canvas
+              </button>
+              <button style={{ ...btnSecondary, padding:'5px 10px', fontSize:11.5 }}>
+                Edit plan
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function BuilderTopBar() {
+  return (
+    <div style={{
+      height:56, flexShrink:0, display:'flex', alignItems:'center', gap:14,
+      padding:'0 20px 0 16px', background:'var(--bg-surface)',
+      borderBottom:'1px solid var(--border)',
+    }}>
+      <button style={iconBtn}><Icon name="chevron-left" size={16} /></button>
+      <div style={{ display:'flex', alignItems:'center', gap:8, flex:1, minWidth:0 }}>
+        <span style={{ fontSize:11, color:'var(--text-3)', whiteSpace:'nowrap' }}>Flows</span>
+        <Icon name="chevron-right" size={11} color="var(--text-3)" />
+        <span style={{ fontSize:14, fontWeight:600, color:'var(--text-1)', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis', minWidth:0 }}>Nightly Trudax → SpatialQ sync</span>
+        <span style={{
+          padding:'2px 8px 2px 7px', borderRadius:5,
+          background:'var(--warning-50)', color:'#B45309',
+          fontSize:11, fontWeight:600, display:'inline-flex', alignItems:'center', gap:5,
+          whiteSpace:'nowrap', flexShrink:0,
+        }}>
+          <span style={{ width:6, height:6, borderRadius:'50%', background:'#F59E0B' }} />
+          Draft · unsaved changes
+        </span>
+        <button style={{ ...iconBtn, width:26, height:26, flexShrink:0 }}><Icon name="more-horizontal" size={14} /></button>
+      </div>
+      <div style={{ display:'flex', alignItems:'center', gap:8 }}>
+        <button style={iconBtn} title="Undo"><Icon name="undo" size={14} /></button>
+        <button style={iconBtn} title="Redo"><Icon name="redo" size={14} /></button>
+        <span style={{ width:1, height:18, background:'var(--border)' }} />
+        <button style={btnSecondary}><Icon name="play" size={13} /> Test flow</button>
+        <button style={btnSecondary}><Icon name="history" size={13} /> Versions</button>
+        <button style={btnPrimary}><Icon name="upload" size={13} /> Publish</button>
+      </div>
+    </div>
+  );
+}
+
+function BuilderCanvas({ selectedId, onSelect }) {
+  return (
+    <div style={{
+      flex:1, minWidth:0, overflow:'auto', position:'relative',
+      background:
+        'radial-gradient(circle, var(--gray-200) 1px, transparent 1.4px)',
+      backgroundSize:'18px 18px',
+      backgroundColor:'var(--bg-app)',
+    }}>
+      {/* canvas toolbar overlay */}
+      <div style={{
+        position:'absolute', top:14, left:14, display:'flex', gap:6,
+        padding:4, background:'var(--bg-surface)',
+        border:'1px solid var(--border)', borderRadius:8,
+        boxShadow:'var(--shadow-sm)', zIndex:2,
+      }}>
+        <button style={canvasBtn}><Icon name="hand" size={14} /></button>
+        <button style={{ ...canvasBtn, background:'var(--accent-soft)', color:'var(--accent-hover)' }}><Icon name="mouse-pointer-2" size={14} /></button>
+        <span style={{ width:1, background:'var(--divider)', margin:'2px 2px' }} />
+        <button style={canvasBtn}><Icon name="plus" size={14} /></button>
+        <button style={canvasBtn}><Icon name="minus" size={14} /></button>
+        <span style={{ alignSelf:'center', fontSize:11, color:'var(--text-3)', padding:'0 4px' }} className="mono">100%</span>
+      </div>
+      <div style={{
+        position:'absolute', top:14, right:14, display:'flex', gap:6,
+        padding:4, background:'var(--bg-surface)',
+        border:'1px solid var(--border)', borderRadius:8,
+        boxShadow:'var(--shadow-sm)', zIndex:2,
+      }}>
+        <button style={canvasBtn}><Icon name="maximize" size={14} /></button>
+        <button style={canvasBtn}><Icon name="map" size={14} /></button>
+      </div>
+
+      {/* flow */}
+      <div style={{
+        minWidth:560, margin:'72px auto 80px',
+        display:'flex', flexDirection:'column', alignItems:'center', paddingTop:8,
+      }}>
+        <FlowNode n={BUILDER_NODES[0]} selected={selectedId === 'trg'} onSelect={() => onSelect('trg')} isTrigger />
+        <FlowConnector />
+        <FlowNode n={BUILDER_NODES[1]} selected={selectedId === 's1'} onSelect={() => onSelect('s1')} />
+        <FlowConnector />
+        <FlowNode n={BUILDER_NODES[2]} selected={selectedId === 's2'} onSelect={() => onSelect('s2')} />
+        <FlowConnector />
+        <FlowNode n={BUILDER_NODES[3]} selected={selectedId === 'sw'} onSelect={() => onSelect('sw')} />
+
+        {/* horizontal split line under router */}
+        <div style={{ position:'relative', width:480, height:34 }}>
+          <span style={{ position:'absolute', left:'50%', top:0, width:2, height:14, background:'var(--border-strong)', transform:'translateX(-50%)' }} />
+          <span style={{ position:'absolute', left:'25%', right:'25%', top:14, height:2, background:'var(--border-strong)' }} />
+          <span style={{ position:'absolute', left:'25%', top:14, width:2, height:20, background:'var(--border-strong)' }} />
+          <span style={{ position:'absolute', right:'25%', top:14, width:2, height:20, background:'var(--border-strong)' }} />
+        </div>
+
+        {/* branch row */}
+        <div style={{ display:'flex', gap:32, alignItems:'flex-start' }}>
+          <BranchColumn label="site" tone="primary">
+            <FlowNode n={BUILDER_NODES[4]} selected={selectedId === 's3a'} onSelect={() => onSelect('s3a')} compact />
+            <FlowConnector small />
+            <AddStep compact />
+          </BranchColumn>
+          <BranchColumn label="review" tone="neutral">
+            <FlowNode n={BUILDER_NODES[5]} selected={selectedId === 's3b'} onSelect={() => onSelect('s3b')} compact />
+            <FlowConnector small />
+            <AddStep compact />
+          </BranchColumn>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+const canvasBtn = {
+  width:26, height:26, borderRadius:5, border:'none', background:'transparent',
+  color:'var(--text-2)', cursor:'pointer',
+  display:'inline-flex', alignItems:'center', justifyContent:'center',
+};
+
+function tintColors(tint) {
+  switch (tint) {
+    case 'primary':   return { bg:'var(--primary-100)',   fg:'var(--primary-700)'   };
+    case 'secondary': return { bg:'var(--secondary-100)', fg:'var(--secondary-700)' };
+    case 'tertiary':  return { bg:'var(--tertiary-100)',  fg:'var(--tertiary-700)'  };
+    default:          return { bg:'var(--gray-100)',      fg:'var(--text-2)'        };
+  }
+}
+
+function FlowNode({ n, selected, onSelect, isTrigger, compact }) {
+  const { bg, fg } = tintColors(n.tint);
+  const width = compact ? 280 : 360;
+  return (
+    <button onClick={onSelect} style={{
+      width, padding:0,
+      background:'var(--bg-surface)',
+      border: selected ? '2px solid var(--accent)' : '1px solid var(--border)',
+      borderRadius:10, boxShadow: selected ? '0 0 0 4px var(--accent-soft), var(--shadow-sm)' : 'var(--shadow-sm)',
+      textAlign:'left', cursor:'pointer', overflow:'hidden',
+      transition:'border-color 140ms ease, box-shadow 140ms ease',
+    }}>
+      {isTrigger && <span style={{ display:'block', height:3, background:'var(--accent)' }} />}
+      <span style={{ display:'flex', alignItems:'center', gap:11, padding:'10px 12px' }}>
+        <span style={{
+          width:34, height:34, borderRadius:7, background:bg, color:fg,
+          display:'inline-flex', alignItems:'center', justifyContent:'center',
+          flexShrink:0,
+        }}><Icon name={n.icon} size={17} /></span>
+        <span style={{ flex:1, minWidth:0 }}>
+          <span style={{
+            display:'inline-flex', alignItems:'center', gap:5, marginBottom:1,
+            fontSize:9.5, fontWeight:600, color:'var(--text-3)',
+            textTransform:'uppercase', letterSpacing:0.5,
+          }}>
+            {n.kind === 'trigger' ? <><Icon name="zap" size={9} /> Trigger</> :
+             n.kind === 'branch'  ? <><Icon name="git-branch" size={9} /> Router</> :
+                                    <span>{n.piece}</span>}
+          </span>
+          <span style={{ display:'block', fontSize:13, fontWeight:600, color:'var(--text-1)', lineHeight:1.3, whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>{n.title}</span>
+          <span className="mono" style={{ display:'block', fontSize:10.5, color:'var(--text-3)', marginTop:1, whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>{n.action}</span>
+        </span>
+        <span style={{ display:'inline-flex', flexDirection:'column', gap:3, alignItems:'flex-end', flexShrink:0 }}>
+          {selected && <span style={{
+            fontSize:9.5, fontWeight:600, color:'var(--accent-hover)',
+            padding:'1px 5px', borderRadius:3, background:'var(--accent-soft)',
+          }}>editing</span>}
+          <Icon name="more-vertical" size={13} color="var(--text-3)" />
+        </span>
+      </span>
+    </button>
+  );
+}
+
+function FlowConnector({ small }) {
+  return (
+    <div style={{
+      display:'flex', flexDirection:'column', alignItems:'center',
+      height: small ? 36 : 44, position:'relative',
+    }}>
+      <span style={{ flex:1, width:2, background:'var(--border-strong)' }} />
+      <button style={{
+        position:'absolute', top:'50%', transform:'translateY(-50%)',
+        width:22, height:22, borderRadius:'50%',
+        background:'var(--bg-surface)', border:'1px dashed var(--border-strong)',
+        color:'var(--text-3)', cursor:'pointer',
+        display:'inline-flex', alignItems:'center', justifyContent:'center',
+      }}><Icon name="plus" size={12} /></button>
+    </div>
+  );
+}
+
+function AddStep({ compact }) {
+  return (
+    <button style={{
+      width: compact ? 280 : 360, padding:'10px 14px',
+      background:'transparent', border:'1px dashed var(--border-strong)',
+      borderRadius:10, color:'var(--text-3)', fontSize:12.5, fontWeight:500,
+      display:'inline-flex', alignItems:'center', justifyContent:'center', gap:6,
+      cursor:'pointer',
+    }}><Icon name="plus" size={13} /> Add step</button>
+  );
+}
+
+function BranchColumn({ label, tone, children }) {
+  const { bg, fg } = tintColors(tone === 'primary' ? 'primary' : 'neutral');
+  return (
+    <div style={{ display:'flex', flexDirection:'column', alignItems:'center' }}>
+      <span style={{
+        padding:'2px 8px', borderRadius:5,
+        background:bg, color:fg, fontSize:10, fontWeight:600,
+        marginBottom:8, whiteSpace:'nowrap', textTransform:'uppercase', letterSpacing:0.5,
+      }}>category = {label}</span>
+      {children}
+    </div>
+  );
+}
+
+function BuilderConfigPanel({ node }) {
+  const { bg, fg } = tintColors(node.tint);
+  return (
+    <aside style={{
+      width:360, flexShrink:0, height:'100%', overflow:'auto',
+      background:'var(--bg-surface)', borderLeft:'1px solid var(--border)',
+      display:'flex', flexDirection:'column',
+    }}>
+      {/* header */}
+      <div style={{ padding:'14px 18px 12px', borderBottom:'1px solid var(--divider)' }}>
+        <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:10 }}>
+          <span style={{
+            width:30, height:30, borderRadius:7, background:bg, color:fg,
+            display:'inline-flex', alignItems:'center', justifyContent:'center', flexShrink:0,
+          }}><Icon name={node.icon} size={16} /></span>
+          <div style={{ flex:1, minWidth:0 }}>
+            <div style={{ fontSize:10, fontWeight:600, color:'var(--text-3)', textTransform:'uppercase', letterSpacing:0.4 }}>{node.piece}</div>
+            <div style={{ fontSize:14, fontWeight:600, color:'var(--text-1)', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>{node.title}</div>
+          </div>
+          <button style={iconBtn}><Icon name="x" size={14} /></button>
+        </div>
+        <div style={{ display:'flex', gap:6 }}>
+          <button style={tabBtn(true)}>Configure</button>
+          <button style={tabBtn(false)}>Test</button>
+          <button style={tabBtn(false)}>Logs</button>
+        </div>
+      </div>
+
+      {/* form */}
+      <div style={{ padding:'16px 18px', display:'flex', flexDirection:'column', gap:14, flex:1 }}>
+        <Field label="Step name">
+          <input defaultValue={node.title} style={inputStyle} />
+        </Field>
+        <Field label="Connection" hint="Used to authenticate this step">
+          <div style={{ ...inputStyle, display:'flex', alignItems:'center', gap:8, padding:'6px 8px 6px 10px' }}>
+            <span style={{ width:16, height:16, borderRadius:4, background:'var(--secondary-500)' }} />
+            <span style={{ flex:1, fontSize:13 }}>claude_prod</span>
+            <span style={{ fontSize:10.5, color:'var(--success-500)', display:'inline-flex', alignItems:'center', gap:4, fontWeight:600 }}>
+              <span style={{ width:5, height:5, borderRadius:'50%', background:'var(--success-500)' }} />
+              Connected
+            </span>
+            <Icon name="chevron-down" size={13} color="var(--text-3)" />
+          </div>
+        </Field>
+        <Field label="Model">
+          <div style={{ ...inputStyle, display:'flex', alignItems:'center', justifyContent:'space-between', padding:'8px 10px' }}>
+            <span style={{ fontSize:13 }}>claude-sonnet-4-5</span>
+            <Icon name="chevron-down" size={13} color="var(--text-3)" />
+          </div>
+        </Field>
+        <Field label="System prompt">
+          <textarea defaultValue={'Classify each asset into one of: site, review, archive. Return a JSON array of {asset_id, category, confidence}.'} style={{ ...inputStyle, fontSize:12.5, lineHeight:1.5, minHeight:84, resize:'vertical' }} />
+        </Field>
+        <Field label="Input items" hint="Drag fields from earlier steps">
+          <div style={{ display:'flex', flexWrap:'wrap', gap:6, padding:'8px', border:'1px solid var(--border)', borderRadius:8, background:'var(--bg-app)' }}>
+            <VarChip step="Fetch updated assets" field="items[]" tint="secondary" />
+            <VarChip step="Schedule" field="cursor" tint="primary" />
+            <span style={{ padding:'2px 8px', borderRadius:5, border:'1px dashed var(--border-strong)', color:'var(--text-3)', fontSize:11.5, cursor:'pointer' }}>+ Add input</span>
+          </div>
+        </Field>
+
+        <div style={{
+          marginTop:8, padding:12, borderRadius:9,
+          background:'var(--success-50)', border:'1px solid color-mix(in oklab, var(--success-500) 25%, transparent)',
+        }}>
+          <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:6 }}>
+            <span style={{ fontSize:11.5, fontWeight:600, color:'#047857', display:'inline-flex', alignItems:'center', gap:5 }}>
+              <Icon name="check-circle-2" size={12} /> Last test passed
+            </span>
+            <span className="mono" style={{ fontSize:10.5, color:'#047857' }}>1.4s · 24 items</span>
+          </div>
+          <div className="mono" style={{ fontSize:11.5, color:'var(--text-2)', lineHeight:1.55 }}>
+            <span style={{ color:'var(--text-3)' }}>{'→'}</span> 24/24 classified · site=18 review=4 archive=2
+          </div>
+        </div>
+      </div>
+
+      {/* footer */}
+      <div style={{
+        padding:'12px 18px', borderTop:'1px solid var(--divider)',
+        display:'flex', gap:8, background:'var(--bg-surface)',
+      }}>
+        <button style={{ ...btnSecondary, flex:1, justifyContent:'center' }}>
+          <Icon name="play" size={13} /> Run test step
+        </button>
+        <button style={btnPrimary}>
+          <Icon name="check" size={13} /> Save
+        </button>
+      </div>
+    </aside>
+  );
+}
+
+const inputStyle = {
+  width:'100%', padding:'8px 10px', fontSize:13,
+  background:'var(--bg-app)', border:'1px solid var(--border)',
+  borderRadius:7, color:'var(--text-1)', outline:'none',
+  fontFamily:'inherit',
+};
+
+function Field({ label, hint, children }) {
+  return (
+    <label style={{ display:'flex', flexDirection:'column', gap:5 }}>
+      <span style={{ fontSize:11.5, fontWeight:600, color:'var(--text-2)' }}>{label}</span>
+      {children}
+      {hint && <span style={{ fontSize:11, color:'var(--text-3)' }}>{hint}</span>}
+    </label>
+  );
+}
+
+function tabBtn(active) {
+  return {
+    padding:'5px 10px', fontSize:12, fontWeight: active ? 600 : 500,
+    color: active ? 'var(--text-1)' : 'var(--text-3)',
+    background: active ? 'var(--bg-elev)' : 'transparent',
+    border:'1px solid', borderColor: active ? 'var(--border)' : 'transparent',
+    borderRadius:6, cursor:'pointer',
+  };
+}
+
+function VarChip({ step, field, tint }) {
+  const { bg, fg } = tintColors(tint);
+  return (
+    <span style={{
+      display:'inline-flex', alignItems:'center', gap:4,
+      padding:'2px 7px', borderRadius:5,
+      background:bg, color:fg, fontSize:11, fontWeight:500,
+    }}>
+      <Icon name="braces" size={10} />
+      <span style={{ opacity:0.7 }}>{step}.</span>
+      <span className="mono" style={{ fontWeight:600 }}>{field}</span>
+    </span>
+  );
+}
+
+/* =========================================================
+   APP
+   ========================================================= */
+function App() {
+  const [theme, setTheme] = useState(() => localStorage.getItem('pf-theme') || 'A');
+  const [route, setRoute] = useState(() => localStorage.getItem('pf-route') || 'explore');
+  useEffect(() => {
+    document.body.setAttribute('data-theme', theme);
+    localStorage.setItem('pf-theme', theme);
+  }, [theme]);
+  useEffect(() => { localStorage.setItem('pf-route', route); }, [route]);
+
+  return (
+    <div style={{ display:'flex', minHeight:'100vh' }}>
+      <Sidebar route={route} setRoute={setRoute} theme={theme} setTheme={setTheme} />
+      <div style={{ flex:1, display:'flex', flexDirection:'column', minWidth:0 }}>
+        {route === 'explore' ? <ExplorePage /> :
+         route === 'builder' ? <BuilderPage /> :
+         (<><TopBar route={route} /><FlowsPage /></>)}
+      </div>
+    </div>
+  );
+}
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
+</script>
+
+<style>
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.45; }
+}
+
+/* ============================================================
+   Per-theme logo recolor (the source PNG is blue; we hue-shift
+   it so the wordmark feels native to each iteration)
+   ============================================================ */
+.pf-logo { transition: filter 220ms ease; }
+[data-theme="A"] .pf-logo { filter: hue-rotate(38deg) saturate(1.05); }   /* purple */
+[data-theme="B"] .pf-logo { filter: none; }                                /* native blue */
+[data-theme="C"] .pf-logo { filter: hue-rotate(-50deg) saturate(0.95); }   /* teal */
+[data-theme="D"] .pf-logo { filter: hue-rotate(-10deg) saturate(0.45) brightness(0.9); } /* slate */
+[data-theme="E"] .pf-logo { filter: invert(1) hue-rotate(180deg) saturate(0.4) brightness(1.05); } /* midnight: invert for dark bg */
+</style>
+</body>
+</html>

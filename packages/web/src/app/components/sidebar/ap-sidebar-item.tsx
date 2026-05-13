@@ -48,8 +48,12 @@ export const ApSidebarItem = (item: SidebarItemType) => {
 
   const button = (
     <SidebarMenuButton
+      isActive={isLinkActive}
       className={cn(
-        { 'bg-sidebar-accent hover:bg-sidebar-accent!': isLinkActive },
+        {
+          'bg-sidebar-accent hover:bg-sidebar-accent! text-sidebar-accent-foreground':
+            isLinkActive,
+        },
         item.highlight && !isLinkActive && 'hover:bg-sidebar-accent/60',
       )}
       onClick={() => {
@@ -61,7 +65,7 @@ export const ApSidebarItem = (item: SidebarItemType) => {
     >
       {item.icon && renderIcon(item.icon, iconRef, item.iconClassName)}
       {!isCollapsed && (
-        <span className={cn('text-sm', { 'font-semibold': isLinkActive })}>
+        <span className={cn({ 'font-semibold': isLinkActive })}>
           {item.label}
         </span>
       )}

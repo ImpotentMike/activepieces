@@ -60,9 +60,7 @@ export const platformPiecesMutations = {
       },
       onSuccess: () => {
         toast.success(t('Pieces synced'), {
-          description: t(
-            'Pieces have been synced from the PromptFlow cloud.',
-          ),
+          description: t('Pieces have been synced from the PromptFlow cloud.'),
         });
       },
     });

@@ -42,9 +42,7 @@ const CarouselContentWithButtons = ({
                 onClick={() => onCategorySelect(category)}
                 className="px-4 py-1.5 h-auto whitespace-nowrap transition-all duration-200 text-sm font-medium rounded-none border-0 bg-transparent relative"
                 style={{
-                  color: isSelected
-                    ? '#111827'
-                    : '#6b7280',
+                  color: isSelected ? '#111827' : '#6b7280',
                   borderBottom: isSelected
                     ? '2px solid hsl(var(--primary))'
                     : '2px solid transparent',

@@ -1,7 +1,7 @@
 import { isNil } from '@activepieces/shared';
 import { useQueryClient } from '@tanstack/react-query';
 import { t } from 'i18next';
-import { ChevronsUpDown, LogOut, UserCogIcon } from 'lucide-react';
+import { LogOut, UserCogIcon } from 'lucide-react';
 import { useState } from 'react';
 
 import { UserAvatar } from '@/components/custom/user-avatar';
@@ -52,8 +52,13 @@ export function SidebarUser() {
       <SidebarMenuItem>
         <DropdownMenu modal>
           <DropdownMenuTrigger asChild className="w-full">
-            <SidebarMenuButton className="h-10! pl-2! group-data-[collapsible=icon]:h-10! group-data-[collapsible=icon]:pl-2!">
-              <div className="size-[18px] shrink-0 overflow-hidden flex items-center justify-center rounded-full">
+            <SidebarMenuButton
+              className={cn(
+                'h-auto! w-full px-0! py-0! gap-3 bg-transparent hover:bg-sidebar-accent/40 rounded-lg',
+                'group-data-[collapsible=icon]:size-9! group-data-[collapsible=icon]:p-0! group-data-[collapsible=icon]:justify-center',
+              )}
+            >
+              <div className="size-9 shrink-0 overflow-hidden flex items-center justify-center rounded-full">
                 <UserAvatar
                   className={cn('size-full object-cover', {
                     'scale-150': isNil(user.imageUrl),
@@ -61,18 +66,20 @@ export function SidebarUser() {
                   name={user.firstName + ' ' + user.lastName}
                   email={user.email}
                   imageUrl={user.imageUrl}
-                  size={18}
+                  size={36}
                   disableTooltip={true}
                 />
               </div>
 
               {!isCollapsed && (
-                <>
-                  <span className="truncate">
+                <div className="flex flex-1 flex-col items-start min-w-0 text-left">
+                  <span className="truncate text-sm font-semibold text-sidebar-foreground/80 leading-5 w-full">
                     {user.firstName + ' ' + user.lastName}
                   </span>
-                  <ChevronsUpDown className="ml-auto size-4" />
-                </>
+                  <span className="truncate text-xs font-normal text-muted-foreground leading-4 w-full">
+                    {user.email}
+                  </span>
+                </div>
               )}
             </SidebarMenuButton>
           </DropdownMenuTrigger>
