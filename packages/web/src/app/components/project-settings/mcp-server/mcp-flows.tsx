@@ -1,9 +1,8 @@
 import { FlowStatus, PopulatedMcpServer } from '@activepieces/shared';
 import { t } from 'i18next';
 
+import { PfStatusPill } from '@/components/custom/pf-status-pill';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils';
 
 export function McpFlows({ mcpServer }: McpFlowsProps) {
   const flows = mcpServer?.flows ?? [];
@@ -32,18 +31,7 @@ export function McpFlows({ mcpServer }: McpFlowsProps) {
             <span className="text-sm font-medium">
               {flow.version.displayName}
             </span>
-            <Badge
-              variant={isEnabled ? 'success' : 'outline'}
-              className="flex items-center gap-1.5"
-            >
-              <div
-                className={cn(
-                  'w-2 h-2 rounded-full',
-                  isEnabled ? 'bg-success' : 'bg-gray-400',
-                )}
-              />
-              <span>{isEnabled ? t('On') : t('Off')}</span>
-            </Badge>
+            <PfStatusPill status={isEnabled ? 'published' : 'paused'} />
           </div>
         );
       })}

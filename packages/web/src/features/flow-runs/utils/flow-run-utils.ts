@@ -19,6 +19,7 @@ import {
   Timer,
 } from 'lucide-react';
 
+import { type PfStatusPillStatus } from '@/components/custom/pf-status-pill';
 import { cn } from '@/lib/utils';
 
 export const flowRunUtils = {
@@ -218,6 +219,27 @@ export const flowRunUtils = {
           variant: 'error',
           Icon: CircleAlert,
         };
+    }
+  },
+
+  getStatusPillStatus(status: FlowRunStatus): PfStatusPillStatus {
+    switch (status) {
+      case FlowRunStatus.RUNNING:
+      case FlowRunStatus.QUEUED:
+        return 'running';
+      case FlowRunStatus.SUCCEEDED:
+        return 'success';
+      case FlowRunStatus.PAUSED:
+        return 'waiting';
+      case FlowRunStatus.CANCELED:
+        return 'unpublished';
+      case FlowRunStatus.FAILED:
+      case FlowRunStatus.INTERNAL_ERROR:
+      case FlowRunStatus.QUOTA_EXCEEDED:
+      case FlowRunStatus.MEMORY_LIMIT_EXCEEDED:
+      case FlowRunStatus.LOG_SIZE_EXCEEDED:
+      case FlowRunStatus.TIMEOUT:
+        return 'failed';
     }
   },
 };

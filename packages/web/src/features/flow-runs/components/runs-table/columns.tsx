@@ -17,7 +17,7 @@ import { RowDataWithActions } from '@/components/custom/data-table';
 import { DataTableColumnHeader } from '@/components/custom/data-table/data-table-column-header';
 import { TruncatedColumnTextValue } from '@/components/custom/data-table/truncated-column-text-value';
 import { FormattedDate } from '@/components/custom/formatted-date';
-import { StatusIconWithText } from '@/components/custom/status-icon-with-text';
+import { PfStatusPill } from '@/components/custom/pf-status-pill';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
@@ -223,14 +223,9 @@ export const runsTableColumns = ({
     ),
     cell: ({ row }) => {
       const status = row.original.status;
-      const { variant, Icon } = flowRunUtils.getStatusIcon(status);
       return (
         <div className="text-left">
-          <StatusIconWithText
-            icon={Icon}
-            text={formatUtils.convertEnumToReadable(status)}
-            variant={variant}
-          />
+          <PfStatusPill status={flowRunUtils.getStatusPillStatus(status)} />
         </div>
       );
     },

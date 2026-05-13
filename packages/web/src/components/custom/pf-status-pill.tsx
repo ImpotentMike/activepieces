@@ -1,4 +1,5 @@
 import { cva, type VariantProps } from 'class-variance-authority';
+import { t } from 'i18next';
 import * as React from 'react';
 
 import {
@@ -69,13 +70,13 @@ function PfStatusPill({
   'aria-label': ariaLabelProp,
   ...spanProps
 }: PfStatusPillProps) {
-  const visibleLabel = children ?? label ?? STATUS_DEFAULT_LABEL[status];
+  const visibleLabel = children ?? label ?? t(STATUS_LABEL_KEY[status]);
   const resolvedScope = scope ?? STATUS_SCOPE[status];
   const ariaLabel =
     ariaLabelProp ??
     (resolvedScope === 'run'
-      ? `Run status: ${visibleLabel}`
-      : `Workflow status: ${visibleLabel}`);
+      ? `${t('Run status')}: ${visibleLabel}`
+      : `${t('Workflow status')}: ${visibleLabel}`);
 
   const isLiveState = status === 'running' || status === 'waiting';
 
@@ -113,7 +114,7 @@ function PfStatusPill({
   );
 }
 
-const STATUS_DEFAULT_LABEL: Record<PfStatusPillStatus, string> = {
+const STATUS_LABEL_KEY: Record<PfStatusPillStatus, string> = {
   running: 'Running',
   success: 'Success',
   failed: 'Failed',
