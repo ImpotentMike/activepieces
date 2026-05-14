@@ -269,7 +269,7 @@ function PfTemplateCard({
   pieces,
   ctaLabel = 'Use template',
   className,
-  ...props
+  ...buttonProps
 }: PfTemplateCardProps) {
   return (
     <PfCard
@@ -277,9 +277,8 @@ function PfTemplateCard({
       data-pf-card-variant="template"
       className={cn('group', className)}
       asChild
-      {...props}
     >
-      <button type="button">
+      <button type="button" {...buttonProps}>
         <PfCardHead>
           <PfCardTitleWrap>
             <PfCardTitle>{title}</PfCardTitle>
@@ -346,7 +345,7 @@ function PfProjectCard({
   members,
   lastRun,
   className,
-  ...props
+  ...buttonProps
 }: PfProjectCardProps) {
   return (
     <PfCard
@@ -354,9 +353,8 @@ function PfProjectCard({
       data-pf-card-variant="project"
       className={cn(className)}
       asChild
-      {...props}
     >
-      <button type="button">
+      <button type="button" {...buttonProps}>
         <PfCardHead>
           <PfCardMark style={markColor ? { background: markColor } : undefined}>
             {mark}
@@ -406,43 +404,53 @@ function PfWorkflowCard({
   meta,
   disabled = false,
   className,
-  ...props
+  ...buttonProps
 }: PfWorkflowCardProps) {
-  const Wrapper: React.ElementType = disabled ? 'div' : 'button';
+  const body = (
+    <>
+      <div className="flex min-w-0 items-start justify-between gap-3">
+        <div className="flex min-w-0 flex-1 flex-col">
+          <PfCardTitle className="text-[14.5px]">{name}</PfCardTitle>
+          {id ? (
+            <span className="mt-0.5 font-mono text-[11px] text-muted-foreground">
+              {id}
+            </span>
+          ) : null}
+        </div>
+        {status ? <PfStatusPill status={status} size="sm" /> : null}
+      </div>
+      {meta && meta.length > 0 ? (
+        <PfCardMeta>
+          {meta.map((row, index) => (
+            <PfCardMetaRow
+              key={`${row.label}-${index}`}
+              label={row.label}
+              icon={row.icon}
+            >
+              {row.value}
+            </PfCardMetaRow>
+          ))}
+        </PfCardMeta>
+      ) : null}
+    </>
+  );
+
   return (
     <PfCard
       variant={disabled ? 'disabled' : 'clickable'}
       data-pf-card-variant="workflow"
       className={cn(className)}
       asChild
-      {...props}
     >
-      <Wrapper {...(disabled ? { 'aria-disabled': true } : { type: 'button' })}>
-        <div className="flex min-w-0 items-start justify-between gap-3">
-          <div className="flex min-w-0 flex-1 flex-col">
-            <PfCardTitle className="text-[14.5px]">{name}</PfCardTitle>
-            {id ? (
-              <span className="mt-0.5 font-mono text-[11px] text-muted-foreground">
-                {id}
-              </span>
-            ) : null}
-          </div>
-          {status ? <PfStatusPill status={status} size="sm" /> : null}
+      {disabled ? (
+        <div role="button" aria-disabled="true">
+          {body}
         </div>
-        {meta && meta.length > 0 ? (
-          <PfCardMeta>
-            {meta.map((row, index) => (
-              <PfCardMetaRow
-                key={`${row.label}-${index}`}
-                label={row.label}
-                icon={row.icon}
-              >
-                {row.value}
-              </PfCardMetaRow>
-            ))}
-          </PfCardMeta>
-        ) : null}
-      </Wrapper>
+      ) : (
+        <button type="button" {...buttonProps}>
+          {body}
+        </button>
+      )}
     </PfCard>
   );
 }

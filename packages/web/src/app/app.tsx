@@ -22,7 +22,6 @@ import { api } from '@/lib/api';
 
 import { EmbeddingFontLoader } from './components/embedding-font-loader';
 import { InitialDataGuard } from './components/initial-data-guard';
-import { ThemeSwitcher } from './components/theme-switcher';
 import { ApRouter } from './guards';
 
 const queryClient = new QueryClient({
@@ -70,7 +69,6 @@ export function App() {
                       <ApRouter />
                       <Toaster position="bottom-right" />
                       <ApErrorDialog />
-                      <ThemeSwitcher />
                     </ThemeProvider>
                   </React.Fragment>
                 </TooltipProvider>
