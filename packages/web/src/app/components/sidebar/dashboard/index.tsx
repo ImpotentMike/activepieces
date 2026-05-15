@@ -69,7 +69,9 @@ export function ProjectDashboardSidebar({
   const buildItems: SidebarItemType[] = [
     {
       type: 'link',
-      to: '/impact',
+      to: hasProject
+        ? authenticationSession.appendProjectRoutePrefix('/dashboard')
+        : '/',
       label: t('Dashboard'),
       icon: LayoutGridIcon,
       show: true,
