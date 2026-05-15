@@ -18,6 +18,7 @@ import { AutomationsPage } from './automations';
 const FlowBuilderPage = React.lazy(() =>
   import('./flows/id').then((m) => ({ default: m.FlowBuilderPage })),
 );
+const DashboardPage = React.lazy(() => import('./dashboard'));
 const AnalyticsPage = React.lazy(() => import('./impact'));
 const LeaderboardPage = React.lazy(() => import('./leaderboard'));
 const ProjectReleasesPage = React.lazy(() =>
@@ -68,6 +69,18 @@ const automationsPagePermissions = [
 ];
 
 export const projectRoutes = [
+  ...ProjectRouterWrapper({
+    path: routesThatRequireProjectId.dashboard,
+    element: (
+      <ProjectDashboardLayout>
+        <PageTitle title="Dashboard">
+          <SuspenseWrapper>
+            <DashboardPage />
+          </SuspenseWrapper>
+        </PageTitle>
+      </ProjectDashboardLayout>
+    ),
+  }),
   ...ProjectRouterWrapper({
     path: routesThatRequireProjectId.automations,
     element: (

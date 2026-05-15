@@ -3,6 +3,7 @@ import { Permission } from '@activepieces/shared';
 import { authenticationSession } from './authentication-session';
 
 export const routesThatRequireProjectId = {
+  dashboard: '/dashboard',
   runs: '/runs',
   singleRun: '/runs/:runId',
   flows: '/flows',
