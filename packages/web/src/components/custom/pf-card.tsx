@@ -206,33 +206,112 @@ function PfStatCard({
   unit,
   trend,
   footnote,
+  breakdown,
+  state = 'ready',
+  accent = false,
+  onClick,
   className,
-  ...props
+  id,
+  'aria-label': ariaLabel,
 }: PfStatCardProps) {
-  return (
-    <PfCard
-      density="compact"
-      data-pf-card-variant="stat"
-      className={cn(className)}
-      {...props}
+  const isLoading = state === 'loading';
+  const isError = state === 'error';
+  const isClickable = !!onClick && !isLoading && !isError;
+
+  const labelNode = (
+    <p
+      data-slot="pf-stat-card-label"
+      className="m-0 text-[12.5px] font-medium text-muted-foreground"
     >
-      <p className="m-0 text-[12.5px] font-medium text-muted-foreground">
-        {label}
-      </p>
-      <div className="flex items-end justify-between gap-3">
-        <h2 className="m-0 text-3xl font-semibold leading-[1.05] tracking-tight text-foreground">
-          {value}
-          {unit ? (
+      {label}
+    </p>
+  );
+
+  const valueRow = (
+    <div className="flex items-end justify-between gap-3">
+      {isLoading ? (
+        <span
+          aria-hidden="true"
+          className="my-0.5 inline-block h-8 w-20 animate-pulse rounded-md bg-gray-100"
+        />
+      ) : (
+        <h2
+          className={cn(
+            'm-0 text-3xl font-semibold leading-[1.05] tracking-tight',
+            isError
+              ? 'text-muted-foreground'
+              : accent
+              ? 'text-primary-700'
+              : 'text-foreground',
+          )}
+        >
+          {isError ? '—' : value}
+          {!isError && unit ? (
             <span className="ml-1 text-sm font-medium text-muted-foreground">
               {unit}
             </span>
           ) : null}
         </h2>
-        {trend ? <PfStatTrend {...trend} /> : null}
-      </div>
-      {footnote ? (
-        <p className="m-0 text-[11.5px] text-muted-foreground">{footnote}</p>
-      ) : null}
+      )}
+      {!isLoading && !isError && trend ? <PfStatTrend {...trend} /> : null}
+    </div>
+  );
+
+  const footnoteText = isError ? footnote ?? 'Couldn’t load' : footnote;
+  const footnoteNode = footnoteText ? (
+    <p
+      data-slot="pf-stat-card-footnote"
+      className="m-0 line-clamp-1 text-[11.5px] text-muted-foreground"
+    >
+      {footnoteText}
+    </p>
+  ) : null;
+
+  const breakdownNode =
+    !isLoading && !isError && breakdown ? (
+      <p
+        data-slot="pf-stat-card-breakdown"
+        className="m-0 line-clamp-1 text-[11.5px] text-gray-600 dark:text-gray-300"
+      >
+        {breakdown}
+      </p>
+    ) : null;
+
+  const body = (
+    <>
+      {labelNode}
+      {valueRow}
+      {footnoteNode}
+      {breakdownNode}
+    </>
+  );
+
+  if (isClickable) {
+    return (
+      <PfCard
+        variant="clickable"
+        density="compact"
+        data-pf-card-variant="stat"
+        className={cn('text-left', className)}
+        asChild
+      >
+        <button type="button" id={id} aria-label={ariaLabel} onClick={onClick}>
+          {body}
+        </button>
+      </PfCard>
+    );
+  }
+
+  return (
+    <PfCard
+      density="compact"
+      data-pf-card-variant="stat"
+      data-pf-stat-state={state}
+      className={cn(className)}
+      id={id}
+      aria-label={ariaLabel}
+    >
+      {body}
     </PfCard>
   );
 }
@@ -488,12 +567,19 @@ export type PfStatTrendProps = {
   value: React.ReactNode;
 };
 
-export type PfStatCardProps = Omit<React.ComponentProps<'div'>, 'children'> & {
+export type PfStatCardProps = {
   label: React.ReactNode;
   value: React.ReactNode;
   unit?: React.ReactNode;
   trend?: PfStatTrendProps;
   footnote?: React.ReactNode;
+  breakdown?: React.ReactNode;
+  state?: 'loading' | 'error' | 'ready';
+  accent?: boolean;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
+  className?: string;
+  id?: string;
+  'aria-label'?: string;
 };
 
 export type PfTemplateCardPiece = {
