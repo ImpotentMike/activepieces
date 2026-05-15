@@ -19,15 +19,9 @@ export const routesThatRequireProjectId = {
 };
 
 export const determineDefaultRoute = (
-  checkAccess: (permission: Permission) => boolean,
+  _checkAccess: (permission: Permission) => boolean,
 ) => {
-  if (checkAccess(Permission.READ_FLOW) || checkAccess(Permission.READ_TABLE)) {
-    return authenticationSession.appendProjectRoutePrefix('/automations');
-  }
-  if (checkAccess(Permission.READ_RUN)) {
-    return authenticationSession.appendProjectRoutePrefix('/runs');
-  }
-  return authenticationSession.appendProjectRoutePrefix('/settings');
+  return authenticationSession.appendProjectRoutePrefix('/dashboard');
 };
 
 export const NEW_FLOW_QUERY_PARAM = 'newFlow';
