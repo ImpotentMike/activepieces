@@ -13,7 +13,7 @@ This folder contains the brand/visual foundations, CSS tokens, fonts, icon conve
 | Shadcn UI Kit for Figma + Pro Blocks (Oct 2025) | mounted `.fig` VFS — browse via `fig_ls /`, screenshot via `fig_screenshot` |
 | Activepieces codebase | `github.com/yazeed-prog/activepieces` (`packages/web` is the React UI) |
 | Canonical brand stylesheet | `packages/web/src/styles.css` (Tailwind v4 + Shadcn "new-york" style) |
-| Brand logo | `packages/web/public/logo.svg` — purple mark `#8142E3` |
+| Brand logo | `packages/web/public/logo.svg` — brand blue `#2563eb` (asset file may still be purple — pending re-export) |
 | Brand fonts | Inter (400/500/600/700/800) — provided in `uploads/` and `fonts/` |
 | `Sentient-Variable.woff2` | provided as a display/display-alt exploration font (not used in shipping UI) |
 
@@ -104,12 +104,12 @@ Activepieces copy is **functional, direct, and product-led**. It talks about wor
 ## VISUAL FOUNDATIONS
 
 ### Palette
-- **Primary — Purple** `hsl(257 74% 57%)` ≈ `#8142E3`. Used for: primary buttons, the logo, active sidebar item, add-step affordance, selection glow in the builder, key links.
-  - `--primary-100` `hsl(257 75% 85%)` for soft backgrounds / selection washes
-  - `--primary-300` `hsl(257 74% 25%)` for deep accents
-- **Neutrals**: Tailwind `neutral` scale (50→950). `950` is near-black (`#0a0a0a`), used for body text and the dark-mode background. The whole app reads as crisp **white + near-black** with purple as the only accent.
+- **Primary — Blue** `hsl(221 83% 53%)` ≈ `#2563eb`. Used for: primary buttons, the logo, active sidebar item, add-step affordance, selection glow in the builder, key links.
+  - `--primary-100` `hsl(213 97% 87%)` for soft backgrounds / selection washes
+  - `--primary-300` `hsl(224 64% 33%)` for deep accents
+- **Neutrals**: Tailwind `neutral` scale (50→950). `950` is near-black (`#0a0a0a`), used for body text and the dark-mode background. The whole app reads as crisp **white + near-black** with blue as the only accent.
 - **Semantics**: Emerald (`success` 160 84% 39%), Rose (`destructive` 350 89% 60%), Amber (`warning` 38 92% 50%). Only the 500 step is used for the solid colour; 50/100 are the soft fill for alerts/toasts; 700 is for high-contrast text on light chips.
-- **Dark mode**: `neutral-950` background, `neutral-800` popovers/secondary, `hsla(0,0%,100%,0.1)` borders. In the shipping app primary *shifts to blue* in dark mode — we keep it purple by default in this design system for brand consistency, but document the blue variant.
+- **Dark mode**: `neutral-950` background, `neutral-800` popovers/secondary, `hsla(0,0%,100%,0.1)` borders. Primary stays blue in dark mode for brand consistency.
 
 ### Typography
 - **Inter** across the entire product (400 / 500 / 600 / 700 / 800). `font-feature-settings: 'rlig' 1, 'calt' 1`.
@@ -188,5 +188,5 @@ Activepieces is a Tailwind v4 codebase. When generating production-style code of
 ## Caveats
 
 - The **Pro-Blocks** Figma pages (Landing, Application, etc.) are Shadcn's stock templates and do NOT reflect the real Activepieces marketing site (which isn't in the repo). We use them as secondary reference for Shadcn patterns only.
-- Figma file says primary purple is `rgb(151,71,255)` (`#9747FF`). The **actual shipping** primary per `styles.css` is `hsl(257 74% 57%)` ≈ `#8142E3` (matches the logo). We use the shipping value — the Figma swatch is a slightly lighter preview variant.
+- Legacy Figma files show primary as purple `rgb(151,71,255)` (`#9747FF`) or `#8142E3`. The **actual shipping** primary per `styles.css` is `hsl(221 83% 53%)` ≈ `#2563eb` (PromptFlow brand blue). The brand was rebranded from Activepieces purple to PromptFlow blue — ignore older purple references.
 - **Sentient** (uploaded) is included as a display option but **is not used in shipping Activepieces UI**. Treat as optional branding exploration only.

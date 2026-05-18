@@ -207,8 +207,8 @@ type ThemeConfig = {
 
 const THEME_CONFIGS: Record<Iteration, ThemeConfig> = {
   A: {
-    label: 'Activepieces',
-    primary: violet,
+    label: 'PromptFlow',
+    primary: blue,
     secondary: cyan,
     tertiary: pink,
     pageBg: '#ffffff',
@@ -306,7 +306,7 @@ function readStored(): Iteration {
 
 /* Tiny colored dot swatch for each theme button */
 const THEME_DOTS: Record<Iteration, string> = {
-  A: '#8b5cf6',
+  A: '#2563eb',
   B: '#3b82f6',
   C: '#14b8a6',
   D: '#64748b',

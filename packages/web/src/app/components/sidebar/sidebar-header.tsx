@@ -1,10 +1,9 @@
 import { ApEdition, ApFlagId } from '@activepieces/shared';
 import { t } from 'i18next';
-import { ChevronsUpDown, Menu } from 'lucide-react';
+import { ChevronsUpDown } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 import { useEmbedding } from '@/components/providers/embed-provider';
-import { Button } from '@/components/ui/button';
 import {
   SidebarHeader,
   SidebarMenuButton,
@@ -21,7 +20,7 @@ export const AppSidebarHeader = () => {
   const { embedState } = useEmbedding();
   const { data: edition } = flagsHooks.useFlag<ApEdition>(ApFlagId.EDITION);
   const showSwitcher = edition === ApEdition.CLOUD && !embedState.isEmbedded;
-  const { state, toggleSidebar } = useSidebar();
+  const { state } = useSidebar();
   const { platform: currentPlatform } = platformHooks.useCurrentPlatform();
   const { checkAccess } = useAuthorization();
   const defaultRoute = determineDefaultRoute(checkAccess);
@@ -63,7 +62,7 @@ export const AppSidebarHeader = () => {
 
   return (
     <SidebarHeader>
-      <div className="flex min-h-14 w-full items-center justify-between gap-2">
+      <div className="flex min-h-14 w-full items-center gap-2">
         {showSwitcher ? (
           <PlatformSwitcher>
             <SidebarMenuButton
@@ -84,15 +83,6 @@ export const AppSidebarHeader = () => {
             {wordmark}
           </div>
         )}
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={toggleSidebar}
-          className="h-8 w-8 shrink-0 text-muted-foreground hover:text-sidebar-foreground"
-          aria-label="Toggle sidebar"
-        >
-          <Menu className="size-4" />
-        </Button>
       </div>
     </SidebarHeader>
   );

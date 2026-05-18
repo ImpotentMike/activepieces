@@ -64,7 +64,7 @@ export function generateTheme({
 }
 
 export const defaultTheme = generateTheme({
-    primaryColor: '#6e41e2',
+    primaryColor: '#2563eb',
     websiteName: 'PromptFlow',
     fullLogoUrl: '/logo.svg',
     favIconUrl: '/logo.svg',

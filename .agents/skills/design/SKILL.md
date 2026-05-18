@@ -1,6 +1,6 @@
 ---
 name: activepieces-design-system
-description: Design system for Activepieces (open-source AI automation platform, "open source replacement for Zapier"). Use whenever designing, mocking, or building UI for Activepieces — the web app (flow builder, runs, connections, dashboard), docs, or marketing surfaces. Provides brand purple `#8142E3`, Inter type ramp with `sm` (14px) as body default, Tailwind neutrals, Lucide icons, Shadcn/Radix primitive conventions, the signature dotted-canvas builder background, and a recreated web UI kit.
+description: Design system for Activepieces (open-source AI automation platform, "open source replacement for Zapier"). Use whenever designing, mocking, or building UI for Activepieces — the web app (flow builder, runs, connections, dashboard), docs, or marketing surfaces. Provides brand blue `#2563eb`, Inter type ramp with `sm` (14px) as body default, Tailwind neutrals, Lucide icons, Shadcn/Radix primitive conventions, the signature dotted-canvas builder background, and a recreated web UI kit.
 ---
 
 # Activepieces Design System
@@ -14,7 +14,7 @@ Read `README.md` in this folder **first** — it is the canonical reference. Thi
 - `README.md` — full spec (content fundamentals, visual foundations, iconography, caveats). Read first.
 - `colors_and_type.css` — CSS tokens (colors, fonts, radii, shadows, spacing, type ramp). Import in every HTML file.
 - `fonts/` — Inter 400/500/600/700/800 + `Sentient-Variable.woff2` (display alt, not used in app).
-- `assets/logo.svg` — brand mark. Purple `#8142E3`.
+- `assets/logo.svg` — brand mark. Brand blue `#2563eb` (asset file may still be purple — pending re-export).
 - `assets/` — piece-tile SVGs (Shopify, Airtable, Google, OpenAI, Slack, Gmail) + MCP/code glyphs.
 - `preview/` — ~700px-wide design-system cards (type, color, spacing, components).
 - `ui_kits/web/` — high-fidelity recreation of the Activepieces web app. Entry `ui_kits/web/index.html`. Form-controls showcase at `ui_kits/web/forms.html`. Modular JSX via Babel standalone. Screens: Flows dashboard, Builder (dotted canvas + step panel), Runs table, Connections list, **Ask AI chat overlay** (Lottie-animated "thinking" loader at `assets/ai-loader.lottie.json`). Supports **light + dark mode** via `.dark` class on `<html>` — toggle lives in the sidebar footer.
@@ -49,7 +49,7 @@ Read `README.md` in this folder **first** — it is the canonical reference. Thi
 
 ## Hard rules (never violate)
 
-1. **Primary is purple `hsl(257 74% 57%)` / `#8142E3`** — the shipping value from `packages/web/src/styles.css`. Not the `#9747FF` swatch some Figma files show. **Primary stays purple in dark mode** too (brand continuity) — use `.dark.blue-primary` to opt back into the repo's blue-in-dark behaviour.
+1. **Primary is blue `hsl(221 83% 53%)` / `#2563eb`** — the shipping value from `packages/web/src/styles.css`. Not the `#9747FF` (purple) swatch legacy Figma files show. **Primary stays blue in dark mode** too (brand continuity).
 2. **Body text is 14px (`text-sm`), not 16**. Activepieces feels dense and tool-like. Headings use `-0.01em` to `-0.02em` tracking.
 3. **Sentence case everywhere**: headings, buttons, menu items, page titles. Proper nouns only for feature names (Flows, Runs, Pieces, MCP, Agents, Connections).
 4. **Lucide icons only**, 1.5–2px stroke, rounded caps. Default size `16` (`size-4`). Icon + text → `gap-2` (8px). No emoji in the product UI. No Unicode glyphs (✓ × ←) — always a Lucide component.
@@ -77,9 +77,9 @@ Matter-of-fact, second-person, verb-first. No "Click here". No "Please". No hype
 ### Colors
 ```css
 /* Primary */
---ap-primary:     hsl(257 74% 57%);   /* #8142E3 — the brand purple */
---ap-primary-100: hsl(257 75% 85%);   /* soft wash, selection, add-step glow */
---ap-primary-300: hsl(257 74% 25%);   /* deep accent, text on primary-100 */
+--ap-primary:     hsl(221 83% 53%);   /* #2563eb — the brand blue */
+--ap-primary-100: hsl(213 97% 87%);   /* soft wash, selection, add-step glow */
+--ap-primary-300: hsl(224 64% 33%);   /* deep accent, text on primary-100 */
 
 /* Neutrals (Tailwind neutral) */
 --ap-neutral-50:  #fafafa;
@@ -114,7 +114,7 @@ Matter-of-fact, second-person, verb-first. No "Click here". No "Please". No hype
 - Shadows: `sm` `0 1px 3px rgba(0,0,0,0.06)` (cards that lift), `md` `0 10px 15px -3px rgba(0,0,0,0.08)` (menus). **No colored shadows** except the add-step button: `box-shadow: 0 0 0 6px var(--primary-100)`.
 
 ### Button variants
-`default` (purple), `secondary` (near-black), `outline` (white + border), `ghost` (transparent), `destructive` (rose), `link` (underlined purple). Sizes: `xs 24` / `sm 30` / `default 36` / `lg 40` (height in px) + `icon` / `icon-sm` / `icon-lg` (square). Icon-only buttons: square with `radius-md`.
+`default` (blue), `secondary` (near-black), `outline` (white + border), `ghost` (transparent), `destructive` (rose), `link` (underlined blue). Sizes: `xs 24` / `sm 30` / `default 36` / `lg 40` (height in px) + `icon` / `icon-sm` / `icon-lg` (square). Icon-only buttons: square with `radius-md`.
 
 ### Form controls (ships in `Primitives.jsx`)
 - **Input** 36px default, 32px `thin`; supports left icon.
@@ -153,7 +153,7 @@ Or inline SVGs from https://lucide.dev. Piece/integration icons: copy the real S
 
 - Toggle via `.dark` on `<html>`. Persist with `localStorage['ap-theme']`.
 - Surfaces: outer shell `neutral-950`, floating card `neutral-900`, popovers/muted `neutral-800`, accent `neutral-700`.
-- **Primary stays purple** (`hsl(257 74% 57%)`) — brand continuity. Opt back into the repo's blue-in-dark with `.dark.blue-primary`.
+- **Primary stays blue** (`hsl(221 83% 53%)`) — brand continuity in dark mode.
 - Semantics lift from `-500` → `-400` for legibility on dark backgrounds (`success hsl(160 60% 52%)`, `destructive hsl(351 95% 72%)`, `warning hsl(43 97% 56%)`).
 - Dividers: `hsla(0, 0%, 100%, 0.14)` — 14% white, bumped from the repo's 10% so borders stay readable against `neutral-900`.
 
@@ -165,8 +165,8 @@ Or inline SVGs from https://lucide.dev. Piece/integration icons: copy the real S
 
 ## Known gotchas
 
-- Figma file shows primary as `#9747FF`. **Ignore it.** Shipping primary is `#8142E3` (from `packages/web/src/styles.css` and the logo).
-- The repo's dark mode shifts primary to **blue**. This system keeps primary **purple** in both modes for brand consistency; document the blue variant only if the user explicitly asks for dark-mode fidelity.
+- Legacy Figma files show primary as `#9747FF` (purple). **Ignore it.** Shipping primary is `#2563eb` (from `packages/web/src/styles.css`).
+- The brand has been rebranded from Activepieces purple to PromptFlow blue. Primary stays blue in both light and dark modes for brand consistency.
 - `Sentient-Variable.woff2` is an *optional* display/marketing font — **not used in shipping product UI**. Only use if explicitly doing branding/marketing exploration.
 - The Pro-Blocks Figma pages (Landing, Application, etc.) are Shadcn stock templates, not Activepieces marketing. Use as Shadcn pattern reference only.
 - `packages/web` is the only shipping UI surface in the repo. There is no marketing-site code to reference.
@@ -177,4 +177,4 @@ Or inline SVGs from https://lucide.dev. Piece/integration icons: copy the real S
 2. Import `colors_and_type.css` in your HTML.
 3. Load Inter (already in `fonts/`) and Lucide via CDN.
 4. If building a web-app screen: open `ui_kits/web/index.html`, copy the relevant component file(s), and compose.
-5. Use sentence case, 14px body, 1px borders, purple `#8142E3` only for primary action + brand. Nothing else.
+5. Use sentence case, 14px body, 1px borders, blue `#2563eb` only for primary action + brand. Nothing else.
