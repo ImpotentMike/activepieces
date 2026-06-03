@@ -1731,5 +1731,14 @@
   "Across this project": "Across this project",
   "Across {count} projects": "Across {count} projects",
   "Couldn’t load recent failures.": "Couldn’t load recent failures.",
-  "No failures to investigate. Good.": "No failures to investigate. Good."
+  "No failures to investigate. Good.": "No failures to investigate. Good.",
+  "PromptFlow AI": "PromptFlow AI",
+  "Collapse": "Collapse",
+  "Proposed workflow": "Proposed workflow",
+  "Apply to canvas": "Apply to canvas",
+  "Discard": "Discard",
+  "Describe a workflow to build…": "Describe a workflow to build…",
+  "Describe what you want to automate": "Describe what you want to automate",
+  "Try one of these to get started": "Try one of these to get started",
+  "Preview only — applying to the canvas is not wired up yet": "Preview only — applying to the canvas is not wired up yet"
 }
