@@ -60,11 +60,14 @@ export function generateTheme({
             favIconUrl,
             logoIconUrl,
         },
+        isDefault: primaryColor.toLowerCase() === BRAND_PRIMARY_COLOR.toLowerCase(),
     }
 }
 
+const BRAND_PRIMARY_COLOR = '#2563eb'
+
 export const defaultTheme = generateTheme({
-    primaryColor: '#2563eb',
+    primaryColor: BRAND_PRIMARY_COLOR,
     websiteName: 'PromptFlow',
     fullLogoUrl: '/logo.svg',
     favIconUrl: '/logo.svg',

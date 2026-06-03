@@ -62,10 +62,11 @@ export function ThemeProvider({
     root.classList.remove('light', 'dark');
     document.title = branding.websiteName;
 
-    // Only apply default branding colors if we aren't using a custom PromptFlow theme
-    const hasCustomTheme = root.hasAttribute('data-pf-theme');
+    const hasCustomPfTheme = root.hasAttribute('data-pf-theme');
+    const shouldApplyServerPrimary =
+      !hasCustomPfTheme && branding.isDefault === false;
 
-    if (!hasCustomTheme) {
+    if (shouldApplyServerPrimary) {
       document.documentElement.style.setProperty(
         '--primary',
         colorsUtils.hexToHslString(branding.colors.primary.default),
@@ -75,7 +76,7 @@ export function ThemeProvider({
     setFavicon(branding.logos.favIconUrl);
     switch (resolvedTheme) {
       case 'light': {
-        if (!hasCustomTheme) {
+        if (shouldApplyServerPrimary) {
           document.documentElement.style.setProperty(
             '--primary-100',
             colorsUtils.hexToHslString(branding.colors.primary.light),
@@ -88,7 +89,7 @@ export function ThemeProvider({
         break;
       }
       case 'dark': {
-        if (!hasCustomTheme) {
+        if (shouldApplyServerPrimary) {
           document.documentElement.style.setProperty(
             '--primary-100',
             colorsUtils.hexToHslString(branding.colors.primary.dark),

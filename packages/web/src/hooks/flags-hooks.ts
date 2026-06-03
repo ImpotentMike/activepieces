@@ -17,6 +17,7 @@ type WebsiteBrand = {
       light: string;
     };
   };
+  isDefault?: boolean;
 };
 const queryKey = ['flags'];
 export const flagsHooks = {
