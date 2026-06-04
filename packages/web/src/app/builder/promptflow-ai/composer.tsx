@@ -59,5 +59,5 @@ type AiComposerProps = {
   value: string;
   onChange: (value: string) => void;
   onSend: (text: string) => void;
-  textareaRef: RefObject<HTMLTextAreaElement>;
+  textareaRef: RefObject<HTMLTextAreaElement | null>;
 };
