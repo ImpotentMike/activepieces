@@ -50,7 +50,7 @@ export function RunsOverTimeChart({ series, state }: RunsOverTimeChartProps) {
   );
 
   return (
-    <PfCard data-slot="dashboard-runs-over-time" className="gap-3">
+    <PfCard data-slot="dashboard-runs-over-time" className="h-full gap-3">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="flex min-w-0 flex-col">
           <h3 className="m-0 inline-flex items-center gap-2 text-[15px] font-semibold tracking-tight text-foreground">

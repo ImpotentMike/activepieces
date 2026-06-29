@@ -199,32 +199,6 @@ export const dashboardData = {
         status: run.status,
       }));
   },
-
-  flaggedWorkflows({
-    runs,
-    limit = 3,
-  }: {
-    runs: RecentRunRow[];
-    limit?: number;
-  }): DashboardFlaggedWorkflow[] {
-    const byFlow = new Map<string, DashboardFlaggedWorkflow>();
-    for (const run of runs) {
-      if (!FAILED_STATES.includes(run.status)) {
-        continue;
-      }
-      const name = run.flowVersion?.displayName ?? null;
-      const key = run.flowId ?? name ?? run.id;
-      const existing = byFlow.get(key);
-      if (existing) {
-        existing.failures += 1;
-      } else {
-        byFlow.set(key, { flowId: run.flowId ?? null, name, failures: 1 });
-      }
-    }
-    return Array.from(byFlow.values())
-      .sort((a, b) => b.failures - a.failures)
-      .slice(0, limit);
-  },
 };
 
 export type DashboardQueryState = 'loading' | 'error' | 'ready';
@@ -243,12 +217,6 @@ export type DashboardFailureWindow = {
   ratePercent: number | null;
   level: DashboardFailureRateLevel | null;
   trend: PfTrend | undefined;
-};
-
-export type DashboardFlaggedWorkflow = {
-  flowId: string | null;
-  name: string | null;
-  failures: number;
 };
 
 export type DashboardRunsWindow = {

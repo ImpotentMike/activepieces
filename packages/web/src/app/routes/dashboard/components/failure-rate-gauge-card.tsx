@@ -1,21 +1,11 @@
 import { t } from 'i18next';
-import {
-  ArrowDownRight,
-  ArrowUpRight,
-  ChevronRight,
-  CircleCheck,
-  Minus,
-  TriangleAlert,
-  Workflow,
-} from 'lucide-react';
+import { ArrowDownRight, ArrowUpRight, Minus, TriangleAlert } from 'lucide-react';
 
 import { PfCard } from '@/components/custom/pf-card';
-import { TextWithTooltip } from '@/components/custom/text-with-tooltip';
 import { cn } from '@/lib/utils';
 
 import {
   DashboardFailureWindow,
-  DashboardFlaggedWorkflow,
   DashboardQueryState,
   PfTrend,
 } from '../lib/dashboard-data';
@@ -29,10 +19,7 @@ const BAND_RADIUS = 76;
 
 export function FailureRateGaugeCard({
   failureWindow,
-  flagged,
   state,
-  onManage,
-  onFlaggedClick,
 }: FailureRateGaugeCardProps) {
   const rate = failureWindow.ratePercent;
   const hasData = state === 'ready' && rate !== null;
@@ -45,17 +32,14 @@ export function FailureRateGaugeCard({
     : 'text-foreground';
 
   return (
-    <PfCard data-slot="dashboard-failure-gauge" className="h-full gap-4">
-      <div className="flex items-center justify-between gap-3">
-        <h3 className="m-0 inline-flex items-center gap-2 text-[15px] font-semibold tracking-tight text-foreground">
-          <TriangleAlert
-            aria-hidden="true"
-            className="size-4 text-muted-foreground"
-          />
-          {t('Failure rate')}
-        </h3>
-        <ManageLink onClick={onManage} />
-      </div>
+    <PfCard data-slot="dashboard-failure-gauge" className="h-full gap-3">
+      <h3 className="m-0 inline-flex items-center gap-2 text-[15px] font-semibold tracking-tight text-foreground">
+        <TriangleAlert
+          aria-hidden="true"
+          className="size-4 text-muted-foreground"
+        />
+        {t('Failure rate')}
+      </h3>
 
       {state === 'loading' ? (
         <GaugeSkeleton />
@@ -64,9 +48,9 @@ export function FailureRateGaugeCard({
           {t('Couldn’t load failure rate.')}
         </p>
       ) : (
-        <div className="flex flex-col items-center gap-4 sm:flex-row sm:items-stretch sm:gap-5">
+        <div className="flex flex-1 items-center justify-center">
           <div
-            className="relative w-full max-w-[210px] shrink-0"
+            className="relative w-full max-w-[200px]"
             style={{ aspectRatio: `${VIEW_W} / ${VIEW_H}` }}
             role="img"
             aria-label={
@@ -119,7 +103,7 @@ export function FailureRateGaugeCard({
             <div className="absolute inset-x-0 bottom-[4%] flex flex-col items-center gap-1">
               <span
                 className={cn(
-                  'text-[26px] font-bold leading-none tracking-tight tabular-nums',
+                  'text-[28px] font-bold leading-none tracking-tight tabular-nums',
                   valueClass,
                 )}
               >
@@ -134,86 +118,9 @@ export function FailureRateGaugeCard({
               )}
             </div>
           </div>
-
-          <FlaggedList
-            flagged={flagged}
-            hasRuns={hasData}
-            onFlaggedClick={onFlaggedClick}
-          />
         </div>
       )}
     </PfCard>
-  );
-}
-
-function FlaggedList({ flagged, hasRuns, onFlaggedClick }: FlaggedListProps) {
-  if (!hasRuns) {
-    return (
-      <div className="flex min-w-0 flex-1 items-center sm:border-l sm:border-gray-100 sm:pl-5">
-        <p className="m-0 text-[13px] text-muted-foreground">
-          {t('No runs in this period yet.')}
-        </p>
-      </div>
-    );
-  }
-
-  if (flagged.length === 0) {
-    return (
-      <div className="flex min-w-0 flex-1 flex-col justify-center gap-1.5 sm:border-l sm:border-gray-100 sm:pl-5">
-        <span className="inline-flex items-center gap-2 text-[13px] font-medium text-success-700">
-          <CircleCheck aria-hidden="true" className="size-4" />
-          {t('No workflows flagged')}
-        </span>
-        <p className="m-0 text-[12px] text-muted-foreground">
-          {t('Every workflow is running within healthy limits.')}
-        </p>
-      </div>
-    );
-  }
-
-  return (
-    <div className="flex min-w-0 flex-1 flex-col gap-2 sm:border-l sm:border-gray-100 sm:pl-5">
-      <p className="m-0 text-[12.5px] font-medium text-muted-foreground">
-        {t('flaggedWorkflowsCount', { count: flagged.length })}
-      </p>
-      <ul className="flex flex-col gap-1">
-        {flagged.map((workflow, index) => {
-          const name = workflow.name ?? t('Untitled');
-          return (
-            <li key={workflow.flowId ?? `${name}-${index}`} className="min-w-0">
-              <button
-                type="button"
-                disabled={!onFlaggedClick}
-                onClick={() => onFlaggedClick?.(workflow)}
-                className={cn(
-                  'group flex w-full min-w-0 items-center gap-2 rounded-md py-0.5 text-left',
-                  onFlaggedClick &&
-                    'focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-primary-600/30',
-                )}
-              >
-                <Workflow
-                  aria-hidden="true"
-                  className="size-3.5 shrink-0 text-muted-foreground"
-                />
-                <TextWithTooltip tooltipMessage={name}>
-                  <span
-                    className={cn(
-                      'block min-w-0 flex-1 truncate text-[13px] font-medium text-primary-700',
-                      onFlaggedClick && 'group-hover:underline',
-                    )}
-                  >
-                    {name}
-                  </span>
-                </TextWithTooltip>
-                <span className="shrink-0 text-[11.5px] font-medium tabular-nums text-destructive-600">
-                  {t('{count} failed', { count: workflow.failures })}
-                </span>
-              </button>
-            </li>
-          );
-        })}
-      </ul>
-    </div>
   );
 }
 
@@ -239,41 +146,13 @@ function FailureTrendPill({ direction, value }: PfTrend) {
   );
 }
 
-function ManageLink({ onClick }: { onClick?: () => void }) {
-  if (!onClick) {
-    return null;
-  }
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={cn(
-        'inline-flex items-center gap-0.5 rounded-md px-1.5 py-1 text-[12.5px] font-medium text-muted-foreground',
-        'transition-colors hover:text-foreground focus-visible:text-foreground focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-primary-600/30',
-      )}
-    >
-      {t('Manage')}
-      <ChevronRight className="size-3.5" />
-    </button>
-  );
-}
-
 function GaugeSkeleton() {
   return (
-    <div className="flex flex-col items-center gap-4 sm:flex-row sm:gap-5">
+    <div className="flex flex-1 items-center justify-center">
       <span
         aria-hidden="true"
-        className="h-[120px] w-[200px] shrink-0 animate-pulse rounded-t-full bg-gray-100"
+        className="h-[120px] w-[200px] max-w-full animate-pulse rounded-t-full bg-gray-100"
       />
-      <div className="flex flex-1 flex-col gap-2">
-        {[0, 1, 2].map((i) => (
-          <span
-            key={i}
-            aria-hidden="true"
-            className="h-4 w-full animate-pulse rounded bg-gray-100"
-          />
-        ))}
-      </div>
     </div>
   );
 }
@@ -322,16 +201,7 @@ const LEVEL_VALUE_CLASS = {
   high: 'text-destructive-700',
 } as const;
 
-type FlaggedListProps = {
-  flagged: DashboardFlaggedWorkflow[];
-  hasRuns: boolean;
-  onFlaggedClick?: (workflow: DashboardFlaggedWorkflow) => void;
-};
-
 export type FailureRateGaugeCardProps = {
   failureWindow: DashboardFailureWindow;
-  flagged: DashboardFlaggedWorkflow[];
   state: DashboardQueryState;
-  onManage?: () => void;
-  onFlaggedClick?: (workflow: DashboardFlaggedWorkflow) => void;
 };

@@ -1,10 +1,10 @@
-import { FAILED_STATES, FlowRunCountByDay } from '@activepieces/shared';
-import dayjs from 'dayjs';
+import { FlowRunCountByDay } from '@activepieces/shared';
 import { t } from 'i18next';
 import { ArrowRight } from 'lucide-react';
 import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { PfStatCard } from '@/components/custom/pf-card';
 import { Button } from '@/components/ui/button';
 import { authenticationSession } from '@/lib/authentication-session';
 import { cn, DASHBOARD_CONTENT_PADDING_X } from '@/lib/utils';
@@ -14,6 +14,7 @@ import { DashboardWorkflowCounts } from '../lib/dashboard-synthetic-data';
 
 import { DashboardToolbar } from './dashboard-toolbar';
 import { FailureRateGaugeCard } from './failure-rate-gauge-card';
+import { FlaggedRunsCard } from './flagged-runs-card';
 import { ProjectSummaryCard } from './project-summary-card';
 import { RecentRuns, RecentRunRow } from './recent-runs';
 import { RunsOverTimeChart } from './runs-over-time-chart';
@@ -28,7 +29,6 @@ export function PrimaryDashboardView({
   workflowCountsState,
   runsState,
   recentRunsState,
-  projectId,
   lastUpdated,
   isRefreshing,
   onRangeChange,
@@ -47,20 +47,19 @@ export function PrimaryDashboardView({
     [series, rangeDays],
   );
 
-  const flagged = useMemo(
-    () => dashboardData.flaggedWorkflows({ runs: recentRuns, limit: 3 }),
+  const runsWindow = useMemo(
+    () => dashboardData.runsWindow({ series, days: rangeDays }),
+    [series, rangeDays],
+  );
+
+  const avgDurationMs = useMemo(
+    () => dashboardData.avgRunDurationMs({ runs: recentRuns }),
     [recentRuns],
   );
 
-  const timeWindow = useMemo(
-    () => ({
-      createdAfter: dayjs()
-        .subtract(rangeDays - 1, 'day')
-        .startOf('day')
-        .toISOString(),
-      createdBefore: dayjs().toISOString(),
-    }),
-    [rangeDays],
+  const flagged = useMemo(
+    () => dashboardData.flaggedRuns({ runs: recentRuns, limit: 6 }),
+    [recentRuns],
   );
 
   const composition = workflowCounts
@@ -71,13 +70,14 @@ export function PrimaryDashboardView({
       }
     : undefined;
 
+  const avgDuration =
+    avgDurationMs === null ? null : formatCompactDuration(avgDurationMs);
+
   const workflowsHref =
     authenticationSession.appendProjectRoutePrefix('/automations');
 
   return (
-    <div
-      className={cn('flex flex-col gap-5 pt-1', DASHBOARD_CONTENT_PADDING_X)}
-    >
+    <div className={cn('flex flex-col gap-5 pt-1', DASHBOARD_CONTENT_PADDING_X)}>
       {showToolbar ? (
         <DashboardToolbar
           rangeDays={rangeDays}
@@ -90,44 +90,59 @@ export function PrimaryDashboardView({
 
       <div
         data-slot="dashboard-summary-grid"
-        className="grid grid-cols-1 gap-4 lg:grid-cols-12"
+        className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-6"
       >
-        <div className="lg:col-span-3">
-          <ProjectSummaryCard
-            name={projectName}
-            total={workflowCounts?.total ?? 0}
-            running={workflowCounts?.published ?? 0}
-            state={workflowCountsState}
-          />
+        <div className="lg:col-span-1">
+          <ProjectSummaryCard name={projectName} />
         </div>
-        <div className="lg:col-span-4">
+        <div className="sm:col-span-2 lg:col-span-2">
           <WorkflowsDonutCard
             composition={composition}
             state={workflowCountsState}
             onManage={() => navigate(workflowsHref)}
           />
         </div>
-        <div className="lg:col-span-5">
-          <FailureRateGaugeCard
-            failureWindow={failureWindow}
-            flagged={flagged}
+        <div className="lg:col-span-1">
+          <FailureRateGaugeCard failureWindow={failureWindow} state={runsState} />
+        </div>
+        <div className="lg:col-span-1">
+          <PfStatCard
+            className="h-full"
+            label={t('Total runs')}
+            value={runsWindow.total.toLocaleString()}
+            trend={runsWindow.trend}
             state={runsState}
-            onManage={() => navigate(workflowsHref)}
-            onFlaggedClick={(workflow) =>
-              navigate(
-                dashboardData.buildRunsHref({
-                  projectId,
-                  statuses: FAILED_STATES,
-                  flowId: workflow.flowId,
-                  timeWindow,
-                }),
-              )
-            }
+          />
+        </div>
+        <div className="lg:col-span-1">
+          <PfStatCard
+            className="h-full"
+            label={t('Avg time per run')}
+            value={avgDuration ? avgDuration.value : '—'}
+            unit={avgDuration ? avgDuration.unit : undefined}
+            footnote={t('across recent runs')}
+            state={recentRunsState}
           />
         </div>
       </div>
 
-      <RunsOverTimeChart series={windowedSeries} state={runsState} />
+      <div
+        data-slot="dashboard-activity-grid"
+        className="grid grid-cols-1 gap-4 lg:grid-cols-6"
+      >
+        <div className="lg:col-span-4">
+          <RunsOverTimeChart series={windowedSeries} state={runsState} />
+        </div>
+        <div className="lg:col-span-2">
+          <FlaggedRunsCard
+            runs={flagged}
+            state={recentRunsState}
+            onRunClick={(run) =>
+              navigate(`/projects/${run.projectId}/runs/${run.id}`)
+            }
+          />
+        </div>
+      </div>
 
       <section
         data-slot="dashboard-recent-runs"
@@ -159,6 +174,24 @@ export function PrimaryDashboardView({
       </section>
     </div>
   );
+}
+
+function formatCompactDuration(ms: number): { value: string; unit: string } {
+  if (ms < 1000) {
+    return { value: String(Math.round(ms)), unit: 'ms' };
+  }
+  const seconds = ms / 1000;
+  if (seconds < 60) {
+    return {
+      value: seconds < 10 ? seconds.toFixed(1) : String(Math.round(seconds)),
+      unit: 's',
+    };
+  }
+  const minutes = seconds / 60;
+  return {
+    value: minutes < 10 ? minutes.toFixed(1) : String(Math.round(minutes)),
+    unit: 'min',
+  };
 }
 
 export type PrimaryDashboardViewProps = {
