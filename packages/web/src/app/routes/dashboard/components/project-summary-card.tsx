@@ -17,7 +17,7 @@ export function ProjectSummaryCard({ name }: ProjectSummaryCardProps) {
         className="pointer-events-none absolute -right-10 -top-12 size-40 rounded-full bg-primary-400/15 blur-3xl"
       />
 
-      <h2 className="m-0 line-clamp-3 break-words text-[26px] font-bold leading-[1.1] tracking-tight text-foreground">
+      <h2 className="m-0 line-clamp-3 break-words text-[26px] font-bold leading-[1.15] tracking-tight text-foreground lg:text-[22px] min-[1440px]:text-[26px]">
         {name}
       </h2>
     </PfCard>
