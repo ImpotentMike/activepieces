@@ -547,15 +547,20 @@ export const flowService = (log: FastifyBaseLogger) => ({
         return template
     },
 
-    async count({ projectId, folderId, status }: CountParams): Promise<number> {
+    async count({ projectId, folderId, status, hasPublishedVersion }: CountParams): Promise<number> {
+        const publishedVersionFilter = isNil(hasPublishedVersion)
+            ? {}
+            : { publishedVersionId: hasPublishedVersion ? Not(IsNull()) : IsNull() }
+
         if (folderId === undefined) {
-            return flowRepo().countBy({ projectId, status })
+            return flowRepo().countBy({ projectId, status, ...publishedVersionFilter })
         }
 
         return flowRepo().countBy({
             folderId: folderId !== UncategorizedFolderId ? folderId : IsNull(),
             projectId,
             status,
+            ...publishedVersionFilter,
         })
     },
 
@@ -796,6 +801,7 @@ type CountParams = {
     projectId: ProjectId
     folderId?: string
     status?: FlowStatus
+    hasPublishedVersion?: boolean
 }
 
 type UpdateParams = {

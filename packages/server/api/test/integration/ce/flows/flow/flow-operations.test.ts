@@ -99,6 +99,70 @@ describe('Flow Operations API', () => {
             const body = response?.json()
             expect(body).toBe(2)
         })
+
+        it('should count flows filtered by status and published version', async () => {
+            const ctx = await setup()
+
+            const publishedFlow = createMockFlow({
+                projectId: ctx.project.id,
+                status: FlowStatus.ENABLED,
+            })
+            const pausedFlow = createMockFlow({
+                projectId: ctx.project.id,
+                status: FlowStatus.DISABLED,
+            })
+            const draftFlow = createMockFlow({
+                projectId: ctx.project.id,
+                status: FlowStatus.DISABLED,
+                publishedVersionId: null,
+            })
+            await db.save('flow', [publishedFlow, pausedFlow, draftFlow])
+
+            const publishedFlowVersion = createMockFlowVersion({
+                flowId: publishedFlow.id,
+                state: FlowVersionState.LOCKED,
+            })
+            const pausedFlowVersion = createMockFlowVersion({
+                flowId: pausedFlow.id,
+                state: FlowVersionState.LOCKED,
+            })
+            const draftFlowVersion = createMockFlowVersion({
+                flowId: draftFlow.id,
+            })
+            await db.save('flow_version', [
+                publishedFlowVersion,
+                pausedFlowVersion,
+                draftFlowVersion,
+            ])
+            await db.update('flow', publishedFlow.id, {
+                publishedVersionId: publishedFlowVersion.id,
+            })
+            await db.update('flow', pausedFlow.id, {
+                publishedVersionId: pausedFlowVersion.id,
+            })
+
+            const publishedResponse = await ctx.get('/v1/flows/count', {
+                projectId: ctx.project.id,
+                status: FlowStatus.ENABLED,
+            })
+            expect(publishedResponse?.statusCode).toBe(StatusCodes.OK)
+            expect(publishedResponse?.json()).toBe(1)
+
+            const pausedResponse = await ctx.get('/v1/flows/count', {
+                projectId: ctx.project.id,
+                status: FlowStatus.DISABLED,
+                hasPublishedVersion: true,
+            })
+            expect(pausedResponse?.statusCode).toBe(StatusCodes.OK)
+            expect(pausedResponse?.json()).toBe(1)
+
+            const draftResponse = await ctx.get('/v1/flows/count', {
+                projectId: ctx.project.id,
+                hasPublishedVersion: false,
+            })
+            expect(draftResponse?.statusCode).toBe(StatusCodes.OK)
+            expect(draftResponse?.json()).toBe(1)
+        })
     })
 
     describeWithAuth('DELETE /v1/flows/:id', () => app!, (setup) => {

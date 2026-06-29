@@ -25,6 +25,24 @@ export const CountFlowRunsByStatusRequest = z.object({
     createdBefore: z.string().optional(),
 })
 
+export const CountFlowRunsByDayRequest = z.object({
+    projectId: ApId,
+    createdAfter: z.string(),
+    createdBefore: z.string().optional(),
+    timezone: z.string().optional(),
+})
+
+export const FlowRunCountByDay = z.object({
+    day: z.string(),
+    total: z.number(),
+    succeeded: z.number(),
+    failed: z.number(),
+})
+
+export const CountFlowRunsByDayResponse = z.object({
+    data: z.array(FlowRunCountByDay),
+})
+
 export const FlowRunCountByStatus = z.object({
     status: z.nativeEnum(FlowRunStatus),
     count: z.number(),
@@ -37,3 +55,6 @@ export const CountFlowRunsByStatusResponse = z.object({
 export type CountFlowRunsByStatusRequest = z.infer<typeof CountFlowRunsByStatusRequest>
 export type FlowRunCountByStatus = z.infer<typeof FlowRunCountByStatus>
 export type CountFlowRunsByStatusResponse = z.infer<typeof CountFlowRunsByStatusResponse>
+export type CountFlowRunsByDayRequest = z.infer<typeof CountFlowRunsByDayRequest>
+export type FlowRunCountByDay = z.infer<typeof FlowRunCountByDay>
+export type CountFlowRunsByDayResponse = z.infer<typeof CountFlowRunsByDayResponse>

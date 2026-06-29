@@ -19,6 +19,7 @@ const FlowBuilderPage = React.lazy(() =>
   import('./flows/id').then((m) => ({ default: m.FlowBuilderPage })),
 );
 const DashboardPage = React.lazy(() => import('./dashboard'));
+const DashboardRndPage = React.lazy(() => import('./dashboard-rnd'));
 const AnalyticsPage = React.lazy(() => import('./impact'));
 const LeaderboardPage = React.lazy(() => import('./leaderboard'));
 const ProjectReleasesPage = React.lazy(() =>
@@ -76,6 +77,18 @@ export const projectRoutes = [
         <PageTitle title="Dashboard">
           <SuspenseWrapper>
             <DashboardPage />
+          </SuspenseWrapper>
+        </PageTitle>
+      </ProjectDashboardLayout>
+    ),
+  }),
+  ...ProjectRouterWrapper({
+    path: routesThatRequireProjectId.dashboardRnd,
+    element: (
+      <ProjectDashboardLayout>
+        <PageTitle title="Dashboard R&D">
+          <SuspenseWrapper>
+            <DashboardRndPage />
           </SuspenseWrapper>
         </PageTitle>
       </ProjectDashboardLayout>

@@ -146,6 +146,8 @@ export const flowController: FastifyPluginAsyncZod = async (app) => {
         return flowService(request.log).count({
             folderId: request.query.folderId,
             projectId: request.projectId,
+            status: request.query.status,
+            hasPublishedVersion: request.query.hasPublishedVersion,
         })
     })
 

@@ -34,8 +34,9 @@ export const ApSidebarItem = (item: SidebarItemType) => {
   const { state } = useSidebar();
   const iconRef = useRef<AnimatedIconHandle | null>(null);
   const [isHovered, setIsHovered] = useState(false);
-  const isLinkActive =
-    location.pathname.startsWith(item.to) || item.isActive?.(location.pathname);
+  const isLinkActive = item.isActive
+    ? item.isActive(location.pathname)
+    : location.pathname.startsWith(item.to);
   const isCollapsed = state === 'collapsed';
 
   useEffect(() => {

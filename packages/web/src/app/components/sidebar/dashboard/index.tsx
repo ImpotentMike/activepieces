@@ -8,6 +8,7 @@ import {
   ChevronDown,
   Diamond,
   FileText,
+  FlaskConical,
   Settings,
   Shield,
   Unplug,
@@ -77,6 +78,20 @@ export function ProjectDashboardSidebar({
       show: true,
       hasPermission: true,
       isSubItem: false,
+      isActive: (pathname) =>
+        pathname.includes('/dashboard') && !pathname.includes('/dashboard-rnd'),
+    },
+    {
+      type: 'link',
+      to: hasProject
+        ? authenticationSession.appendProjectRoutePrefix('/dashboard-rnd')
+        : '/',
+      label: t('Dashboard R&D'),
+      icon: FlaskConical,
+      show: hasProject,
+      hasPermission: true,
+      isSubItem: false,
+      isActive: (pathname) => pathname.includes('/dashboard-rnd'),
     },
     {
       type: 'link',

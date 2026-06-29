@@ -5,9 +5,11 @@ import {
     Cursor,
     ErrorCode,
     ExecutionType,
+    FAILED_STATES,
     FlowId,
     FlowRetryStrategy,
     FlowRun,
+    FlowRunCountByDay,
     FlowRunCountByStatus,
     FlowRunId,
     FlowRunStatus,
@@ -23,6 +25,7 @@ import {
     SampleDataFileType,
     SeekPage,
     StreamStepProgress,
+    tryCatchSync,
     UploadLogsBehavior,
     WorkerJobType,
 } from '@activepieces/shared'
@@ -422,6 +425,47 @@ export const flowRunService = (log: FastifyBaseLogger) => ({
         const results = await query.getRawMany()
         return results.map((r: { status: FlowRunStatus, count: string }) => ({ status: r.status, count: parseInt(r.count, 10) }))
     },
+    async countByDay(params: CountByDayParams): Promise<FlowRunCountByDay[]> {
+        const timezone = params.timezone ?? 'UTC'
+        const { error: invalidTimezone } = tryCatchSync(() => new Intl.DateTimeFormat('en-US', { timeZone: timezone }))
+        if (invalidTimezone) {
+            throw new ActivepiecesError({
+                code: ErrorCode.VALIDATION,
+                params: { message: `Invalid timezone: ${timezone}` },
+            })
+        }
+
+        let query = flowRunRepo().createQueryBuilder('flow_run')
+            .select('TO_CHAR(flow_run.created AT TIME ZONE :timezone, \'YYYY-MM-DD\')', 'day')
+            .addSelect('COUNT(*)', 'total')
+            .addSelect('COUNT(*) FILTER (WHERE flow_run.status = :succeededStatus)', 'succeeded')
+            .addSelect('COUNT(*) FILTER (WHERE flow_run.status IN (:...failedStatuses))', 'failed')
+            .where({
+                projectId: params.projectId,
+                environment: RunEnvironment.PRODUCTION,
+                archivedAt: IsNull(),
+            })
+            .andWhere('flow_run.created >= :createdAfter', { createdAfter: params.createdAfter })
+            .setParameters({
+                timezone,
+                succeededStatus: FlowRunStatus.SUCCEEDED,
+                failedStatuses: FAILED_STATES,
+            })
+            .groupBy('day')
+            .orderBy('day', 'ASC')
+
+        if (params.createdBefore) {
+            query = query.andWhere('flow_run.created <= :createdBefore', { createdBefore: params.createdBefore })
+        }
+
+        const results = await query.getRawMany()
+        return results.map((r: { day: string, total: string, succeeded: string, failed: string }) => ({
+            day: r.day,
+            total: parseInt(r.total, 10),
+            succeeded: parseInt(r.succeeded, 10),
+            failed: parseInt(r.failed, 10),
+        }))
+    },
     async getOnePopulatedOrThrow(params: GetOneParams): Promise<FlowRun> {
         const flowRun = await this.getOneOrThrow(params)
         let steps = {}
@@ -771,6 +815,13 @@ type CountByStatusParams = {
     projectId: ProjectId
     createdAfter?: string
     createdBefore?: string
+}
+
+type CountByDayParams = {
+    projectId: ProjectId
+    createdAfter: string
+    createdBefore?: string
+    timezone?: string
 }
 
 type FilterFlowRunsAndApplyFiltersParams = {

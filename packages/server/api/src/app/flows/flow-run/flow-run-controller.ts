@@ -4,6 +4,8 @@ import {
     BulkActionOnRunsRequestBody,
     BulkArchiveActionOnRunsRequestBody,
     BulkCancelFlowRequestBody,
+    CountFlowRunsByDayRequest,
+    CountFlowRunsByDayResponse,
     CountFlowRunsByStatusRequest,
     CountFlowRunsByStatusResponse,
     ErrorCode,
@@ -50,6 +52,16 @@ export const flowRunController: FastifyPluginAsyncZod = async (app) => {
             projectId: request.query.projectId,
             createdAfter: request.query.createdAfter,
             createdBefore: request.query.createdBefore,
+        })
+        return { data }
+    })
+
+    app.get('/count-by-day', CountByDayRouteConfig, async (request) => {
+        const data = await flowRunService(request.log).countByDay({
+            projectId: request.query.projectId,
+            createdAfter: request.query.createdAfter,
+            createdBefore: request.query.createdBefore,
+            timezone: request.query.timezone,
         })
         return { data }
     })
@@ -232,6 +244,25 @@ const CountByStatusRouteConfig = {
         querystring: CountFlowRunsByStatusRequest,
         response: {
             [StatusCodes.OK]: CountFlowRunsByStatusResponse,
+        },
+    },
+}
+
+const CountByDayRouteConfig = {
+    config: {
+        security: securityAccess.project(
+            [PrincipalType.USER, PrincipalType.SERVICE],
+            Permission.READ_RUN, {
+                type: ProjectResourceType.QUERY,
+            }),
+    },
+    schema: {
+        tags: ['flow-runs'],
+        description: 'Count Flow Runs per day',
+        security: [SERVICE_KEY_SECURITY_OPENAPI],
+        querystring: CountFlowRunsByDayRequest,
+        response: {
+            [StatusCodes.OK]: CountFlowRunsByDayResponse,
         },
     },
 }

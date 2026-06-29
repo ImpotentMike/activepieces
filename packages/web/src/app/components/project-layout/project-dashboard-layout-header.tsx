@@ -113,10 +113,15 @@ export const ProjectDashboardLayoutHeader = () => {
     (tab) => tab.show && tab.hasPermission,
   );
 
+  const allTabs = [...visiblePrimaryTabs, ...visibleSecondaryTabs];
+  const isOnTabRoute = allTabs.some((tab) =>
+    location.pathname.includes(tab.to),
+  );
+
   return (
     <div className="flex flex-col">
       {!isEmbedded && <ProjectDashboardPageHeader />}
-      {!embedState.hideSideNav && (
+      {!embedState.hideSideNav && isOnTabRoute && (
         <Tabs className="px-3 pt-2 border-b">
           <TabsList variant="outline">
             {visiblePrimaryTabs.map((tab) => (

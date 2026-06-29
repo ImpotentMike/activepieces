@@ -1,4 +1,6 @@
 import {
+  CountFlowRunsByDayRequest,
+  CountFlowRunsByDayResponse,
   CountFlowRunsByStatusRequest,
   CountFlowRunsByStatusResponse,
   FlowRun,
@@ -31,6 +33,14 @@ export const flowRunsApi = {
   ): Promise<CountFlowRunsByStatusResponse> {
     return api.get<CountFlowRunsByStatusResponse>(
       '/v1/flow-runs/count-by-status',
+      request,
+    );
+  },
+  countByDay(
+    request: CountFlowRunsByDayRequest,
+  ): Promise<CountFlowRunsByDayResponse> {
+    return api.get<CountFlowRunsByDayResponse>(
+      '/v1/flow-runs/count-by-day',
       request,
     );
   },

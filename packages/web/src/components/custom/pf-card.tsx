@@ -207,8 +207,10 @@ function PfStatCard({
   trend,
   footnote,
   breakdown,
+  visual,
   state = 'ready',
   accent = false,
+  tone,
   onClick,
   className,
   id,
@@ -240,6 +242,8 @@ function PfStatCard({
             'm-0 text-3xl font-semibold leading-[1.05] tracking-tight',
             isError
               ? 'text-muted-foreground'
+              : tone
+              ? STAT_TONE_VALUE_CLASS[tone]
               : accent
               ? 'text-primary-700'
               : 'text-foreground',
@@ -277,14 +281,29 @@ function PfStatCard({
       </p>
     ) : null;
 
+  const visualNode =
+    !isLoading && !isError && visual ? (
+      <div data-slot="pf-stat-card-visual">{visual}</div>
+    ) : null;
+
+  const bottomGroup =
+    visualNode || footnoteNode || breakdownNode ? (
+      <div className="mt-auto flex flex-col gap-2">
+        {visualNode}
+        {footnoteNode}
+        {breakdownNode}
+      </div>
+    ) : null;
+
   const body = (
     <>
       {labelNode}
       {valueRow}
-      {footnoteNode}
-      {breakdownNode}
+      {bottomGroup}
     </>
   );
+
+  const heightClass = visual ? 'min-h-[150px]' : undefined;
 
   if (isClickable) {
     return (
@@ -292,7 +311,7 @@ function PfStatCard({
         variant="clickable"
         density="compact"
         data-pf-card-variant="stat"
-        className={cn('text-left', className)}
+        className={cn('text-left', heightClass, className)}
         asChild
       >
         <button type="button" id={id} aria-label={ariaLabel} onClick={onClick}>
@@ -307,7 +326,7 @@ function PfStatCard({
       density="compact"
       data-pf-card-variant="stat"
       data-pf-stat-state={state}
-      className={cn(className)}
+      className={cn(heightClass, className)}
       id={id}
       aria-label={ariaLabel}
     >
@@ -315,6 +334,12 @@ function PfStatCard({
     </PfCard>
   );
 }
+
+const STAT_TONE_VALUE_CLASS: Record<PfStatCardTone, string> = {
+  success: 'text-success-700',
+  warning: 'text-warning-700',
+  destructive: 'text-destructive-700',
+};
 
 function PfStatTrend({ direction, value }: PfStatTrendProps) {
   const Icon =
@@ -567,6 +592,8 @@ export type PfStatTrendProps = {
   value: React.ReactNode;
 };
 
+export type PfStatCardTone = 'success' | 'warning' | 'destructive';
+
 export type PfStatCardProps = {
   label: React.ReactNode;
   value: React.ReactNode;
@@ -574,8 +601,10 @@ export type PfStatCardProps = {
   trend?: PfStatTrendProps;
   footnote?: React.ReactNode;
   breakdown?: React.ReactNode;
+  visual?: React.ReactNode;
   state?: 'loading' | 'error' | 'ready';
   accent?: boolean;
+  tone?: PfStatCardTone;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
   className?: string;
   id?: string;
