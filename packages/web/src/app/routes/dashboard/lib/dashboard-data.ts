@@ -147,6 +147,59 @@ export const dashboardData = {
     };
   },
 
+  runsWindow({
+    series,
+    days,
+  }: {
+    series: FlowRunCountByDay[];
+    days: number;
+  }): DashboardRunsWindow {
+    const current = dashboardData.sumSeries(series.slice(-days));
+    const previous = dashboardData.sumSeries(series.slice(-days * 2, -days));
+    return {
+      total: current.total,
+      trend: dashboardData.trend({
+        current: current.total,
+        previous: previous.total,
+      }),
+    };
+  },
+
+  avgRunDurationMs({ runs }: { runs: RecentRunRow[] }): number | null {
+    const durations = runs
+      .filter((run) => run.startTime && run.finishTime)
+      .map(
+        (run) =>
+          new Date(run.finishTime!).getTime() -
+          new Date(run.startTime!).getTime(),
+      )
+      .filter((ms) => ms >= 0);
+    if (durations.length === 0) {
+      return null;
+    }
+    const sum = durations.reduce((acc, ms) => acc + ms, 0);
+    return Math.round(sum / durations.length);
+  },
+
+  flaggedRuns({
+    runs,
+    limit = 5,
+  }: {
+    runs: RecentRunRow[];
+    limit?: number;
+  }): DashboardFlaggedRun[] {
+    return runs
+      .filter((run) => FAILED_STATES.includes(run.status))
+      .slice(0, limit)
+      .map((run) => ({
+        id: run.id,
+        projectId: run.projectId,
+        flowId: run.flowId ?? null,
+        name: run.flowVersion?.displayName ?? null,
+        status: run.status,
+      }));
+  },
+
   flaggedWorkflows({
     runs,
     limit = 3,
@@ -196,6 +249,19 @@ export type DashboardFlaggedWorkflow = {
   flowId: string | null;
   name: string | null;
   failures: number;
+};
+
+export type DashboardRunsWindow = {
+  total: number;
+  trend: PfTrend | undefined;
+};
+
+export type DashboardFlaggedRun = {
+  id: string;
+  projectId: string;
+  flowId: string | null;
+  name: string | null;
+  status: FlowRunStatus;
 };
 
 export type DashboardWorkflowComposition = {
