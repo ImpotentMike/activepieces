@@ -1,5 +1,10 @@
 import { t } from 'i18next';
-import { ArrowDownRight, ArrowUpRight, Minus, TriangleAlert } from 'lucide-react';
+import {
+  ArrowDownRight,
+  ArrowUpRight,
+  Minus,
+  TriangleAlert,
+} from 'lucide-react';
 
 import { PfCard } from '@/components/custom/pf-card';
 import { cn } from '@/lib/utils';

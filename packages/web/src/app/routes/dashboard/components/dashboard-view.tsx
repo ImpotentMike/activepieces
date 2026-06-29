@@ -77,7 +77,9 @@ export function PrimaryDashboardView({
     authenticationSession.appendProjectRoutePrefix('/automations');
 
   return (
-    <div className={cn('flex flex-col gap-5 pt-1', DASHBOARD_CONTENT_PADDING_X)}>
+    <div
+      className={cn('flex flex-col gap-5 pt-1', DASHBOARD_CONTENT_PADDING_X)}
+    >
       {showToolbar ? (
         <DashboardToolbar
           rangeDays={rangeDays}
@@ -103,7 +105,10 @@ export function PrimaryDashboardView({
           />
         </div>
         <div className="lg:col-span-1">
-          <FailureRateGaugeCard failureWindow={failureWindow} state={runsState} />
+          <FailureRateGaugeCard
+            failureWindow={failureWindow}
+            state={runsState}
+          />
         </div>
         <div className="lg:col-span-1">
           <PfStatCard

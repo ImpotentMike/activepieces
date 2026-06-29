@@ -6,7 +6,10 @@ import { PfCard } from '@/components/custom/pf-card';
 import { TextWithTooltip } from '@/components/custom/text-with-tooltip';
 import { cn } from '@/lib/utils';
 
-import { DashboardFlaggedRun, DashboardQueryState } from '../lib/dashboard-data';
+import {
+  DashboardFlaggedRun,
+  DashboardQueryState,
+} from '../lib/dashboard-data';
 
 export function FlaggedRunsCard({
   runs,
