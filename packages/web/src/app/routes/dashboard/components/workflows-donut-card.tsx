@@ -29,8 +29,8 @@ export function WorkflowsDonutCard({
       color: 'hsl(var(--primary-600))',
     },
     {
-      key: 'published',
-      label: t('Published'),
+      key: 'paused',
+      label: t('Paused'),
       value: composition?.published ?? 0,
       color: 'hsl(var(--warning-500))',
     },
