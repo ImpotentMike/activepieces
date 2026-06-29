@@ -53,9 +53,9 @@ export function FailureRateGaugeCard({
           {t('Couldn’t load failure rate.')}
         </p>
       ) : (
-        <div className="flex flex-1 items-center justify-center">
+        <div className="flex flex-1 flex-col items-center justify-center gap-2">
           <div
-            className="relative w-full max-w-[200px]"
+            className="relative w-full max-w-[176px]"
             style={{ aspectRatio: `${VIEW_W} / ${VIEW_H}` }}
             role="img"
             aria-label={
@@ -104,24 +104,24 @@ export function FailureRateGaugeCard({
                 </g>
               ) : null}
             </svg>
+          </div>
 
-            <div className="absolute inset-x-0 bottom-[4%] flex flex-col items-center gap-1">
-              <span
-                className={cn(
-                  'text-[28px] font-bold leading-none tracking-tight tabular-nums',
-                  valueClass,
-                )}
-              >
-                {hasData ? `${rate.toFixed(1)}%` : '—'}
-              </span>
-              {hasData && failureWindow.trend ? (
-                <FailureTrendPill {...failureWindow.trend} />
-              ) : (
-                <span className="text-[12px] text-muted-foreground">
-                  {hasData ? t('of runs failed') : t('No runs yet')}
-                </span>
+          <div className="flex flex-col items-center gap-1">
+            <span
+              className={cn(
+                'text-[30px] font-bold leading-none tracking-tight tabular-nums',
+                valueClass,
               )}
-            </div>
+            >
+              {hasData ? `${rate.toFixed(1)}%` : '—'}
+            </span>
+            {hasData && failureWindow.trend ? (
+              <FailureTrendPill {...failureWindow.trend} />
+            ) : (
+              <span className="text-[12px] text-muted-foreground">
+                {hasData ? t('of runs failed') : t('No runs yet')}
+              </span>
+            )}
           </div>
         </div>
       )}

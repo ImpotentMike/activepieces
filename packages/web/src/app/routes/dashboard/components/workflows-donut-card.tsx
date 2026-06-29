@@ -10,7 +10,7 @@ import {
   DashboardWorkflowComposition,
 } from '../lib/dashboard-data';
 
-const DONUT_SIZE = 132;
+const DONUT_SIZE = 112;
 
 export function WorkflowsDonutCard({
   composition,
@@ -68,7 +68,7 @@ export function WorkflowsDonutCard({
           {t('Couldn’t load workflows.')}
         </p>
       ) : (
-        <div className="flex items-center gap-5">
+        <div className="flex items-center gap-4">
           <div
             className="relative shrink-0"
             style={{ width: DONUT_SIZE, height: DONUT_SIZE }}
@@ -81,8 +81,8 @@ export function WorkflowsDonutCard({
                 dataKey="value"
                 cx="50%"
                 cy="50%"
-                innerRadius={46}
-                outerRadius={64}
+                innerRadius={38}
+                outerRadius={54}
                 paddingAngle={arcData.length > 1 ? 3 : 0}
                 cornerRadius={5}
                 startAngle={90}
@@ -96,7 +96,7 @@ export function WorkflowsDonutCard({
               </Pie>
             </PieChart>
             <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
-              <span className="text-[30px] font-bold leading-none tracking-tight tabular-nums text-foreground">
+              <span className="text-[26px] font-bold leading-none tracking-tight tabular-nums text-foreground">
                 {total}
               </span>
               <span className="mt-1 text-[11px] font-medium text-muted-foreground">
@@ -155,7 +155,7 @@ function DonutSkeleton() {
     <div className="flex items-center gap-5">
       <span
         aria-hidden="true"
-        className="size-[132px] shrink-0 animate-pulse rounded-full bg-gray-100"
+        className="size-[112px] shrink-0 animate-pulse rounded-full bg-gray-100"
       />
       <div className="flex flex-1 flex-col gap-3">
         {[0, 1, 2].map((i) => (
