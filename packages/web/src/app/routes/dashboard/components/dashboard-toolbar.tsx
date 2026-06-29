@@ -28,7 +28,7 @@ export function DashboardToolbar({
   return (
     <div
       data-slot="dashboard-toolbar"
-      className="flex flex-wrap items-center justify-between gap-3"
+      className="flex flex-wrap items-center gap-2"
     >
       <Select
         value={String(rangeDays)}

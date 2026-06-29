@@ -33,6 +33,7 @@ export function PrimaryDashboardView({
   isRefreshing,
   onRangeChange,
   onRefresh,
+  showToolbar = true,
 }: PrimaryDashboardViewProps) {
   const navigate = useNavigate();
 
@@ -77,13 +78,15 @@ export function PrimaryDashboardView({
     <div
       className={cn('flex flex-col gap-5 pt-1', DASHBOARD_CONTENT_PADDING_X)}
     >
-      <DashboardToolbar
-        rangeDays={rangeDays}
-        onRangeChange={onRangeChange}
-        lastUpdated={lastUpdated}
-        isRefreshing={isRefreshing}
-        onRefresh={onRefresh}
-      />
+      {showToolbar ? (
+        <DashboardToolbar
+          rangeDays={rangeDays}
+          onRangeChange={onRangeChange}
+          lastUpdated={lastUpdated}
+          isRefreshing={isRefreshing}
+          onRefresh={onRefresh}
+        />
+      ) : null}
 
       <div
         data-slot="dashboard-summary-grid"
@@ -172,4 +175,5 @@ export type PrimaryDashboardViewProps = {
   isRefreshing: boolean;
   onRangeChange: (days: number) => void;
   onRefresh: () => void;
+  showToolbar?: boolean;
 };

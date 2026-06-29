@@ -11,6 +11,7 @@ import { flowsApi } from '@/features/flows/api/flows-api';
 import { getProjectName, projectCollectionUtils } from '@/features/projects';
 import { authenticationSession } from '@/lib/authentication-session';
 
+import { DashboardToolbar } from './components/dashboard-toolbar';
 import { PrimaryDashboardView } from './components/dashboard-view';
 import { dashboardData } from './lib/dashboard-data';
 import { dashboardSyntheticData } from './lib/dashboard-synthetic-data';
@@ -147,6 +148,15 @@ export default function DashboardPage() {
             </span>
           ) : undefined
         }
+        rightContent={
+          <DashboardToolbar
+            rangeDays={rangeDays}
+            onRangeChange={setRangeDays}
+            lastUpdated={lastUpdated}
+            isRefreshing={isRefreshing}
+            onRefresh={handleRefresh}
+          />
+        }
       />
 
       <PrimaryDashboardView
@@ -163,6 +173,7 @@ export default function DashboardPage() {
         isRefreshing={isRefreshing}
         onRangeChange={setRangeDays}
         onRefresh={handleRefresh}
+        showToolbar={false}
       />
     </div>
   );
