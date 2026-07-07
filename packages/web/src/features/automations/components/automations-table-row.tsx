@@ -126,64 +126,66 @@ export const AutomationsTableRow = ({
 
   return (
     <>
-      <div
-        className="w-10 shrink-0 pl-4 pr-1 flex items-center"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <Checkbox checked={isSelected} onCheckedChange={onToggleSelection} />
-      </div>
-      <div
-        className={cn(
-          'w-8 shrink-0 flex items-center justify-center mr-2',
-          item.type === 'folder' && 'mr-3',
-        )}
-        onClick={(e) => e.stopPropagation()}
-      >
-        {item.depth === 0 && (
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <button
-                onClick={onTogglePin}
-                className="p-0.5 rounded hover:bg-muted transition-colors"
-              >
-                <Star
-                  className={cn(
-                    'h-4 w-4',
-                    isPinned
-                      ? 'text-yellow-500 fill-yellow-500'
-                      : 'text-muted-foreground/40 hover:text-muted-foreground',
-                  )}
-                />
-              </button>
-            </TooltipTrigger>
-            <TooltipContent side="top">
-              {isPinned ? t('Remove from favorites') : t('Add to favorites')}
-            </TooltipContent>
-          </Tooltip>
-        )}
-      </div>
-      <div className="flex-1 min-w-[200px] pl-2 pr-2 flex items-center">
+      <div className="sticky left-0 z-10 flex flex-1 min-w-[284px] items-center self-stretch bg-background group-hover/row:bg-[color-mix(in_srgb,var(--muted)_50%,var(--background))]">
         <div
-          className="relative flex items-center gap-2 min-w-0"
-          style={{ paddingLeft: item.depth * 24 }}
+          className="w-10 shrink-0 pl-4 pr-1 flex items-center"
+          onClick={(e) => e.stopPropagation()}
         >
-          {item.type === 'folder' && (
-            <span className="absolute -left-5 flex items-center justify-center w-5">
-              {isFolderLoading ? (
-                <Loader2 className="h-4 w-4 shrink-0 text-muted-foreground animate-spin" />
-              ) : isExpanded ? (
-                <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground" />
-              ) : (
-                <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
-              )}
-            </span>
+          <Checkbox checked={isSelected} onCheckedChange={onToggleSelection} />
+        </div>
+        <div
+          className={cn(
+            'w-8 shrink-0 flex items-center justify-center mr-2',
+            item.type === 'folder' && 'mr-3',
           )}
-          <span className="shrink-0">
-            <RowItemIcon item={item} />
-          </span>
-          <TextWithTooltip tooltipMessage={item.name}>
-            <span>{item.name}</span>
-          </TextWithTooltip>
+          onClick={(e) => e.stopPropagation()}
+        >
+          {item.depth === 0 && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={onTogglePin}
+                  className="p-0.5 rounded hover:bg-muted transition-colors"
+                >
+                  <Star
+                    className={cn(
+                      'h-4 w-4',
+                      isPinned
+                        ? 'text-yellow-500 fill-yellow-500'
+                        : 'text-muted-foreground/40 hover:text-muted-foreground',
+                    )}
+                  />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="top">
+                {isPinned ? t('Remove from favorites') : t('Add to favorites')}
+              </TooltipContent>
+            </Tooltip>
+          )}
+        </div>
+        <div className="flex-1 min-w-[200px] pl-2 pr-2 flex items-center">
+          <div
+            className="relative flex items-center gap-2 min-w-0"
+            style={{ paddingLeft: item.depth * 24 }}
+          >
+            {item.type === 'folder' && (
+              <span className="absolute -left-5 flex items-center justify-center w-5">
+                {isFolderLoading ? (
+                  <Loader2 className="h-4 w-4 shrink-0 text-muted-foreground animate-spin" />
+                ) : isExpanded ? (
+                  <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground" />
+                ) : (
+                  <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
+                )}
+              </span>
+            )}
+            <span className="shrink-0">
+              <RowItemIcon item={item} />
+            </span>
+            <TextWithTooltip tooltipMessage={item.name}>
+              <span>{item.name}</span>
+            </TextWithTooltip>
+          </div>
         </div>
       </div>
       <div className="w-[230px] shrink-0 px-2 flex items-center">

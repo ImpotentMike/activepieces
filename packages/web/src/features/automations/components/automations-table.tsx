@@ -45,7 +45,7 @@ type AutomationsTableProps = {
 };
 
 const rowClassName =
-  'flex items-center min-h-[48px] py-2 text-sm cursor-pointer hover:bg-muted/50';
+  'group/row flex items-center min-h-[48px] text-sm cursor-pointer hover:bg-muted/50';
 
 export const AutomationsTable = ({
   items,
@@ -77,20 +77,27 @@ export const AutomationsTable = ({
 
   return (
     <div className="overflow-x-auto">
-      <div className="min-w-[1110px]">
+      <div
+        className={cn(
+          'min-w-[1244px]',
+          embedState.isEmbedded && 'min-w-[994px]',
+        )}
+      >
         <div className="flex items-center h-8 text-xs border-b font-medium text-foreground bg-muted/50">
-          <div className="w-10 shrink-0 pl-4 pr-1">
-            <Checkbox
-              checked={
-                selectableCount > 0 && selectedItems.size === selectableCount
-              }
-              onCheckedChange={onToggleAllSelection}
-            />
-          </div>
-          <div className="w-8 shrink-0"></div>
-          <div className="flex-1 min-w-[200px] pl-2 flex items-center gap-1.5">
-            <Type className="h-3.5 w-3.5" />
-            {t('Name')}
+          <div className="sticky left-0 z-10 flex flex-1 min-w-[284px] items-center self-stretch bg-[color-mix(in_srgb,var(--muted)_50%,var(--background))]">
+            <div className="w-10 shrink-0 pl-4 pr-1">
+              <Checkbox
+                checked={
+                  selectableCount > 0 && selectedItems.size === selectableCount
+                }
+                onCheckedChange={onToggleAllSelection}
+              />
+            </div>
+            <div className="w-8 shrink-0"></div>
+            <div className="flex-1 min-w-[200px] pl-2 flex items-center gap-1.5">
+              <Type className="h-3.5 w-3.5" />
+              {t('Name')}
+            </div>
           </div>
 
           <div className="w-[230px] shrink-0 px-2 flex items-center gap-1.5">
@@ -169,7 +176,7 @@ export const AutomationsTable = ({
                         onLoadMore={undefined}
                       />
                     </div>
-                    <AccordionPrimitive.Content className="overflow-hidden data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down">
+                    <AccordionPrimitive.Content className="overflow-clip data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down">
                       {group.children.map((child) => (
                         <div
                           key={`${child.type}-${child.id}`}
