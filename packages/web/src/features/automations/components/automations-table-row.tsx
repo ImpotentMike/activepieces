@@ -88,6 +88,7 @@ export const AutomationsTableRow = ({
   isPinned,
   isFolderLoading,
   folders,
+  onRowClick,
   onToggleSelection,
   onTogglePin,
   onRename,
@@ -208,9 +209,19 @@ export const AutomationsTableRow = ({
         className="w-[120px] shrink-0 px-2 flex items-center"
         onClick={(e) => e.stopPropagation()}
       >
-        {item.type === 'flow' && (
-          <FlowStatusToggle flow={item.data as PopulatedFlow} />
-        )}
+        {item.type === 'flow' &&
+          (flowLifecycleStatus(item.data as PopulatedFlow) === 'draft' ? (
+            <Button
+              variant="link"
+              size="sm"
+              className="px-0"
+              onClick={() => onRowClick()}
+            >
+              {t('Publish')}
+            </Button>
+          ) : (
+            <FlowStatusToggle flow={item.data as PopulatedFlow} />
+          ))}
       </div>
       <div
         className="w-[50px] shrink-0 px-2 flex items-center"
