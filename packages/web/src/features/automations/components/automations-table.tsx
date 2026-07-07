@@ -77,7 +77,7 @@ export const AutomationsTable = ({
 
   return (
     <div className="overflow-x-auto">
-      <div className="min-w-[1000px]">
+      <div className="min-w-[1110px]">
         <div className="flex items-center h-8 text-xs border-b font-medium text-foreground bg-muted/50">
           <div className="w-10 shrink-0 pl-4 pr-1">
             <Checkbox
@@ -108,10 +108,11 @@ export const AutomationsTable = ({
               {t('Owner')}
             </div>
           )}
-          <div className="w-[120px] shrink-0 px-2 flex items-center gap-1.5">
+          <div className="w-[110px] shrink-0 px-2 flex items-center gap-1.5">
             <Activity className="h-3.5 w-3.5" />
             {t('Status')}
           </div>
+          <div className="w-[120px] shrink-0 px-2"></div>
           <div className="w-[50px] shrink-0 px-2"></div>
         </div>
 
