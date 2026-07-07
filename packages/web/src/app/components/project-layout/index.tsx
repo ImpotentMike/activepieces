@@ -14,10 +14,7 @@ import { flagsHooks } from '@/hooks/flags-hooks';
 import { cn } from '@/lib/utils';
 
 import { authenticationSession } from '../../../lib/authentication-session';
-import {
-  GlobalSearchProvider,
-  useGlobalSearch,
-} from '../global-search/global-search-context';
+import { GlobalSearchProvider } from '../global-search/global-search-context';
 import { ProjectDashboardSidebar } from '../sidebar/dashboard';
 
 import { ProjectDashboardLayoutHeader } from './project-dashboard-layout-header';
@@ -119,10 +116,8 @@ function ProjectDashboardLayoutInner({
   currentProjectId: string;
   children: React.ReactNode;
 }) {
-  const { open: searchOpen } = useGlobalSearch();
-
   return (
-    <SidebarProvider hoverMode={!searchOpen}>
+    <SidebarProvider>
       {!isEmbedded && <ProjectDashboardSidebar />}
       <SidebarInset className="flex flex-col h-full overflow-hidden bg-sidebar">
         <div
