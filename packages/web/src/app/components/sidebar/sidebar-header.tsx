@@ -3,6 +3,7 @@ import { t } from 'i18next';
 import { ChevronsUpDown } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
+import { ApSidebarToggle } from '@/components/custom/ap-sidebar-toggle';
 import { useEmbedding } from '@/components/providers/embed-provider';
 import {
   SidebarHeader,
@@ -47,8 +48,9 @@ export const AppSidebarHeader = () => {
   if (isCollapsed) {
     return (
       <SidebarHeader>
-        <div className="flex min-h-14 items-center justify-center">
+        <div className="flex min-h-14 flex-col items-center justify-center gap-1">
           {brandMark}
+          <ApSidebarToggle />
         </div>
       </SidebarHeader>
     );
@@ -78,11 +80,12 @@ export const AppSidebarHeader = () => {
             </SidebarMenuButton>
           </PlatformSwitcher>
         ) : (
-          <div className="flex items-center gap-2 min-w-0">
+          <div className="flex grow items-center gap-2 min-w-0">
             {brandMark}
             {wordmark}
           </div>
         )}
+        <ApSidebarToggle />
       </div>
     </SidebarHeader>
   );

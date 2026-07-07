@@ -1,6 +1,5 @@
 import { ReactNode } from 'react';
 
-import { ApSidebarToggle } from '@/components/custom/ap-sidebar-toggle';
 import { useEmbedding } from '@/components/providers/embed-provider';
 import { cn } from '@/lib/utils';
 
@@ -9,7 +8,6 @@ export const PageHeader = ({
   description,
   leftContent,
   rightContent,
-  showSidebarToggle = false,
   breadcrumb,
   tabs,
   className = '',
@@ -45,7 +43,6 @@ export const PageHeader = ({
         )}
       >
         <div className="flex min-w-0 grow items-center gap-1">
-          {showSidebarToggle && <ApSidebarToggle />}
           <div className="min-w-0 grow">
             {typeof title === 'string' ? (
               <h1
@@ -89,6 +86,5 @@ interface PageHeaderProps {
   rightContent?: ReactNode;
   breadcrumb?: ReactNode;
   tabs?: ReactNode;
-  showSidebarToggle?: boolean;
   className?: string;
 }

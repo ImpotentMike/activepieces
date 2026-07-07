@@ -106,7 +106,6 @@ const TemplatesPage = () => {
           style={{ backgroundColor: 'var(--pf-page-bg, white)' }}
         >
           <PageHeader
-            showSidebarToggle={true}
             className="static"
             title={
               <>
