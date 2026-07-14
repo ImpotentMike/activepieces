@@ -22,7 +22,6 @@ import {
   Star,
   Table2,
   Trash2,
-  Workflow,
 } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -46,11 +45,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
 import { MoveToFolderDialog } from '@/features/automations/components/move-to-folder-dialog';
 import { FlowStatusToggle } from '@/features/flows/components/flow-status-toggle';
 import { ShareTemplateDialog } from '@/features/flows/components/share-template-dialog';
@@ -134,35 +128,8 @@ export const AutomationsTableRow = ({
           <Checkbox checked={isSelected} onCheckedChange={onToggleSelection} />
         </div>
         <div
-          className={cn(
-            'w-8 shrink-0 flex items-center justify-center mr-2',
-            item.type === 'folder' && 'mr-3',
-          )}
-          onClick={(e) => e.stopPropagation()}
-        >
-          {item.depth === 0 && (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  onClick={onTogglePin}
-                  className="p-0.5 rounded hover:bg-muted transition-colors"
-                >
-                  <Star
-                    className={cn(
-                      'h-4 w-4',
-                      isPinned
-                        ? 'text-yellow-500 fill-yellow-500'
-                        : 'text-muted-foreground/40 hover:text-muted-foreground',
-                    )}
-                  />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent side="top">
-                {isPinned ? t('Remove from favorites') : t('Add to favorites')}
-              </TooltipContent>
-            </Tooltip>
-          )}
-        </div>
+          className={cn('w-8 shrink-0 mr-2', item.type === 'folder' && 'mr-3')}
+        />
         <div className="flex-1 min-w-[200px] pl-2 pr-2 flex items-center">
           <div
             className="relative flex items-center gap-2 min-w-0"
@@ -179,19 +146,21 @@ export const AutomationsTableRow = ({
                 )}
               </span>
             )}
-            <span className="shrink-0">
-              <RowItemIcon item={item} />
-            </span>
+            {item.type !== 'flow' && (
+              <span className="shrink-0">
+                <RowItemIcon item={item} />
+              </span>
+            )}
             <TextWithTooltip tooltipMessage={item.name}>
               <span>{item.name}</span>
             </TextWithTooltip>
           </div>
         </div>
       </div>
-      <div className="w-[230px] shrink-0 px-2 flex items-center">
+      <div className="w-[200px] shrink-0 px-2 flex items-center">
         <RowItemDetails item={item} />
       </div>
-      <div className="w-[200px] shrink-0 px-2 flex items-center">
+      <div className="w-[150px] shrink-0 px-2 flex items-center">
         {item.data && (
           <FormattedDate
             date={new Date(item.data.updated)}
@@ -200,30 +169,31 @@ export const AutomationsTableRow = ({
         )}
       </div>
       {!embedState.isEmbedded && (
-        <div className="w-[250px] shrink-0 px-2 flex items-center overflow-hidden">
+        <div className="w-[190px] shrink-0 px-2 flex items-center overflow-hidden">
           <RowItemOwner item={item} />
         </div>
       )}
-      <div className="w-[110px] shrink-0 px-2 flex items-center">
+      <div className="w-[210px] shrink-0 px-2 flex items-center gap-3">
         <RowItemStatus item={item} />
-      </div>
-      <div
-        className="w-[120px] shrink-0 px-2 flex items-center"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {item.type === 'flow' &&
-          (flowLifecycleStatus(item.data as PopulatedFlow) === 'draft' ? (
-            <Button
-              variant="link"
-              size="sm"
-              className="px-0"
-              onClick={() => onRowClick()}
-            >
-              {t('Publish')}
-            </Button>
-          ) : (
-            <FlowStatusToggle flow={item.data as PopulatedFlow} />
-          ))}
+        {item.type === 'flow' && (
+          <div
+            className="flex items-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {flowLifecycleStatus(item.data as PopulatedFlow) === 'draft' ? (
+              <Button
+                variant="link"
+                size="sm"
+                className="px-0"
+                onClick={() => onRowClick()}
+              >
+                {t('Publish')}
+              </Button>
+            ) : (
+              <FlowStatusToggle flow={item.data as PopulatedFlow} />
+            )}
+          </div>
+        )}
       </div>
       <div
         className="w-[50px] shrink-0 px-2 flex items-center"
@@ -236,6 +206,17 @@ export const AutomationsTableRow = ({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
+            {item.depth === 0 && (
+              <DropdownMenuItem onClick={onTogglePin}>
+                <Star
+                  className={cn(
+                    'h-4 w-4 mr-2',
+                    isPinned && 'text-yellow-500 fill-yellow-500',
+                  )}
+                />
+                {isPinned ? t('Remove from favorites') : t('Add to favorites')}
+              </DropdownMenuItem>
+            )}
             {item.type === 'folder' && (
               <DropdownMenuItem
                 onClick={() => {
@@ -354,10 +335,10 @@ const RowItemIcon = ({ item }: { item: TreeItem }) => {
   switch (item.type) {
     case 'folder':
       return <Folder className="h-4 w-4 text-gray-400 fill-gray-400" />;
-    case 'flow':
-      return <Workflow className="h-4 w-4 text-primary" />;
-    default:
+    case 'table':
       return <Table2 className="h-4 w-4 text-emerald-500" />;
+    default:
+      return null;
   }
 };
 
