@@ -50,20 +50,23 @@ const ThirdPartyLogin = React.memo(({ isSignUp }: { isSignUp: boolean }) => {
 
   return (
     <div className="flex flex-col gap-4">
-      {thirdPartyAuthProviders?.google && (
-        <Button
-          variant="outline"
-          className="w-full rounded-sm"
-          onClick={(e) =>
-            handleProviderClick(e, ThirdPartyAuthnProviderEnum.GOOGLE)
+      {/* Rendered even when Google isn't configured (demo); click is a no-op until it is */}
+      <Button
+        size="lg"
+        className="w-full rounded-full bg-primary-900 text-white hover:bg-primary-900/90"
+        onClick={(e) => {
+          if (!thirdPartyAuthProviders?.google) {
+            e.preventDefault();
+            return;
           }
-        >
-          <ThirdPartyIcon icon={GoogleIcon} />
-          {isSignUp
-            ? `${t(`Sign up With`)} ${t('Google')}`
-            : `${t(`Sign in With`)} ${t('Google')}`}
-        </Button>
-      )}
+          handleProviderClick(e, ThirdPartyAuthnProviderEnum.GOOGLE);
+        }}
+      >
+        <ThirdPartyIcon icon={GoogleIcon} />
+        {isSignUp
+          ? `${t(`Sign up With`)} ${t('Google')}`
+          : `${t(`Sign in With`)} ${t('Google')}`}
+      </Button>
       {thirdPartyAuthProviders?.saml && (
         <Button
           variant="outline"
