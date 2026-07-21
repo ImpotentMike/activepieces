@@ -116,7 +116,7 @@ const AuthLayout = ({
       className="flex h-screen w-full items-center justify-center overflow-y-auto rounded-none border-none bg-background p-6"
       gridColor="hsl(var(--primary-600) / 0.12)"
       beamColor="#6394FF"
-      beamDuration={5}
+      beamDuration={2}
     >
       <div className="flex w-96 max-w-full flex-col items-center">
         <img
