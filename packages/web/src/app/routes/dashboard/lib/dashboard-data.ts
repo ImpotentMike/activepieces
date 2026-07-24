@@ -165,7 +165,14 @@ export const dashboardData = {
     };
   },
 
-  avgRunDurationMs({ runs }: { runs: RecentRunRow[] }): number | null {
+  thisMonthTotal({ series }: { series: FlowRunCountByDay[] }): number {
+    const monthPrefix = dayjs().format('YYYY-MM');
+    return series
+      .filter((day) => day.day.startsWith(monthPrefix))
+      .reduce((acc, day) => acc + day.total, 0);
+  },
+
+  durationStats({ runs }: { runs: RecentRunRow[] }): DashboardDurationStats {
     const durations = runs
       .filter((run) => run.startTime && run.finishTime)
       .map(
@@ -173,12 +180,22 @@ export const dashboardData = {
           new Date(run.finishTime!).getTime() -
           new Date(run.startTime!).getTime(),
       )
-      .filter((ms) => ms >= 0);
+      .filter((ms) => ms >= 0)
+      .sort((a, b) => a - b);
     if (durations.length === 0) {
-      return null;
+      return { avgMs: null, medianMs: null, totalMs: null };
     }
-    const sum = durations.reduce((acc, ms) => acc + ms, 0);
-    return Math.round(sum / durations.length);
+    const totalMs = durations.reduce((acc, ms) => acc + ms, 0);
+    const mid = Math.floor(durations.length / 2);
+    const medianMs =
+      durations.length % 2 === 0
+        ? Math.round((durations[mid - 1] + durations[mid]) / 2)
+        : durations[mid];
+    return {
+      avgMs: Math.round(totalMs / durations.length),
+      medianMs,
+      totalMs,
+    };
   },
 
   flaggedRuns({
@@ -197,6 +214,8 @@ export const dashboardData = {
         flowId: run.flowId ?? null,
         name: run.flowVersion?.displayName ?? null,
         status: run.status,
+        failedStepName: run.failedStep?.displayName ?? null,
+        created: run.created,
       }));
   },
 };
@@ -224,16 +243,24 @@ export type DashboardRunsWindow = {
   trend: PfTrend | undefined;
 };
 
+export type DashboardDurationStats = {
+  avgMs: number | null;
+  medianMs: number | null;
+  totalMs: number | null;
+};
+
 export type DashboardFlaggedRun = {
   id: string;
   projectId: string;
   flowId: string | null;
   name: string | null;
   status: FlowRunStatus;
+  failedStepName: string | null;
+  created: string;
 };
 
 export type DashboardWorkflowComposition = {
   running: number;
-  published: number;
   draft: number;
+  paused: number;
 };

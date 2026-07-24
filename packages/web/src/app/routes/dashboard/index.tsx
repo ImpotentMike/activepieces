@@ -1,15 +1,14 @@
-import { FlowStatus } from '@activepieces/shared';
+import { FAILED_STATES, FlowStatus } from '@activepieces/shared';
 import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import { t } from 'i18next';
 import { useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-import { PageHeader } from '@/components/custom/page-header';
 import { flowRunsApi } from '@/features/flow-runs/api/flow-runs-api';
 import { flowsApi } from '@/features/flows/api/flows-api';
-import { getProjectName, projectCollectionUtils } from '@/features/projects';
 import { authenticationSession } from '@/lib/authentication-session';
+import { cn, DASHBOARD_CONTENT_PADDING_X } from '@/lib/utils';
 
 import { DashboardToolbar } from './components/dashboard-toolbar';
 import { PrimaryDashboardView } from './components/dashboard-view';
@@ -22,7 +21,6 @@ const DEFAULT_RANGE_DAYS = 7;
 export default function DashboardPage() {
   const [searchParams] = useSearchParams();
   const projectId = authenticationSession.getProjectId()!;
-  const { project } = projectCollectionUtils.useCurrentProject();
 
   const [rangeDays, setRangeDays] = useState(DEFAULT_RANGE_DAYS);
 
@@ -87,6 +85,35 @@ export default function DashboardPage() {
     enabled: !isDemo,
   });
 
+  const runsCountQuery = useQuery({
+    queryKey: ['dashboard', 'runs-count', projectId],
+    queryFn: async () => {
+      const { data } = await flowRunsApi.countByStatus({ projectId });
+      const total = data.reduce((acc, entry) => acc + entry.count, 0);
+      const flaggedTotal = data
+        .filter((entry) => FAILED_STATES.includes(entry.status))
+        .reduce((acc, entry) => acc + entry.count, 0);
+      return { total, flaggedTotal };
+    },
+    staleTime: 60_000,
+    refetchOnWindowFocus: false,
+    enabled: !isDemo,
+  });
+
+  const flaggedRunsQuery = useQuery({
+    queryKey: ['dashboard', 'flagged-runs', projectId],
+    queryFn: () =>
+      flowRunsApi.list({
+        projectId,
+        status: FAILED_STATES,
+        limit: 5,
+        cursor: undefined,
+      }),
+    staleTime: 30_000,
+    refetchOnWindowFocus: true,
+    enabled: !isDemo,
+  });
+
   const series = useMemo(() => {
     const counts = demoData?.runsByDay ?? runsByDayQuery.data?.data ?? [];
     return dashboardData.fillDailySeries({ counts, days: CHART_WINDOW_DAYS });
@@ -94,6 +121,20 @@ export default function DashboardPage() {
 
   const workflowCounts = demoData?.workflowCounts ?? workflowCountsQuery.data;
   const recentRuns = demoData?.recentRuns ?? recentRunsQuery.data?.data ?? [];
+  const totalRunsAllTime =
+    demoData?.totalRunsAllTime ?? runsCountQuery.data?.total ?? null;
+
+  const flaggedRuns = useMemo(
+    () =>
+      dashboardData.flaggedRuns({
+        runs: demoData?.recentRuns ?? flaggedRunsQuery.data?.data ?? [],
+        limit: 5,
+      }),
+    [demoData, flaggedRunsQuery.data],
+  );
+  const flaggedCount = isDemo
+    ? demoData!.flaggedTotal
+    : runsCountQuery.data?.flaggedTotal ?? flaggedRuns.length;
 
   const workflowCountsState = isDemo
     ? 'ready'
@@ -102,6 +143,9 @@ export default function DashboardPage() {
   const recentRunsState = isDemo
     ? 'ready'
     : dashboardData.queryState(recentRunsQuery);
+  const flaggedState = isDemo
+    ? 'ready'
+    : dashboardData.queryState(flaggedRunsQuery);
 
   const isRefreshing =
     !isDemo &&
@@ -129,45 +173,49 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="flex w-full flex-col gap-4 bg-[var(--pf-page-bg)] pb-8">
-      <PageHeader
-        breadcrumb={<span>{t('Dashboard')}</span>}
-        title={t('Dashboard')}
-        description={t('Health and activity across all workflows')}
-        leftContent={
-          isDemo ? (
+    <div className="flex w-full flex-col gap-4 bg-[var(--pf-page-bg)] pb-8 pt-4">
+      <div
+        data-slot="dashboard-toolbar-row"
+        className={cn(
+          'flex items-center justify-between gap-3',
+          DASHBOARD_CONTENT_PADDING_X,
+        )}
+      >
+        {isDemo ? (
+          <span
+            data-slot="dashboard-demo-badge"
+            className="inline-flex items-center gap-1.5 rounded-full border border-warning-100 bg-warning-50 px-2.5 py-1 text-[11.5px] font-medium text-warning-700"
+          >
             <span
-              data-slot="dashboard-demo-badge"
-              className="ms-3 inline-flex items-center gap-1.5 rounded-full border border-warning-100 bg-warning-50 px-2.5 py-1 text-[11.5px] font-medium text-warning-700"
-            >
-              <span
-                aria-hidden="true"
-                className="size-1.5 rounded-full bg-warning-500"
-              />
-              {t('Showcase data')}
-            </span>
-          ) : undefined
-        }
-        rightContent={
-          <DashboardToolbar
-            rangeDays={rangeDays}
-            onRangeChange={setRangeDays}
-            lastUpdated={lastUpdated}
-            isRefreshing={isRefreshing}
-            onRefresh={handleRefresh}
-          />
-        }
-      />
+              aria-hidden="true"
+              className="size-1.5 rounded-full bg-warning-500"
+            />
+            {t('Showcase data')}
+          </span>
+        ) : (
+          <span aria-hidden="true" />
+        )}
+        <DashboardToolbar
+          rangeDays={rangeDays}
+          onRangeChange={setRangeDays}
+          lastUpdated={lastUpdated}
+          isRefreshing={isRefreshing}
+          onRefresh={handleRefresh}
+        />
+      </div>
 
       <PrimaryDashboardView
         series={series}
         rangeDays={rangeDays}
         workflowCounts={workflowCounts}
         recentRuns={recentRuns}
-        projectName={getProjectName(project)}
+        flaggedRuns={flaggedRuns}
+        flaggedCount={flaggedCount}
+        totalRunsAllTime={totalRunsAllTime}
         workflowCountsState={workflowCountsState}
         runsState={runsState}
         recentRunsState={recentRunsState}
+        flaggedState={flaggedState}
         projectId={projectId}
         lastUpdated={lastUpdated}
         isRefreshing={isRefreshing}

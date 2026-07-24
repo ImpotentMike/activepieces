@@ -7,9 +7,9 @@ const SYNTHETIC_DAYS = 30;
 const ELEVATED_FAILURE_RATE = 0.05;
 
 const WORKFLOW_COMPOSITION = {
-  published: 6,
-  draft: 5,
-  paused: 3,
+  published: 18,
+  draft: 6,
+  paused: 4,
 };
 
 const RECENT_RUN_TEMPLATES: ReadonlyArray<{
@@ -18,6 +18,7 @@ const RECENT_RUN_TEMPLATES: ReadonlyArray<{
   status: FlowRunStatus;
   minutesAgo: number;
   durationMs: number | null;
+  failedStep?: string;
 }> = [
   {
     flowKey: 'ai-ticket-triage',
@@ -43,9 +44,10 @@ const RECENT_RUN_TEMPLATES: ReadonlyArray<{
   {
     flowKey: 'postgres-backup',
     name: 'Daily Postgres backup',
-    status: FlowRunStatus.FAILED,
+    status: FlowRunStatus.INTERNAL_ERROR,
     minutesAgo: 12,
     durationMs: 11200,
+    failedStep: 'Send a Message on Slack',
   },
   {
     flowKey: 'stripe-quickbooks',
@@ -60,6 +62,7 @@ const RECENT_RUN_TEMPLATES: ReadonlyArray<{
     status: FlowRunStatus.FAILED,
     minutesAgo: 23,
     durationMs: 12600,
+    failedStep: 'Broadcast to Channel',
   },
   {
     flowKey: 'shopify-webhook',
@@ -74,6 +77,7 @@ const RECENT_RUN_TEMPLATES: ReadonlyArray<{
     status: FlowRunStatus.TIMEOUT,
     minutesAgo: 39,
     durationMs: 30000,
+    failedStep: 'Retrieve Data From Dashboard',
   },
   {
     flowKey: 'weekly-report',
@@ -95,6 +99,7 @@ const RECENT_RUN_TEMPLATES: ReadonlyArray<{
     status: FlowRunStatus.FAILED,
     minutesAgo: 72,
     durationMs: 690,
+    failedStep: 'Create Issue Comment',
   },
   {
     flowKey: 'rss-x-poster',
@@ -153,6 +158,9 @@ function buildRecentRuns(projectId: string): RecentRunRow[] {
         ? startTime.add(template.durationMs ?? 0, 'millisecond').toISOString()
         : null,
       flowVersion: { displayName: template.name },
+      failedStep: template.failedStep
+        ? { name: template.failedStep, displayName: template.failedStep }
+        : null,
     };
   });
 }
@@ -173,6 +181,8 @@ export const dashboardSyntheticData = {
         total: published + draft + paused,
       },
       recentRuns: buildRecentRuns(projectId),
+      totalRunsAllTime: 120420,
+      flaggedTotal: 23,
     };
   },
 };
@@ -188,4 +198,6 @@ export type DashboardSyntheticData = {
   runsByDay: FlowRunCountByDay[];
   workflowCounts: DashboardWorkflowCounts;
   recentRuns: RecentRunRow[];
+  totalRunsAllTime: number;
+  flaggedTotal: number;
 };

@@ -169,6 +169,7 @@ export type RecentRunRow = {
   startTime?: string | null;
   finishTime?: string | null;
   flowVersion?: { displayName?: string } | null;
+  failedStep?: { name: string; displayName: string } | null;
 };
 
 type RecentRunsProps = {

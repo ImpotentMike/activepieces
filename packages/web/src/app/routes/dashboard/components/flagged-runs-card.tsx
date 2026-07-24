@@ -1,9 +1,10 @@
 import { FlowRunStatus } from '@activepieces/shared';
 import { t } from 'i18next';
-import { ChevronRight, CircleCheck, TriangleAlert } from 'lucide-react';
+import { ArrowRight, CircleCheck, TriangleAlert } from 'lucide-react';
 
 import { PfCard } from '@/components/custom/pf-card';
 import { TextWithTooltip } from '@/components/custom/text-with-tooltip';
+import { formatUtils } from '@/lib/format-utils';
 import { cn } from '@/lib/utils';
 
 import {
@@ -13,9 +14,13 @@ import {
 
 export function FlaggedRunsCard({
   runs,
+  flaggedCount,
   state,
   onRunClick,
+  onSeeMore,
 }: FlaggedRunsCardProps) {
+  const remaining = Math.max(0, flaggedCount - runs.length);
+
   return (
     <PfCard data-slot="dashboard-flagged-runs" className="h-full gap-3">
       <div className="flex min-w-0 flex-col">
@@ -25,6 +30,11 @@ export function FlaggedRunsCard({
             className="size-4 text-muted-foreground"
           />
           {t('Flagged runs')}
+          {state === 'ready' && flaggedCount > 0 ? (
+            <span className="inline-flex min-w-5 items-center justify-center rounded-full bg-primary-600 px-1.5 text-[11.5px] font-semibold text-primary-foreground tabular-nums">
+              {flaggedCount}
+            </span>
+          ) : null}
         </h3>
         <p className="m-0 mt-0.5 text-[12.5px] text-muted-foreground">
           {t('Failed runs that need attention')}
@@ -48,45 +58,79 @@ export function FlaggedRunsCard({
           </p>
         </div>
       ) : (
-        <ul className="flex flex-col gap-0.5">
-          {runs.map((run) => {
-            const name = run.name ?? t('Untitled');
-            return (
-              <li key={run.id} className="min-w-0">
-                <button
-                  type="button"
-                  onClick={() => onRunClick(run)}
-                  className={cn(
-                    'group flex w-full min-w-0 items-center gap-3 rounded-md px-2 py-2 text-left',
-                    'transition-colors hover:bg-gray-50',
-                    'focus-visible:bg-gray-50 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-primary-600/30',
-                  )}
-                >
-                  <span
-                    aria-hidden="true"
-                    className="size-2 shrink-0 rounded-full bg-destructive-500"
-                  />
-                  <span className="flex min-w-0 flex-1 flex-col gap-0.5">
-                    <TextWithTooltip tooltipMessage={name}>
-                      <span className="truncate text-[13px] font-medium text-foreground group-hover:text-primary-700">
-                        {name}
-                      </span>
-                    </TextWithTooltip>
-                    <span className="truncate text-[12px] text-destructive-600">
-                      {t(STATUS_REASON_KEY[run.status] ?? 'Run failed')}
+        <div className="flex flex-1 flex-col">
+          <ul className="flex flex-col divide-y divide-gray-100">
+            {runs.map((run) => {
+              const name = run.name ?? t('Untitled');
+              return (
+                <li key={run.id} className="min-w-0">
+                  <button
+                    type="button"
+                    onClick={() => onRunClick(run)}
+                    className={cn(
+                      'group flex w-full min-w-0 items-start justify-between gap-3 rounded-md px-2 py-2.5 text-left',
+                      'transition-colors hover:bg-gray-50',
+                      'focus-visible:bg-gray-50 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-primary-600/30',
+                    )}
+                  >
+                    <span className="flex min-w-0 flex-1 flex-col gap-1">
+                      <TextWithTooltip tooltipMessage={name}>
+                        <span className="truncate text-[13px] font-medium text-primary-700 group-hover:underline">
+                          {name}
+                        </span>
+                      </TextWithTooltip>
+                      {run.failedStepName ? (
+                        <TextWithTooltip tooltipMessage={run.failedStepName}>
+                          <span className="truncate text-[12px] text-muted-foreground">
+                            {t('Step: {step}', { step: run.failedStepName })}
+                          </span>
+                        </TextWithTooltip>
+                      ) : (
+                        <span className="truncate text-[12px] text-muted-foreground">
+                          {formatUtils.formatDate(new Date(run.created))}
+                        </span>
+                      )}
                     </span>
-                  </span>
-                  <ChevronRight
-                    aria-hidden="true"
-                    className="size-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5"
-                  />
-                </button>
-              </li>
-            );
-          })}
-        </ul>
+                    <StatusBadge status={run.status} />
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+
+          {remaining > 0 ? (
+            <button
+              type="button"
+              onClick={onSeeMore}
+              className={cn(
+                'mt-auto inline-flex items-center gap-1 self-start rounded-md px-2 pt-2.5 text-[12.5px] font-medium text-primary-700',
+                'transition-colors hover:text-primary-800 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-primary-600/30',
+              )}
+            >
+              {t('See {count} more', { count: remaining })}
+              <ArrowRight className="size-3.5" />
+            </button>
+          ) : null}
+        </div>
       )}
     </PfCard>
+  );
+}
+
+function StatusBadge({ status }: { status: FlowRunStatus }) {
+  return (
+    <span
+      className={cn(
+        'inline-flex shrink-0 items-center gap-1.5 rounded-full border border-destructive-100 bg-destructive-50 px-2 py-0.5',
+        'text-[11px] font-medium text-destructive-700',
+      )}
+    >
+      <span
+        aria-hidden="true"
+        className="size-1.5 rounded-full bg-destructive-500"
+      />
+      {t(STATUS_BADGE_KEY[status] ?? 'Failed')}
+    </span>
   );
 }
 
@@ -97,23 +141,25 @@ function FlaggedRunsSkeleton() {
         <span
           key={i}
           aria-hidden="true"
-          className="h-10 w-full animate-pulse rounded-md bg-gray-100"
+          className="h-12 w-full animate-pulse rounded-md bg-gray-100"
         />
       ))}
     </div>
   );
 }
 
-const STATUS_REASON_KEY: Partial<Record<FlowRunStatus, string>> = {
-  [FlowRunStatus.FAILED]: 'Run failed',
+const STATUS_BADGE_KEY: Partial<Record<FlowRunStatus, string>> = {
+  [FlowRunStatus.FAILED]: 'Failed',
   [FlowRunStatus.INTERNAL_ERROR]: 'Internal error',
   [FlowRunStatus.QUOTA_EXCEEDED]: 'Quota exceeded',
-  [FlowRunStatus.TIMEOUT]: 'Run timed out',
-  [FlowRunStatus.MEMORY_LIMIT_EXCEEDED]: 'Memory limit exceeded',
+  [FlowRunStatus.TIMEOUT]: 'Timed out',
+  [FlowRunStatus.MEMORY_LIMIT_EXCEEDED]: 'Memory limit',
 };
 
 export type FlaggedRunsCardProps = {
   runs: DashboardFlaggedRun[];
+  flaggedCount: number;
   state: DashboardQueryState;
   onRunClick: (run: DashboardFlaggedRun) => void;
+  onSeeMore: () => void;
 };

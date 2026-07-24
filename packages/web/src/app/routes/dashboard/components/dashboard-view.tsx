@@ -1,34 +1,42 @@
-import { FlowRunCountByDay } from '@activepieces/shared';
+import { FAILED_STATES, FlowRunCountByDay } from '@activepieces/shared';
 import { t } from 'i18next';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, History, Timer } from 'lucide-react';
 import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { PfStatCard } from '@/components/custom/pf-card';
 import { Button } from '@/components/ui/button';
 import { authenticationSession } from '@/lib/authentication-session';
+import { formatUtils } from '@/lib/format-utils';
 import { cn, DASHBOARD_CONTENT_PADDING_X } from '@/lib/utils';
 
-import { dashboardData, DashboardQueryState } from '../lib/dashboard-data';
+import {
+  dashboardData,
+  DashboardFlaggedRun,
+  DashboardQueryState,
+} from '../lib/dashboard-data';
 import { DashboardWorkflowCounts } from '../lib/dashboard-synthetic-data';
 
+import { DashboardMetricCard } from './dashboard-metric-card';
 import { DashboardToolbar } from './dashboard-toolbar';
 import { FailureRateGaugeCard } from './failure-rate-gauge-card';
 import { FlaggedRunsCard } from './flagged-runs-card';
-import { ProjectSummaryCard } from './project-summary-card';
 import { RecentRuns, RecentRunRow } from './recent-runs';
 import { RunsOverTimeChart } from './runs-over-time-chart';
-import { WorkflowsDonutCard } from './workflows-donut-card';
+import { WorkflowsSummaryCard } from './workflows-summary-card';
 
 export function PrimaryDashboardView({
   series,
   rangeDays,
   workflowCounts,
   recentRuns,
-  projectName,
+  flaggedRuns,
+  flaggedCount,
+  totalRunsAllTime,
+  projectId,
   workflowCountsState,
   runsState,
   recentRunsState,
+  flaggedState,
   lastUpdated,
   isRefreshing,
   onRangeChange,
@@ -52,26 +60,28 @@ export function PrimaryDashboardView({
     [series, rangeDays],
   );
 
-  const avgDurationMs = useMemo(
-    () => dashboardData.avgRunDurationMs({ runs: recentRuns }),
-    [recentRuns],
+  const thisMonthRuns = useMemo(
+    () => dashboardData.thisMonthTotal({ series }),
+    [series],
   );
 
-  const flagged = useMemo(
-    () => dashboardData.flaggedRuns({ runs: recentRuns, limit: 6 }),
+  const durationStats = useMemo(
+    () => dashboardData.durationStats({ runs: recentRuns }),
     [recentRuns],
   );
 
   const composition = workflowCounts
     ? {
         running: workflowCounts.published,
-        published: workflowCounts.paused,
         draft: workflowCounts.draft,
+        paused: workflowCounts.paused,
       }
     : undefined;
 
   const avgDuration =
-    avgDurationMs === null ? null : formatCompactDuration(avgDurationMs);
+    durationStats.avgMs === null
+      ? null
+      : formatCompactDuration(durationStats.avgMs);
 
   const workflowsHref =
     authenticationSession.appendProjectRoutePrefix('/automations');
@@ -92,16 +102,37 @@ export function PrimaryDashboardView({
 
       <div
         data-slot="dashboard-summary-grid"
-        className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-6"
+        className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5"
       >
-        <div className="lg:col-span-1">
-          <ProjectSummaryCard name={projectName} />
-        </div>
         <div className="sm:col-span-2 lg:col-span-2">
-          <WorkflowsDonutCard
+          <WorkflowsSummaryCard
             composition={composition}
             state={workflowCountsState}
             onManage={() => navigate(workflowsHref)}
+          />
+        </div>
+        <div className="lg:col-span-1">
+          <DashboardMetricCard
+            icon={History}
+            label={t('Runs')}
+            value={runsWindow.total.toLocaleString()}
+            subtitle={t('in last {days} days', { days: rangeDays })}
+            trend={runsWindow.trend}
+            higherIsBetter
+            meta={[
+              {
+                label: t('This month'),
+                value: thisMonthRuns.toLocaleString(),
+              },
+              {
+                label: t('Total'),
+                value:
+                  totalRunsAllTime === null
+                    ? '—'
+                    : totalRunsAllTime.toLocaleString(),
+              },
+            ]}
+            state={runsState}
           />
         </div>
         <div className="lg:col-span-1">
@@ -111,21 +142,28 @@ export function PrimaryDashboardView({
           />
         </div>
         <div className="lg:col-span-1">
-          <PfStatCard
-            className="h-full"
-            label={t('Total runs')}
-            value={runsWindow.total.toLocaleString()}
-            trend={runsWindow.trend}
-            state={runsState}
-          />
-        </div>
-        <div className="lg:col-span-1">
-          <PfStatCard
-            className="h-full"
+          <DashboardMetricCard
+            icon={Timer}
             label={t('Avg time per run')}
             value={avgDuration ? avgDuration.value : '—'}
             unit={avgDuration ? avgDuration.unit : undefined}
-            footnote={t('across recent runs')}
+            subtitle={t('across recent runs')}
+            meta={[
+              {
+                label: t('Median'),
+                value:
+                  durationStats.medianMs === null
+                    ? '—'
+                    : formatUtils.formatDuration(durationStats.medianMs, true),
+              },
+              {
+                label: t('Total'),
+                value:
+                  durationStats.totalMs === null
+                    ? '—'
+                    : formatUtils.formatDuration(durationStats.totalMs, true),
+              },
+            ]}
             state={recentRunsState}
           />
         </div>
@@ -140,10 +178,19 @@ export function PrimaryDashboardView({
         </div>
         <div className="lg:col-span-2">
           <FlaggedRunsCard
-            runs={flagged}
-            state={recentRunsState}
+            runs={flaggedRuns}
+            flaggedCount={flaggedCount}
+            state={flaggedState}
             onRunClick={(run) =>
               navigate(`/projects/${run.projectId}/runs/${run.id}`)
+            }
+            onSeeMore={() =>
+              navigate(
+                dashboardData.buildRunsHref({
+                  projectId,
+                  statuses: FAILED_STATES,
+                }),
+              )
             }
           />
         </div>
@@ -204,10 +251,13 @@ export type PrimaryDashboardViewProps = {
   rangeDays: number;
   workflowCounts: DashboardWorkflowCounts | undefined;
   recentRuns: RecentRunRow[];
-  projectName: string;
+  flaggedRuns: DashboardFlaggedRun[];
+  flaggedCount: number;
+  totalRunsAllTime: number | null;
   workflowCountsState: DashboardQueryState;
   runsState: DashboardQueryState;
   recentRunsState: DashboardQueryState;
+  flaggedState: DashboardQueryState;
   projectId: string;
   lastUpdated: number | null;
   isRefreshing: boolean;

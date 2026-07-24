@@ -123,10 +123,16 @@ export default function DashboardRndPage() {
           rangeDays={rndRangeDays}
           workflowCounts={demoData.workflowCounts}
           recentRuns={demoData.recentRuns}
-          projectName={project ? getProjectName(project) : ''}
+          flaggedRuns={dashboardData.flaggedRuns({
+            runs: demoData.recentRuns,
+            limit: 5,
+          })}
+          flaggedCount={demoData.flaggedTotal}
+          totalRunsAllTime={demoData.totalRunsAllTime}
           workflowCountsState="ready"
           runsState="ready"
           recentRunsState="ready"
+          flaggedState="ready"
           projectId={projectId}
           lastUpdated={rndUpdatedAt}
           isRefreshing={false}

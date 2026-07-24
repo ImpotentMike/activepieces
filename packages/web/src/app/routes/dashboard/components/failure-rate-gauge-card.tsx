@@ -15,12 +15,13 @@ import {
   PfTrend,
 } from '../lib/dashboard-data';
 
-const GAUGE_MAX_PERCENT = 20;
+const GAUGE_MAX_PERCENT = 10;
 const VIEW_W = 200;
-const VIEW_H = 166;
+const VIEW_H = 148;
 const CENTER_X = 100;
-const CENTER_Y = 98;
-const BAND_RADIUS = 76;
+const CENTER_Y = 118;
+const BAND_RADIUS = 80;
+const BAND_WIDTH = 14;
 
 export function FailureRateGaugeCard({
   failureWindow,
@@ -53,9 +54,9 @@ export function FailureRateGaugeCard({
           {t('Couldn’t load failure rate.')}
         </p>
       ) : (
-        <div className="flex flex-1 flex-col items-center justify-center gap-2">
+        <div className="flex flex-1 flex-col items-center justify-center gap-1">
           <div
-            className="relative w-full max-w-[176px]"
+            className="relative w-full max-w-[188px]"
             style={{ aspectRatio: `${VIEW_W} / ${VIEW_H}` }}
             role="img"
             aria-label={
@@ -68,7 +69,7 @@ export function FailureRateGaugeCard({
           >
             <svg
               viewBox={`0 0 ${VIEW_W} ${VIEW_H}`}
-              className="absolute inset-0 h-full w-full"
+              className="absolute inset-0 h-full w-full overflow-visible"
               aria-hidden="true"
             >
               {ZONES.map((zone) => (
@@ -77,10 +78,45 @@ export function FailureRateGaugeCard({
                   d={arcPath({ start: zone.start, end: zone.end })}
                   fill="none"
                   stroke={hasData ? zone.color : 'hsl(var(--muted))'}
-                  strokeWidth={13}
+                  strokeWidth={BAND_WIDTH}
                   strokeLinecap="round"
                 />
               ))}
+
+              <line
+                x1={CENTER_X}
+                y1={CENTER_Y - (BAND_RADIUS + BAND_WIDTH / 2 + 1)}
+                x2={CENTER_X}
+                y2={CENTER_Y - (BAND_RADIUS - BAND_WIDTH / 2 - 1)}
+                className="stroke-foreground/70"
+                strokeWidth={2.5}
+                strokeLinecap="round"
+              />
+              <text
+                x={CENTER_X}
+                y={CENTER_Y - (BAND_RADIUS + BAND_WIDTH / 2 + 8)}
+                textAnchor="middle"
+                className="fill-muted-foreground text-[11px] font-medium"
+              >
+                {t('Limit')}
+              </text>
+
+              <text
+                x={CENTER_X - BAND_RADIUS}
+                y={CENTER_Y + 20}
+                textAnchor="middle"
+                className="fill-muted-foreground text-[11px] tabular-nums"
+              >
+                0%
+              </text>
+              <text
+                x={CENTER_X + BAND_RADIUS}
+                y={CENTER_Y + 20}
+                textAnchor="middle"
+                className="fill-muted-foreground text-[11px] tabular-nums"
+              >
+                {GAUGE_MAX_PERCENT}%
+              </text>
 
               {hasData ? (
                 <g>
@@ -91,7 +127,7 @@ export function FailureRateGaugeCard({
                   <circle
                     cx={CENTER_X}
                     cy={CENTER_Y}
-                    r={8}
+                    r={7}
                     className="fill-background stroke-foreground"
                     strokeWidth={2.5}
                   />
@@ -104,25 +140,26 @@ export function FailureRateGaugeCard({
                 </g>
               ) : null}
             </svg>
+
+            <div className="pointer-events-none absolute inset-x-0 top-[54%] flex -translate-y-1/2 justify-center">
+              <span
+                className={cn(
+                  'text-[32px] font-bold leading-none tracking-tight tabular-nums',
+                  valueClass,
+                )}
+              >
+                {hasData ? `${Math.round(rate)}%` : '—'}
+              </span>
+            </div>
           </div>
 
-          <div className="flex flex-col items-center gap-1">
-            <span
-              className={cn(
-                'text-[30px] font-bold leading-none tracking-tight tabular-nums',
-                valueClass,
-              )}
-            >
-              {hasData ? `${rate.toFixed(1)}%` : '—'}
+          {hasData && failureWindow.trend ? (
+            <FailureTrendPill {...failureWindow.trend} />
+          ) : (
+            <span className="text-[12px] text-muted-foreground">
+              {hasData ? t('of runs failed') : t('No runs yet')}
             </span>
-            {hasData && failureWindow.trend ? (
-              <FailureTrendPill {...failureWindow.trend} />
-            ) : (
-              <span className="text-[12px] text-muted-foreground">
-                {hasData ? t('of runs failed') : t('No runs yet')}
-              </span>
-            )}
-          </div>
+          )}
         </div>
       )}
     </PfCard>
@@ -156,7 +193,7 @@ function GaugeSkeleton() {
     <div className="flex flex-1 items-center justify-center">
       <span
         aria-hidden="true"
-        className="h-[120px] w-[200px] max-w-full animate-pulse rounded-t-full bg-gray-100"
+        className="h-[110px] w-[188px] max-w-full animate-pulse rounded-t-full bg-gray-100"
       />
     </div>
   );
@@ -182,7 +219,7 @@ function arcPath({ start, end }: { start: number; end: number }): string {
 }
 
 function needlePath(angleDeg: number): string {
-  const tip = polar(BAND_RADIUS - 4, angleDeg);
+  const tip = polar(BAND_RADIUS - 6, angleDeg);
   const left = polar(6, angleDeg + 90);
   const right = polar(6, angleDeg - 90);
   return `M ${left.x.toFixed(2)} ${left.y.toFixed(2)} L ${tip.x.toFixed(
@@ -190,14 +227,14 @@ function needlePath(angleDeg: number): string {
   )} ${tip.y.toFixed(2)} L ${right.x.toFixed(2)} ${right.y.toFixed(2)} Z`;
 }
 
-const ANGLE_START = 210;
-const ANGLE_END = -30;
+const ANGLE_START = 180;
+const ANGLE_END = 0;
 const ANGLE_SWEEP = ANGLE_START - ANGLE_END;
 
 const ZONES = [
-  { key: 'healthy', color: 'hsl(var(--success-500))', start: 210, end: 152 },
-  { key: 'elevated', color: 'hsl(var(--warning-500))', start: 148, end: 32 },
-  { key: 'high', color: 'hsl(var(--destructive-500))', start: 28, end: -30 },
+  { key: 'healthy', color: 'hsl(var(--success-500))', start: 180, end: 123 },
+  { key: 'elevated', color: 'hsl(var(--warning-500))', start: 117, end: 63 },
+  { key: 'high', color: 'hsl(var(--destructive-500))', start: 57, end: 0 },
 ] as const;
 
 const LEVEL_VALUE_CLASS = {

@@ -37,13 +37,6 @@ export function RunsOverTimeChart({ series, state }: RunsOverTimeChartProps) {
   const totals = dashboardData.sumSeries(series);
   const dayCount = Math.max(1, series.length);
   const average = totals.total / dayCount;
-  const peak = series.reduce((max, day) => Math.max(max, day.total), 0);
-  const failureRate = dashboardData.failureRatePercent({
-    total: totals.total,
-    failed: totals.failed,
-  });
-  const healthLevel =
-    failureRate === null ? null : dashboardData.failureRateLevel(failureRate);
 
   const incidents = series.filter(
     (day) => day.total > 0 && day.failed / day.total >= ELEVATED_FAILURE_RATE,
@@ -65,23 +58,6 @@ export function RunsOverTimeChart({ series, state }: RunsOverTimeChartProps) {
           </p>
         </div>
         <div className="flex items-center gap-3">
-          {state === 'ready' && healthLevel ? (
-            <span
-              data-slot="chart-health-pill"
-              className={cn(
-                'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[12px] font-medium',
-                HEALTH_PILL_CLASS[healthLevel],
-              )}
-            >
-              <span
-                className={cn(
-                  'size-1.5 rounded-full',
-                  HEALTH_DOT_CLASS[healthLevel],
-                )}
-              />
-              {t(HEALTH_LABEL[healthLevel])}
-            </span>
-          ) : null}
           <Tabs
             value={chartType}
             onValueChange={(value) =>
@@ -128,10 +104,9 @@ export function RunsOverTimeChart({ series, state }: RunsOverTimeChartProps) {
             {t('Daily average')}
           </LegendItem>
           <span className="ml-auto text-[12px] text-muted-foreground">
-            {t('{total} runs · avg {avgPerDay}/day · peak {peak}', {
+            {t('{total} runs · avg {avgPerDay}/day', {
               total: nf(totals.total),
               avgPerDay: nf(Math.round(average)),
-              peak: nf(peak),
             })}
           </span>
         </div>
@@ -484,24 +459,6 @@ function formatLongDay(day: string): string {
     year: 'numeric',
   });
 }
-
-const HEALTH_LABEL = {
-  healthy: 'Healthy',
-  elevated: 'Elevated',
-  high: 'High',
-} as const;
-
-const HEALTH_PILL_CLASS = {
-  healthy: 'bg-success-100 text-success-700',
-  elevated: 'bg-warning-100 text-warning-700',
-  high: 'bg-destructive-100 text-destructive-700',
-} as const;
-
-const HEALTH_DOT_CLASS = {
-  healthy: 'bg-success-600',
-  elevated: 'bg-warning-600',
-  high: 'bg-destructive-600',
-} as const;
 
 type ChartType = 'line' | 'bar';
 
