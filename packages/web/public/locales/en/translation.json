@@ -1857,5 +1857,19 @@
   "Failed runs in the last 7 days": "Failed runs in the last 7 days",
   "{published} live · {draft} draft": "{published} live · {draft} draft",
   "No runs yet": "No runs yet",
-  "Dev fixture: simulated role for this project": "Dev fixture: simulated role for this project"
+  "Dev fixture: simulated role for this project": "Dev fixture: simulated role for this project",
+  "Pause \"{name}\"?": "Pause \"{name}\"?",
+  "Pause {count} workflows?": "Pause {count} workflows?",
+  "This workflow runs {schedule}.": "This workflow runs {schedule}.",
+  "Scheduled runs stop until you turn it back on. You can edit it and republish when you are ready.": "Scheduled runs stop until you turn it back on. You can edit it and republish when you are ready.",
+  "Scheduled runs stop until they are turned back on. They can be edited and republished at any time.": "Scheduled runs stop until they are turned back on. They can be edited and republished at any time.",
+  "Any run already in progress will finish normally.": "Any run already in progress will finish normally.",
+  "Only the {count} active workflows will be paused. {unaffected} are not active and stay as they are.": "Only the {count} active workflows will be paused. {unaffected} are not active and stay as they are.",
+  "{count} workflows were excluded because your role cannot pause them.": "{count} workflows were excluded because your role cannot pause them.",
+  "Only an Admin can resume this workflow once paused.": "Only an Admin can resume this workflow once paused.",
+  "Only an Admin can resume these workflows once paused.": "Only an Admin can resume these workflows once paused.",
+  "Pause workflow": "Pause workflow",
+  "and {count} more": "and {count} more",
+  "Workflow is active": "Workflow is active",
+  "Workflow is paused": "Workflow is paused"
 }

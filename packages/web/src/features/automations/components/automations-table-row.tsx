@@ -46,12 +46,13 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { MoveToFolderDialog } from '@/features/automations/components/move-to-folder-dialog';
-import { FlowStatusToggle } from '@/features/flows/components/flow-status-toggle';
 import { ShareTemplateDialog } from '@/features/flows/components/share-template-dialog';
 import { PieceIconList } from '@/features/pieces/components/piece-icon-list';
 import { cn } from '@/lib/utils';
 
 import { TreeItem } from '../lib/types';
+
+import { WorkflowStatusToggle } from './workflow-status-toggle';
 
 type AutomationsTableRowProps = {
   item: TreeItem;
@@ -190,7 +191,7 @@ export const AutomationsTableRow = ({
                 {t('Publish')}
               </Button>
             ) : (
-              <FlowStatusToggle flow={item.data as PopulatedFlow} />
+              <WorkflowStatusToggle flow={item.data as PopulatedFlow} />
             )}
           </div>
         )}
