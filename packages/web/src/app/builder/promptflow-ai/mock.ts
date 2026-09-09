@@ -1,10 +1,26 @@
-import { AiProposal } from './types';
+import { AiProposal, AiStarterSuggestion } from './types';
 
 // UI-only demo content: real Phase-1 workflows, used until the panel is wired to a backend.
 const examplePrompts = [
   'Run a Trudax query every Monday and email the team',
   'Send a WhatsApp summary daily at 6pm',
   'Notify the CMU officer when a KM submission comes in',
+];
+
+// The canvas card has room for one row of chips, so each prompt carries a short label.
+const starterSuggestions: AiStarterSuggestion[] = [
+  {
+    label: 'Weekly Trudax report',
+    prompt: examplePrompts[0],
+  },
+  {
+    label: 'Daily WhatsApp summary',
+    prompt: examplePrompts[1],
+  },
+  {
+    label: 'KM submission alert',
+    prompt: examplePrompts[2],
+  },
 ];
 
 const confirmationReply =
@@ -30,6 +46,7 @@ const trudaxWeeklyProposal: AiProposal = {
 
 export const promptflowAiMock = {
   examplePrompts,
+  starterSuggestions,
   confirmationReply,
   trudaxWeeklyProposal,
 };

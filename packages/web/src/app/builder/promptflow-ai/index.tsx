@@ -1,8 +1,6 @@
-import { apId } from '@activepieces/shared';
 import { t } from 'i18next';
 import { Bot, PanelLeftClose } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
-import { toast } from 'sonner';
+import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -12,68 +10,22 @@ import {
 } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 
+import { usePromptFlowAi } from './ai-panel-context';
 import { AiComposer } from './composer';
 import { AiConversation } from './conversation';
-import { promptflowAiMock } from './mock';
-import { AiPanelMessage } from './types';
-
-const MOCK_REPLY_DELAY_MS = 600;
 
 export function PromptFlowAiPanel() {
-  const [expanded, setExpanded] = useState(false);
-  const [messages, setMessages] = useState<AiPanelMessage[]>([]);
+  const {
+    expanded,
+    messages,
+    composerRef,
+    openPanel,
+    collapsePanel,
+    sendMessage,
+    applyProposal,
+    discardProposal,
+  } = usePromptFlowAi();
   const [composerValue, setComposerValue] = useState('');
-  const composerRef = useRef<HTMLTextAreaElement>(null);
-  const pendingRepliesRef = useRef<ReturnType<typeof setTimeout>[]>([]);
-
-  useEffect(() => {
-    return () => {
-      pendingRepliesRef.current.forEach(clearTimeout);
-    };
-  }, []);
-
-  const sendMessage = (text: string) => {
-    setComposerValue('');
-    setMessages((current) => [
-      ...current,
-      { id: apId(), role: 'user', kind: 'text', text },
-    ]);
-    // Mocked script: confirmation, then a proposal card. UI-only until the panel is wired up.
-    pendingRepliesRef.current.push(
-      setTimeout(() => {
-        setMessages((current) => [
-          ...current,
-          {
-            id: apId(),
-            role: 'assistant',
-            kind: 'text',
-            text: promptflowAiMock.confirmationReply,
-          },
-        ]);
-      }, MOCK_REPLY_DELAY_MS),
-      setTimeout(() => {
-        setMessages((current) => [
-          ...current,
-          {
-            id: apId(),
-            role: 'assistant',
-            kind: 'proposal',
-            proposal: promptflowAiMock.trudaxWeeklyProposal,
-          },
-        ]);
-      }, MOCK_REPLY_DELAY_MS * 2),
-    );
-  };
-
-  const applyProposal = () => {
-    toast(t('Preview only — applying to the canvas is not wired up yet'));
-  };
-
-  const discardProposal = (messageId: string) => {
-    setMessages((current) =>
-      current.filter((message) => message.id !== messageId),
-    );
-  };
 
   return (
     <aside
@@ -94,7 +46,7 @@ export function PromptFlowAiPanel() {
             <Button
               variant="ghost"
               size="icon-xs"
-              onClick={() => setExpanded(false)}
+              onClick={collapsePanel}
               aria-label={t('Collapse')}
               className="text-muted-foreground"
             >
@@ -112,12 +64,17 @@ export function PromptFlowAiPanel() {
               onDiscardProposal={discardProposal}
             />
           </div>
-          <AiComposer
-            value={composerValue}
-            onChange={setComposerValue}
-            onSend={sendMessage}
-            textareaRef={composerRef}
-          />
+          <div className="border-t p-3">
+            <AiComposer
+              value={composerValue}
+              onChange={setComposerValue}
+              onSend={(text) => {
+                setComposerValue('');
+                sendMessage(text);
+              }}
+              textareaRef={composerRef}
+            />
+          </div>
         </div>
       ) : (
         <div className="flex h-full w-10 flex-col items-center py-2">
@@ -126,7 +83,7 @@ export function PromptFlowAiPanel() {
               <Button
                 variant="ghost"
                 size="icon-sm"
-                onClick={() => setExpanded(true)}
+                onClick={openPanel}
                 aria-label={t('PromptFlow AI')}
                 className="text-muted-foreground"
               >

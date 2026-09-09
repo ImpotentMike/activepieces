@@ -1,3 +1,4 @@
+import { isNil } from '@activepieces/shared';
 import { Node, useKeyPress, useReactFlow } from '@xyflow/react';
 import { t } from 'i18next';
 import {
@@ -11,6 +12,7 @@ import {
 } from 'lucide-react';
 import { useCallback, useEffect } from 'react';
 
+import { usePromptFlowAi } from '@/app/builder/promptflow-ai/ai-panel-context';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import {
@@ -26,6 +28,7 @@ import { NoteDragOverlayMode } from '../state/notes-state';
 import { flowCanvasConsts } from './utils/consts';
 import { flowCanvasUtils } from './utils/flow-canvas-utils';
 import { ApNode } from './utils/types';
+import { aiStartWidgetUtils } from './widgets/ai-start-widget';
 const verticalPaddingOnFitView = 100;
 const calculateNodePositionInCanvas = (
   canvasWidth: number,
@@ -85,6 +88,20 @@ const CanvasControls = ({
 }) => {
   const { zoomIn, zoomOut, setViewport, getNodes, getNode, getViewport } =
     useReactFlow();
+  const { messages, startWidgetDismissed } = usePromptFlowAi();
+  // The AI start card sits above the trigger, so the flow has to open lower down.
+  const showsAiStartWidget = useBuilderStateContext((state) =>
+    aiStartWidgetUtils.isVisible({
+      trigger: state.flowVersion.trigger,
+      readonly: state.readonly,
+      hasRun: !isNil(state.run),
+      dismissed: startWidgetDismissed,
+      messageCount: messages.length,
+    }),
+  );
+  const topPadding = showsAiStartWidget
+    ? verticalPaddingOnFitView + aiStartWidgetUtils.RESERVED_CANVAS_HEIGHT
+    : verticalPaddingOnFitView;
   const handleZoomIn = useCallback(() => {
     zoomIn({
       duration: 0,
@@ -117,7 +134,7 @@ const CanvasControls = ({
             (flowCanvasConsts.AP_NODE_SIZE.STEP.width * zoomRatio) / 2,
           y:
             nodes[0].position.y +
-            verticalPaddingOnFitView * zoomRatio +
+            topPadding * zoomRatio +
             flowCanvasConsts.AP_NODE_SIZE.STEP.height,
           zoom: zoomRatio,
         },
@@ -126,7 +143,7 @@ const CanvasControls = ({
         },
       );
     },
-    [getNodes, canvasHeight, setViewport, canvasWidth],
+    [getNodes, canvasHeight, setViewport, canvasWidth, topPadding],
   );
 
   useEffect(() => {

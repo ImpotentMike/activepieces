@@ -8,6 +8,11 @@ export type AiProposal = {
   steps: AiProposalStep[];
 };
 
+export type AiStarterSuggestion = {
+  label: string;
+  prompt: string;
+};
+
 export type AiPanelMessage =
   | {
       id: string;

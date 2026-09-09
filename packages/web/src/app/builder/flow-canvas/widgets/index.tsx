@@ -1,38 +1,76 @@
+import { isNil } from '@activepieces/shared';
 import { ViewportPortal } from '@xyflow/react';
 import React from 'react';
 
+import {
+  AiStartWidget,
+  aiStartWidgetUtils,
+} from '@/app/builder/flow-canvas/widgets/ai-start-widget';
 import FlowEndWidget from '@/app/builder/flow-canvas/widgets/flow-end-widget';
 import IncompleteSettingsButton from '@/app/builder/flow-canvas/widgets/incomplete-settings-widget';
 import { TestFlowWidget } from '@/app/builder/flow-canvas/widgets/test-flow-widget';
+import { usePromptFlowAi } from '@/app/builder/promptflow-ai/ai-panel-context';
 
 import { useBuilderStateContext } from '../../builder-hooks';
 import { flowCanvasConsts } from '../utils/consts';
 
 const AboveFlowWidgets = React.memo(() => {
-  const [flowVersion, selectStepByName, readonly] = useBuilderStateContext(
-    (state) => [state.flowVersion, state.selectStepByName, state.readonly],
+  const [flowVersion, selectStepByName, readonly, run] = useBuilderStateContext(
+    (state) => [
+      state.flowVersion,
+      state.selectStepByName,
+      state.readonly,
+      state.run,
+    ],
   );
+  const { messages, startWidgetDismissed } = usePromptFlowAi();
+  const showAiStartWidget = aiStartWidgetUtils.isVisible({
+    trigger: flowVersion.trigger,
+    readonly,
+    hasRun: !isNil(run),
+    dismissed: startWidgetDismissed,
+    messageCount: messages.length,
+  });
+
   return (
     <ViewportPortal>
-      <WidgetWrapper>
+      {showAiStartWidget ? (
         <div
           style={{
-            transform: `translate(0px,-${flowCanvasConsts.AP_NODE_SIZE.STEP.height}px )`,
             position: 'absolute',
+            top: 0,
+            left:
+              (flowCanvasConsts.AP_NODE_SIZE.STEP.width -
+                aiStartWidgetUtils.WIDTH) /
+              2,
+            width: aiStartWidgetUtils.WIDTH,
+            transform: `translateY(calc(-100% - ${aiStartWidgetUtils.GAP_ABOVE_TRIGGER}px))`,
             pointerEvents: 'auto',
           }}
         >
-          <div className="justify-center items-center flex w-[260px]">
-            <TestFlowWidget></TestFlowWidget>
-            {!readonly && (
-              <IncompleteSettingsButton
-                flowVersion={flowVersion}
-                selectStepByName={selectStepByName}
-              ></IncompleteSettingsButton>
-            )}
-          </div>
+          <AiStartWidget />
         </div>
-      </WidgetWrapper>
+      ) : (
+        <WidgetWrapper>
+          <div
+            style={{
+              transform: `translate(0px,-${flowCanvasConsts.AP_NODE_SIZE.STEP.height}px )`,
+              position: 'absolute',
+              pointerEvents: 'auto',
+            }}
+          >
+            <div className="justify-center items-center flex w-[260px]">
+              <TestFlowWidget></TestFlowWidget>
+              {!readonly && (
+                <IncompleteSettingsButton
+                  flowVersion={flowVersion}
+                  selectStepByName={selectStepByName}
+                ></IncompleteSettingsButton>
+              )}
+            </div>
+          </div>
+        </WidgetWrapper>
+      )}
     </ViewportPortal>
   );
 });
