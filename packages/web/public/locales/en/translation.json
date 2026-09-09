@@ -1856,5 +1856,6 @@
   "Across all workflows": "Across all workflows",
   "Failed runs in the last 7 days": "Failed runs in the last 7 days",
   "{published} live · {draft} draft": "{published} live · {draft} draft",
-  "No runs yet": "No runs yet"
+  "No runs yet": "No runs yet",
+  "Dev fixture: simulated role for this project": "Dev fixture: simulated role for this project"
 }

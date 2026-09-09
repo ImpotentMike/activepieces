@@ -45,6 +45,7 @@ import {
   getProjectName,
   projectCollectionUtils,
 } from '@/features/projects';
+import { DevProjectRoleBadge } from '@/features/projects/fixtures/promptflow-role-fixture';
 import { useIsPlatformAdmin } from '@/hooks/authorization-hooks';
 import { platformHooks } from '@/hooks/platform-hooks';
 import { userHooks } from '@/hooks/user-hooks';
@@ -333,6 +334,7 @@ function ProjectSelectorPill() {
               <span className="flex-1 truncate text-left text-sm font-medium text-sidebar-foreground">
                 {projectName}
               </span>
+              <DevProjectRoleBadge />
               <ChevronDown className="size-3.5 shrink-0 text-muted-foreground" />
             </>
           )}

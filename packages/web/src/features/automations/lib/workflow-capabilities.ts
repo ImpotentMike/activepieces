@@ -1,5 +1,6 @@
 import { Permission } from '@activepieces/shared';
 
+import { useDevProjectRole } from '@/features/projects/fixtures/promptflow-role-fixture';
 import {
   useAuthorization,
   useIsPlatformAdmin,
@@ -16,8 +17,10 @@ import {
 export const useWorkflowCapabilities = (): ResolvedWorkflowCapabilities => {
   const { checkAccess, isFetchingProjectRole } = useAuthorization();
   const isPlatformAdmin = useIsPlatformAdmin();
+  const devRole = useDevProjectRole();
 
-  const role: PromptFlowRole | null = isPlatformAdmin ? 'Superadmin' : null;
+  const role: PromptFlowRole | null =
+    devRole ?? (isPlatformAdmin ? 'Superadmin' : null);
 
   if (role !== null) {
     return {
