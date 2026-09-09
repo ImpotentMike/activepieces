@@ -39,7 +39,11 @@ export const useBulkPause = ({
     },
     onSuccess: ({ total, failed }) => {
       if (failed === 0) {
-        toast.success(t('Paused {count} workflows', { count: total }));
+        toast.success(
+          t('Paused {count, plural, one {# workflow} other {# workflows}}', {
+            count: total,
+          }),
+        );
       } else {
         toast.error(
           t('{failed} of {total} workflows could not be paused', {

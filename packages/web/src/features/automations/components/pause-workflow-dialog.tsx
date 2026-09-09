@@ -52,7 +52,10 @@ export const PauseWorkflowDialog = ({
           <DialogTitle>
             {isSingle
               ? t('Pause "{name}"?', { name: workflows[0].version.displayName })
-              : t('Pause {count} workflows?', { count })}
+              : t(
+                  'Pause {count} {count, plural, one {workflow} other {workflows}}?',
+                  { count },
+                )}
           </DialogTitle>
           <DialogDescription asChild>
             <div className="space-y-2">
@@ -71,17 +74,25 @@ export const PauseWorkflowDialog = ({
               <p>{t('Any run already in progress will finish normally.')}</p>
               {!isSingle && <WorkflowNameList workflows={workflows} />}
               {notActiveCount > 0 && (
-                <p>
-                  {t(
-                    'Only the {count} active workflows will be paused. {unaffected} are not active and stay as they are.',
-                    { count, unaffected: notActiveCount },
-                  )}
-                </p>
+                <>
+                  <p>
+                    {t(
+                      '{count, plural, one {Only the active workflow will be paused.} other {Only the # active workflows will be paused.}}',
+                      { count },
+                    )}
+                  </p>
+                  <p>
+                    {t(
+                      '{count, plural, one {# workflow is not active and stays as it is.} other {# workflows are not active and stay as they are.}}',
+                      { count: notActiveCount },
+                    )}
+                  </p>
+                </>
               )}
               {excludedByRoleCount > 0 && (
                 <p>
                   {t(
-                    '{count} workflows were excluded because your role cannot pause them.',
+                    '{count, plural, one {# workflow was excluded because your role cannot pause it.} other {# workflows were excluded because your role cannot pause them.}}',
                     { count: excludedByRoleCount },
                   )}
                 </p>

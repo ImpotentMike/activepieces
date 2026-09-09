@@ -2,10 +2,7 @@ import { isNil } from '@activepieces/shared';
 import { t } from 'i18next';
 
 import type { PromptFlowRole } from '@/features/automations/lib/workflow-capabilities';
-import {
-  getProjectName,
-  projectCollectionUtils,
-} from '@/features/projects/stores/project-collection';
+import { projectCollectionUtils } from '@/features/projects/stores/project-collection';
 
 /**
  * UI-TESTING FIXTURE — local development only.
@@ -36,8 +33,10 @@ export const useDevProjectRole = (): PromptFlowRole | null => {
     return null;
   }
 
+  // project.displayName, not getProjectName(): the latter overrides a PERSONAL
+  // project's name to the literal 'Personal Project', which would never match.
   return promptFlowRoleFixture.roleForProjectName({
-    projectName: getProjectName(project),
+    projectName: project.displayName,
   });
 };
 
@@ -77,6 +76,11 @@ const roleForProjectName = ({
 /**
  * The two projects the walkthrough uses. Keyed by project display name, so
  * naming a local project "Trudax" or "SISS" is all that is needed.
+ *
+ * Local caveat: this dev plan caps TEAM projects at one — creating a second
+ * returns 402 FEATURE_DISABLED. So both names cannot exist at once here. To
+ * walk through both roles, either rename the single team project between the
+ * two, or add your personal project's displayName as an extra entry.
  */
 export const DEV_PROJECT_ROLES: DevProjectRole[] = [
   { projectName: 'Trudax', role: 'Admin' },
