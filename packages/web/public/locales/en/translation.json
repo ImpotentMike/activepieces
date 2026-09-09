@@ -1880,5 +1880,9 @@
   "Resume restricted": "Resume restricted",
   "Only an Admin can resume this workflow.": "Only an Admin can resume this workflow.",
   "Only an Admin can resume this workflow. Ask your project Admin to turn it back on.": "Only an Admin can resume this workflow. Ask your project Admin to turn it back on.",
-  "Your project Admins are listed under Project settings, Members.": "Your project Admins are listed under Project settings, Members."
+  "Your project Admins are listed under Project settings, Members.": "Your project Admins are listed under Project settings, Members.",
+  "Workflow is a draft": "Workflow is a draft",
+  "Publish this workflow to enable it": "Publish this workflow to enable it",
+  "This workflow is still a draft. Publish it to turn it on.": "This workflow is still a draft. Publish it to turn it on.",
+  "This workflow is still a draft. Only an Admin can publish it.": "This workflow is still a draft. Only an Admin can publish it."
 }

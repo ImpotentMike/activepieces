@@ -170,10 +170,14 @@ export const AutomationsTableRow = ({
         <RowItemStatus item={item} />
         {item.type === 'flow' && (
           <div
-            className="flex items-center"
+            className="flex items-center gap-2"
             onClick={(e) => e.stopPropagation()}
           >
-            {flowLifecycleStatus(item.data as PopulatedFlow) === 'draft' ? (
+            <WorkflowStatusToggle
+              flow={item.data as PopulatedFlow}
+              onPublish={() => onRowClick()}
+            />
+            {flowLifecycleStatus(item.data as PopulatedFlow) === 'draft' && (
               <Button
                 variant="link"
                 size="sm"
@@ -182,8 +186,6 @@ export const AutomationsTableRow = ({
               >
                 {t('Publish')}
               </Button>
-            ) : (
-              <WorkflowStatusToggle flow={item.data as PopulatedFlow} />
             )}
           </div>
         )}

@@ -16,6 +16,7 @@ import { flowsUtils } from '@/features/flows/utils/flows-utils';
 import { useWorkflowCapabilities } from '../lib/workflow-capabilities';
 import { flowLifecycleStatus } from '../lib/workflow-lifecycle';
 
+import { DraftToggle } from './draft-toggle';
 import { PauseWorkflowDialog } from './pause-workflow-dialog';
 import { ResumeRestrictedToggle } from './resume-restricted-toggle';
 
@@ -30,14 +31,18 @@ import { ResumeRestrictedToggle } from './resume-restricted-toggle';
  * Behaviour: pausing an Active workflow goes through a confirmation dialog;
  * resuming is immediate, because resume is additive and needs no gate.
  */
-export const WorkflowStatusToggle = ({ flow }: { flow: PopulatedFlow }) => {
+export const WorkflowStatusToggle = ({
+  flow,
+  onPublish,
+}: WorkflowStatusToggleProps) => {
   const queryClient = useQueryClient();
   const { capabilities } = useWorkflowCapabilities();
   const [isPauseDialogOpen, setIsPauseDialogOpen] = useState(false);
 
+  const lifecycle = flowLifecycleStatus(flow);
   const isActive = flow.status === FlowStatus.ENABLED;
   const isResumeRestricted =
-    flowLifecycleStatus(flow) === 'paused' && !capabilities.canResumeWorkflow;
+    lifecycle === 'paused' && !capabilities.canResumeWorkflow;
 
   const { mutateAsync: changeStatus, isPending } =
     flowHooks.useChangeFlowStatus({
@@ -65,6 +70,15 @@ export const WorkflowStatusToggle = ({ flow }: { flow: PopulatedFlow }) => {
     }
     changeStatus();
   };
+
+  if (lifecycle === 'draft') {
+    return (
+      <DraftToggle
+        canPublish={capabilities.canPublishWorkflow}
+        onPublish={onPublish}
+      />
+    );
+  }
 
   if (isResumeRestricted) {
     return <ResumeRestrictedToggle />;
@@ -117,4 +131,10 @@ export const WorkflowStatusToggle = ({ flow }: { flow: PopulatedFlow }) => {
       />
     </div>
   );
+};
+
+export type WorkflowStatusToggleProps = {
+  flow: PopulatedFlow;
+  /** Opens the workflow in the builder, where publishing happens. */
+  onPublish: () => void;
 };
