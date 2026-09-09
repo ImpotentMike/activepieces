@@ -14,8 +14,10 @@ import { flowHooks } from '@/features/flows/hooks/flow-hooks';
 import { flowsUtils } from '@/features/flows/utils/flows-utils';
 
 import { useWorkflowCapabilities } from '../lib/workflow-capabilities';
+import { flowLifecycleStatus } from '../lib/workflow-lifecycle';
 
 import { PauseWorkflowDialog } from './pause-workflow-dialog';
+import { ResumeRestrictedToggle } from './resume-restricted-toggle';
 
 /**
  * The Workflow List's lifecycle toggle.
@@ -34,6 +36,8 @@ export const WorkflowStatusToggle = ({ flow }: { flow: PopulatedFlow }) => {
   const [isPauseDialogOpen, setIsPauseDialogOpen] = useState(false);
 
   const isActive = flow.status === FlowStatus.ENABLED;
+  const isResumeRestricted =
+    flowLifecycleStatus(flow) === 'paused' && !capabilities.canResumeWorkflow;
 
   const { mutateAsync: changeStatus, isPending } =
     flowHooks.useChangeFlowStatus({
@@ -61,6 +65,10 @@ export const WorkflowStatusToggle = ({ flow }: { flow: PopulatedFlow }) => {
     }
     changeStatus();
   };
+
+  if (isResumeRestricted) {
+    return <ResumeRestrictedToggle />;
+  }
 
   return (
     <div className="flex items-center justify-start gap-1">
