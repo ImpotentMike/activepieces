@@ -1,6 +1,6 @@
 import { Permission, UncategorizedFolderId } from '@activepieces/shared';
 import { t } from 'i18next';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 
 import { recordAccess } from '@/app/components/global-search/access-history';
@@ -25,6 +25,7 @@ import {
 } from '@/features/automations/hooks/use-automations-selection';
 import { usePinnedItems } from '@/features/automations/hooks/use-pinned-items';
 import { TreeItem } from '@/features/automations/lib/types';
+import { workflowSelectionUtils } from '@/features/automations/lib/workflow-selection';
 import { appConnectionsQueries } from '@/features/connections';
 import { projectMembersHooks } from '@/features/members';
 import { piecesHooks } from '@/features/pieces';
@@ -117,6 +118,15 @@ const AutomationsPageContent = ({ projectId }: { projectId: string }) => {
   });
 
   const dialogs = useAutomationsDialogs({ mutations, selectedItems });
+
+  const selectedFlows = useMemo(
+    () =>
+      workflowSelectionUtils.selectedFlowRows({
+        selectableItems,
+        selectedItems,
+      }),
+    [selectableItems, selectedItems],
+  );
 
   const { data: connections } = appConnectionsQueries.useAppConnections({
     request: { projectId, limit: 10000 },
@@ -284,6 +294,8 @@ const AutomationsPageContent = ({ projectId }: { projectId: string }) => {
         isMoving={mutations.isMoving}
         isExporting={mutations.isExporting}
         hasMovableOrExportableItems={hasMovableOrExportableItems(selectedItems)}
+        selectedFlows={selectedFlows}
+        onAfterPause={() => clearSelection()}
         onMoveClick={() => dialogs.setMoveToDialogOpen(true)}
         onDeleteClick={() => mutations.handleBulkDelete(selectedItems)}
         onExportClick={() => mutations.handleBulkExport(selectedItems)}

@@ -1871,5 +1871,10 @@
   "Pause workflow": "Pause workflow",
   "and {count} more": "and {count} more",
   "Workflow is active": "Workflow is active",
-  "Workflow is paused": "Workflow is paused"
+  "Workflow is paused": "Workflow is paused",
+  "Paused {count} workflows": "Paused {count} workflows",
+  "{failed} of {total} workflows could not be paused": "{failed} of {total} workflows could not be paused",
+  "Failed to pause workflows": "Failed to pause workflows",
+  "Pause": "Pause",
+  "Your role cannot pause workflows.": "Your role cannot pause workflows."
 }

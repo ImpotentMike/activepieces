@@ -1,10 +1,4 @@
-import {
-  FlowStatus,
-  FolderDto,
-  isNil,
-  PopulatedFlow,
-  Table,
-} from '@activepieces/shared';
+import { FolderDto, PopulatedFlow, Table } from '@activepieces/shared';
 import { t } from 'i18next';
 import {
   ArrowDown,
@@ -29,10 +23,7 @@ import { toast } from 'sonner';
 import { ApAvatar } from '@/components/custom/ap-avatar';
 import { ConfirmationDeleteDialog } from '@/components/custom/delete-dialog';
 import { FormattedDate } from '@/components/custom/formatted-date';
-import {
-  PfStatusPill,
-  PfStatusPillStatus,
-} from '@/components/custom/pf-status-pill';
+import { PfStatusPill } from '@/components/custom/pf-status-pill';
 import { LoadingSpinner } from '@/components/custom/spinner';
 import { TextWithTooltip } from '@/components/custom/text-with-tooltip';
 import { useEmbedding } from '@/components/providers/embed-provider';
@@ -51,6 +42,7 @@ import { PieceIconList } from '@/features/pieces/components/piece-icon-list';
 import { cn } from '@/lib/utils';
 
 import { TreeItem } from '../lib/types';
+import { flowLifecycleStatus } from '../lib/workflow-lifecycle';
 
 import { WorkflowStatusToggle } from './workflow-status-toggle';
 
@@ -364,15 +356,6 @@ const RowItemDetails = ({ item }: { item: TreeItem }) => {
     default:
       return <span className="text-muted-foreground">-</span>;
   }
-};
-
-const flowLifecycleStatus = (
-  flow: PopulatedFlow,
-): Extract<PfStatusPillStatus, 'draft' | 'published' | 'paused'> => {
-  if (isNil(flow.publishedVersionId)) {
-    return 'draft';
-  }
-  return flow.status === FlowStatus.ENABLED ? 'published' : 'paused';
 };
 
 const RowItemStatus = ({ item }: { item: TreeItem }) => {

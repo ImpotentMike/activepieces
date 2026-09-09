@@ -1,3 +1,4 @@
+import { PopulatedFlow } from '@activepieces/shared';
 import { t } from 'i18next';
 import { Download, FolderInput, Trash2, X } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
@@ -7,12 +8,16 @@ import { LoadingSpinner } from '@/components/custom/spinner';
 import { useEmbedding } from '@/components/providers/embed-provider';
 import { Button } from '@/components/ui/button';
 
+import { BulkPauseAction } from './bulk-pause-action';
+
 type AutomationsSelectionBarProps = {
   selectedCount: number;
   isDeleting: boolean;
   isMoving: boolean;
   isExporting: boolean;
   hasMovableOrExportableItems: boolean;
+  selectedFlows: PopulatedFlow[];
+  onAfterPause: () => void;
   onMoveClick: () => void;
   onDeleteClick: () => void;
   onExportClick: () => void;
@@ -25,6 +30,8 @@ export const AutomationsSelectionBar = ({
   isMoving,
   isExporting,
   hasMovableOrExportableItems,
+  selectedFlows,
+  onAfterPause,
   onMoveClick,
   onDeleteClick,
   onExportClick,
@@ -69,6 +76,10 @@ export const AutomationsSelectionBar = ({
                 {isExporting ? t('Exporting') : t('Export')}
               </Button>
             )}
+            <BulkPauseAction
+              selectedFlows={selectedFlows}
+              onAfterPause={onAfterPause}
+            />
             <ConfirmationDeleteDialog
               title={t('Delete Selected Items')}
               message={t(
