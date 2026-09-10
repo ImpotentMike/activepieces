@@ -85,6 +85,9 @@ const roleForProjectName = ({
 export const DEV_PROJECT_ROLES: DevProjectRole[] = [
   { projectName: 'Trudax', role: 'Admin' },
   { projectName: 'SISS', role: 'Builder' },
+  // The stock dev seed's personal project, so a fresh checkout has an
+  // Admin-side project to switch against without renaming anything.
+  { projectName: "dev's Platform's Project", role: 'Admin' },
 ];
 
 export const promptFlowRoleFixture = { roleForProjectName };
