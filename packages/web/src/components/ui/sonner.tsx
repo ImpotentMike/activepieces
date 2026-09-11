@@ -32,11 +32,11 @@ export const UNSAVED_CHANGES_TOAST = {
 };
 
 function Toaster({ ...props }: ToasterProps) {
-  const { theme } = useTheme();
+  const { resolvedTheme } = useTheme();
 
   return (
     <Sonner
-      theme={theme as ToasterProps['theme']}
+      theme={resolvedTheme}
       className="toaster group"
       expand={true}
       toastOptions={{
@@ -45,11 +45,17 @@ function Toaster({ ...props }: ToasterProps) {
             data-[type=error]:text-destructive-700!
             data-[type=warning]:text-warning-700!
             data-[type=success]:text-success-700!
+            dark:data-[type=error]:text-destructive-300!
+            dark:data-[type=warning]:text-warning-300!
+            dark:data-[type=success]:text-success-300!
           `,
           description: `
             data-[type=error]:text-destructive-700!
             data-[type=warning]:text-warning-700!
             data-[type=success]:text-success-700!
+            dark:data-[type=error]:text-destructive-300!
+            dark:data-[type=warning]:text-warning-300!
+            dark:data-[type=success]:text-success-300!
           `,
         },
         descriptionClassName: 'text-inherit!',

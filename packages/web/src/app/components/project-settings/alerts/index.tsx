@@ -82,7 +82,7 @@ export const AlertsSettings = () => {
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="size-8 p-0 hover:bg-destructive-50"
+                        className="size-8 p-0 hover:bg-destructive-50 dark:hover:bg-destructive-950"
                         onClick={() => deleteAlert(alert)}
                         disabled={writeAlertPermission === false}
                       >

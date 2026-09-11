@@ -50,7 +50,7 @@ export function RndKpiCard({
           {isLoading ? (
             <span
               aria-hidden="true"
-              className="my-0.5 inline-block h-8 w-20 animate-pulse rounded-md bg-gray-100"
+              className="my-0.5 inline-block h-8 w-20 animate-pulse rounded-md bg-muted"
             />
           ) : (
             <span className="text-[30px] font-bold leading-[1.05] tracking-tight tabular-nums text-foreground">
@@ -79,7 +79,7 @@ export function RndKpiCard({
     rndStyles.panel,
     'min-h-[140px] gap-4',
     isClickable &&
-      'cursor-pointer transition-[transform,border-color] duration-150 ease-out hover:-translate-y-px hover:border-gray-300 focus-visible:border-primary-600 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-primary-600/30',
+      'cursor-pointer transition-[transform,border-color] duration-150 ease-out hover:-translate-y-px hover:border-neutral-300 dark:hover:border-neutral-600 focus-visible:border-primary-600 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-primary-600/30',
   );
 
   if (isClickable) {

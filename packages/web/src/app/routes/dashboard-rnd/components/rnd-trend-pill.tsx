@@ -28,9 +28,11 @@ export function RndTrendPill({
       data-slot="rnd-trend-pill"
       className={cn(
         'inline-flex items-center gap-0.5 rounded-full px-2 py-[3px] text-[11.5px] font-semibold leading-none tabular-nums',
-        isGood === null && 'bg-gray-100 text-gray-600',
-        isGood === true && 'bg-success-100 text-success-700',
-        isGood === false && 'bg-destructive-100 text-destructive-700',
+        isGood === null && 'bg-muted text-muted-foreground',
+        isGood === true &&
+          'bg-success-100 text-success-700 dark:bg-success-950 dark:text-success-300',
+        isGood === false &&
+          'bg-destructive-100 text-destructive-700 dark:bg-destructive-950 dark:text-destructive-300',
         className,
       )}
     >

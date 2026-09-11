@@ -24,7 +24,7 @@ export function RecentRuns({ runs, onRowClick, state }: RecentRunsProps) {
         {[0, 1, 2, 3, 4].map((i) => (
           <div
             key={i}
-            className="h-12 w-full animate-pulse rounded-md bg-gray-100"
+            className="h-12 w-full animate-pulse rounded-md bg-muted"
           />
         ))}
       </div>
@@ -51,20 +51,20 @@ export function RecentRuns({ runs, onRowClick, state }: RecentRunsProps) {
   }
 
   return (
-    <div className="overflow-hidden rounded-xl border border-gray-200 bg-background shadow-xs">
+    <div className="overflow-hidden rounded-xl border border-border bg-card shadow-xs">
       <Table>
         <TableHeader>
           <TableRow className="hover:bg-transparent">
-            <TableHead className="h-10 bg-gray-50 text-[12px] font-medium text-muted-foreground">
+            <TableHead className="h-10 bg-muted/50 text-[12px] font-medium text-muted-foreground">
               {t('Workflow')}
             </TableHead>
-            <TableHead className="h-10 bg-gray-50 text-[12px] font-medium text-muted-foreground">
+            <TableHead className="h-10 bg-muted/50 text-[12px] font-medium text-muted-foreground">
               {t('Status')}
             </TableHead>
-            <TableHead className="h-10 bg-gray-50 text-[12px] font-medium text-muted-foreground">
+            <TableHead className="h-10 bg-muted/50 text-[12px] font-medium text-muted-foreground">
               {t('Started At')}
             </TableHead>
-            <TableHead className="h-10 bg-gray-50 text-right text-[12px] font-medium text-muted-foreground">
+            <TableHead className="h-10 bg-muted/50 text-right text-[12px] font-medium text-muted-foreground">
               {t('Duration')}
             </TableHead>
           </TableRow>
@@ -85,8 +85,8 @@ export function RecentRuns({ runs, onRowClick, state }: RecentRunsProps) {
                   }
                 }}
                 className={cn(
-                  'cursor-pointer transition-colors hover:bg-gray-50',
-                  'focus-visible:bg-gray-50 focus-visible:outline-none',
+                  'cursor-pointer transition-colors hover:bg-muted/50',
+                  'focus-visible:bg-muted/50 focus-visible:outline-none',
                 )}
               >
                 <TableCell className="font-medium">

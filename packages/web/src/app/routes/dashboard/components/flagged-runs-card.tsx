@@ -49,7 +49,7 @@ export function FlaggedRunsCard({
         </p>
       ) : runs.length === 0 ? (
         <div className="flex flex-1 flex-col justify-center gap-1.5">
-          <span className="inline-flex items-center gap-2 text-[13px] font-medium text-success-700">
+          <span className="inline-flex items-center gap-2 text-[13px] font-medium text-success-700 dark:text-success-400">
             <CircleCheck aria-hidden="true" className="size-4" />
             {t('No flagged runs')}
           </span>
@@ -59,7 +59,7 @@ export function FlaggedRunsCard({
         </div>
       ) : (
         <div className="flex flex-1 flex-col">
-          <ul className="flex flex-col divide-y divide-gray-100">
+          <ul className="flex flex-col divide-y divide-border">
             {runs.map((run) => {
               const name = run.name ?? t('Untitled');
               return (
@@ -69,13 +69,13 @@ export function FlaggedRunsCard({
                     onClick={() => onRunClick(run)}
                     className={cn(
                       'group flex w-full min-w-0 items-start justify-between gap-3 rounded-md px-2 py-2.5 text-left',
-                      'transition-colors hover:bg-gray-50',
-                      'focus-visible:bg-gray-50 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-primary-600/30',
+                      'transition-colors hover:bg-muted/50',
+                      'focus-visible:bg-muted/50 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-primary-600/30',
                     )}
                   >
                     <span className="flex min-w-0 flex-1 flex-col gap-1">
                       <TextWithTooltip tooltipMessage={name}>
-                        <span className="truncate text-[13px] font-medium text-primary-700 group-hover:underline">
+                        <span className="truncate text-[13px] font-medium text-primary-700 dark:text-primary-400 group-hover:underline">
                           {name}
                         </span>
                       </TextWithTooltip>
@@ -103,8 +103,8 @@ export function FlaggedRunsCard({
               type="button"
               onClick={onSeeMore}
               className={cn(
-                'mt-auto inline-flex items-center gap-1 self-start rounded-md px-2 pt-2.5 text-[12.5px] font-medium text-primary-700',
-                'transition-colors hover:text-primary-800 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-primary-600/30',
+                'mt-auto inline-flex items-center gap-1 self-start rounded-md px-2 pt-2.5 text-[12.5px] font-medium text-primary-700 dark:text-primary-400',
+                'transition-colors hover:text-primary-800 dark:hover:text-primary-300 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-primary-600/30',
               )}
             >
               {t('See {count} more', { count: remaining })}
@@ -122,7 +122,8 @@ function StatusBadge({ status }: { status: FlowRunStatus }) {
     <span
       className={cn(
         'inline-flex shrink-0 items-center gap-1.5 rounded-full border border-destructive-100 bg-destructive-50 px-2 py-0.5',
-        'text-[11px] font-medium text-destructive-700',
+        'dark:border-destructive-800 dark:bg-destructive-950',
+        'text-[11px] font-medium text-destructive-700 dark:text-destructive-300',
       )}
     >
       <span
@@ -141,7 +142,7 @@ function FlaggedRunsSkeleton() {
         <span
           key={i}
           aria-hidden="true"
-          className="h-12 w-full animate-pulse rounded-md bg-gray-100"
+          className="h-12 w-full animate-pulse rounded-md bg-muted"
         />
       ))}
     </div>

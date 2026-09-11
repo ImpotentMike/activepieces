@@ -13,14 +13,14 @@ import { cn } from '@/lib/utils';
 import { PfStatusPill, type PfStatusPillStatus } from './pf-status-pill';
 
 const cardVariants = cva(
-  'relative flex w-full min-w-0 flex-col rounded-xl border border-gray-200 bg-background text-left text-foreground shadow-xs transition-[border-color,box-shadow,transform] duration-150 ease-out',
+  'relative flex w-full min-w-0 flex-col rounded-xl border border-border bg-card text-left text-foreground shadow-xs transition-[border-color,box-shadow,transform] duration-150 ease-out',
   {
     variants: {
       variant: {
         default: '',
         clickable:
-          'cursor-pointer hover:-translate-y-px hover:border-gray-300 hover:shadow-md focus-visible:border-primary-600 focus-visible:ring-[3px] focus-visible:ring-primary-600/35 focus-visible:outline-none focus-visible:shadow-md',
-        disabled: 'cursor-not-allowed bg-gray-50 opacity-60',
+          'cursor-pointer hover:-translate-y-px hover:border-neutral-300 dark:hover:border-neutral-600 hover:shadow-md focus-visible:border-primary-600 focus-visible:ring-[3px] focus-visible:ring-primary-600/35 focus-visible:outline-none focus-visible:shadow-md',
+        disabled: 'cursor-not-allowed bg-muted/50 opacity-60',
       },
       density: {
         default: 'gap-3.5 p-5',
@@ -155,7 +155,7 @@ function PfCardFooter({ className, ...props }: React.ComponentProps<'div'>) {
     <div
       data-slot="pf-card-footer"
       className={cn(
-        'mt-auto flex items-center justify-between gap-2 border-t border-gray-100 pt-3',
+        'mt-auto flex items-center justify-between gap-2 border-t border-border pt-3',
         className,
       )}
       {...props}
@@ -168,7 +168,7 @@ function PfCardMeta({ className, ...props }: React.ComponentProps<'div'>) {
     <div
       data-slot="pf-card-meta"
       className={cn(
-        'mt-auto flex flex-col gap-2 border-t border-gray-100 pt-3 text-[12.5px] text-muted-foreground',
+        'mt-auto flex flex-col gap-2 border-t border-border pt-3 text-[12.5px] text-muted-foreground',
         className,
       )}
       {...props}
@@ -234,7 +234,7 @@ function PfStatCard({
       {isLoading ? (
         <span
           aria-hidden="true"
-          className="my-0.5 inline-block h-8 w-20 animate-pulse rounded-md bg-gray-100"
+          className="my-0.5 inline-block h-8 w-20 animate-pulse rounded-md bg-muted"
         />
       ) : (
         <h2
@@ -245,7 +245,7 @@ function PfStatCard({
               : tone
               ? STAT_TONE_VALUE_CLASS[tone]
               : accent
-              ? 'text-primary-700'
+              ? 'text-primary-700 dark:text-primary-400'
               : 'text-foreground',
           )}
         >
@@ -336,9 +336,9 @@ function PfStatCard({
 }
 
 const STAT_TONE_VALUE_CLASS: Record<PfStatCardTone, string> = {
-  success: 'text-success-700',
-  warning: 'text-warning-700',
-  destructive: 'text-destructive-700',
+  success: 'text-success-700 dark:text-success-400',
+  warning: 'text-warning-700 dark:text-warning-400',
+  destructive: 'text-destructive-700 dark:text-destructive-400',
 };
 
 function PfStatTrend({ direction, value }: PfStatTrendProps) {
@@ -354,9 +354,11 @@ function PfStatTrend({ direction, value }: PfStatTrendProps) {
       data-direction={direction}
       className={cn(
         'inline-flex items-center gap-1 rounded-sm px-1.5 py-0.5 font-mono text-xs font-medium',
-        direction === 'up' && 'bg-success-100 text-success-700',
-        direction === 'down' && 'bg-destructive-100 text-destructive-700',
-        direction === 'flat' && 'bg-gray-100 text-gray-700',
+        direction === 'up' &&
+          'bg-success-100 text-success-700 dark:bg-success-950 dark:text-success-300',
+        direction === 'down' &&
+          'bg-destructive-100 text-destructive-700 dark:bg-destructive-950 dark:text-destructive-300',
+        direction === 'flat' && 'bg-muted text-muted-foreground',
       )}
     >
       <Icon className="size-3" />
@@ -403,8 +405,8 @@ function PfTemplateCard({
                 className={cn(
                   'inline-flex items-center gap-1 rounded-md border px-2 py-px text-[11.5px] font-medium leading-[18px] whitespace-nowrap',
                   tag.variant === 'accent'
-                    ? 'border-primary-100 bg-primary-50 text-primary-800'
-                    : 'border-gray-200 bg-gray-100 text-gray-700',
+                    ? 'border-primary-100 bg-primary-50 text-primary-800 dark:border-primary-800 dark:bg-primary-950 dark:text-primary-300'
+                    : 'border-border bg-muted text-muted-foreground',
                 )}
               >
                 {tag.label}
@@ -429,7 +431,7 @@ function PfTemplateCard({
           </div>
           <span
             data-slot="pf-template-cta"
-            className="pointer-events-none translate-y-0.5 text-[13px] font-medium text-primary-700 opacity-0 transition-[opacity,transform] duration-150 ease-out group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100"
+            className="pointer-events-none translate-y-0.5 text-[13px] font-medium text-primary-700 dark:text-primary-400 opacity-0 transition-[opacity,transform] duration-150 ease-out group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100"
           >
             {ctaLabel} →
           </span>
@@ -472,7 +474,7 @@ function PfProjectCard({
         {description ? (
           <PfCardDescription>{description}</PfCardDescription>
         ) : null}
-        <div className="mt-auto grid grid-cols-3 gap-2 border-t border-gray-100 pt-3">
+        <div className="mt-auto grid grid-cols-3 gap-2 border-t border-border pt-3">
           <PfProjectStat label="Workflows" value={workflows} />
           <PfProjectStat label="Members" value={members} />
           <PfProjectStat label="Last run" value={lastRun} />

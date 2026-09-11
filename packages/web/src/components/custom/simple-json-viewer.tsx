@@ -21,7 +21,7 @@ export const SimpleJsonViewer: React.FC<SimpleJsonViewerProps> = ({
   maxHeight = 400,
 }) => {
   const [copied, setCopied] = useState(false);
-  const { theme } = useTheme();
+  const { resolvedTheme } = useTheme();
 
   const formattedJson =
     typeof data === 'string' ? data : JSON.stringify(data, null, 2);
@@ -38,7 +38,7 @@ export const SimpleJsonViewer: React.FC<SimpleJsonViewerProps> = ({
     }, 3000);
   };
 
-  const viewerTheme = theme === 'dark' ? 'bright' : 'rjv-default';
+  const viewerTheme = resolvedTheme === 'dark' ? 'bright' : 'rjv-default';
 
   return (
     <div
@@ -60,7 +60,7 @@ export const SimpleJsonViewer: React.FC<SimpleJsonViewerProps> = ({
             ) : (
               <Copy
                 className={`w-4 h-4 ${
-                  theme === 'dark' ? 'text-white' : 'text-black'
+                  resolvedTheme === 'dark' ? 'text-white' : 'text-black'
                 }`}
               />
             )}

@@ -191,7 +191,7 @@ export function AgentMcpDialog({
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center py-8 space-y-4">
-                <div className="rounded-full bg-success-100 p-3">
+                <div className="rounded-full bg-success-100 p-3 dark:bg-success-950">
                   <CheckCircle2 className="w-8 h-8 text-success" />
                 </div>
                 <div className="text-center space-y-2">

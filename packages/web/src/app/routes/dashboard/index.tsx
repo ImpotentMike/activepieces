@@ -184,7 +184,7 @@ export default function DashboardPage() {
         {isDemo ? (
           <span
             data-slot="dashboard-demo-badge"
-            className="inline-flex items-center gap-1.5 rounded-full border border-warning-100 bg-warning-50 px-2.5 py-1 text-[11.5px] font-medium text-warning-700"
+            className="inline-flex items-center gap-1.5 rounded-full border border-warning-100 bg-warning-50 px-2.5 py-1 text-[11.5px] font-medium text-warning-700 dark:border-warning-800 dark:bg-warning-950 dark:text-warning-300"
           >
             <span
               aria-hidden="true"

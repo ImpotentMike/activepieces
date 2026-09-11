@@ -291,7 +291,7 @@ export const DoneBlock = () => {
     <TimelineItem
       icon={<CircleCheckBig className="h-4 w-4 text-success-600" />}
     >
-      <div className="border border-success/40 bg-success-50/60 rounded-md p-3 text-sm text-success-700 font-medium flex items-center gap-2">
+      <div className="border border-success/40 bg-success-50/60 dark:bg-success-950/60 rounded-md p-3 text-sm text-success-700 dark:text-success-300 font-medium flex items-center gap-2">
         <span>{t('Done!')}</span>
       </div>
     </TimelineItem>
@@ -301,7 +301,7 @@ export const DoneBlock = () => {
 export const FailedBlock = () => {
   return (
     <TimelineItem icon={<CircleX className="h-4 w-4 text-destructive-600" />}>
-      <div className="border border-destructive/40 bg-destructive-50/60 rounded-md p-3 text-sm text-destructive-700 font-medium flex items-center gap-2">
+      <div className="border border-destructive/40 bg-destructive-50/60 dark:bg-destructive-950/60 rounded-md p-3 text-sm text-destructive-700 dark:text-destructive-300 font-medium flex items-center gap-2">
         <span>{t('Failed')}</span>
       </div>
     </TimelineItem>

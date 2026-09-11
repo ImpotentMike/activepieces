@@ -20,10 +20,7 @@ export const ExploreTemplateCard = React.memo(
       hasFlows ? template.flows![0]?.trigger : undefined,
     );
 
-    /* Theme-aware gradient: secondary-200 → tertiary-200 for a clearly visible
-       pastel strip that makes each theme instantly recognizable. */
-    const themedGradient =
-      'linear-gradient(135deg, hsl(var(--secondary-color-200)), hsl(var(--tertiary-200)))';
+    const themedGradient = 'var(--pf-template-gradient)';
 
     return (
       <Card

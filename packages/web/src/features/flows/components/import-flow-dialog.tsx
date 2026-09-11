@@ -249,7 +249,7 @@ const ImportFlowDialog = (
             </Alert>
           )}
           <div className="w-full flex flex-col gap-2 justify-between items-start">
-            <span className="w-16 text-sm font-medium text-gray-700">
+            <span className="w-16 text-sm font-medium text-muted-foreground">
               {t('Flow')}
             </span>
             <Input
@@ -262,7 +262,7 @@ const ImportFlowDialog = (
           </div>
           {!props.insideBuilder && !embedState.hideFolders && (
             <div className="w-full flex flex-col gap-2 justify-between items-start">
-              <span className="w-16 text-sm font-medium text-gray-700">
+              <span className="w-16 text-sm font-medium text-muted-foreground">
                 {t('Folder')}
               </span>
               {isLoading ? (

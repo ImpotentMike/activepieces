@@ -41,7 +41,7 @@ export function AiProposalCard({
           </li>
         ))}
       </ol>
-      <div className="flex items-center gap-2 border-t border-gray-100 pt-3">
+      <div className="flex items-center gap-2 border-t border-border pt-3">
         <Button size="sm" variant="default" onClick={onApply}>
           {t('Apply to canvas')}
         </Button>

@@ -30,7 +30,7 @@ export const PageHeader = ({
       {breadcrumb && (
         <div
           data-slot="page-header-breadcrumb"
-          className="flex h-12 items-center gap-2 border-b border-gray-100 px-4 text-[13px] text-muted-foreground"
+          className="flex h-12 items-center gap-2 border-b border-border px-4 text-[13px] text-muted-foreground"
         >
           {breadcrumb}
         </div>
@@ -70,7 +70,7 @@ export const PageHeader = ({
         <div
           data-slot="page-header-tabs"
           role="tablist"
-          className="flex h-11 items-center gap-1 border-t border-gray-100 px-4"
+          className="flex h-11 items-center gap-1 border-t border-border px-4"
         >
           {tabs}
         </div>

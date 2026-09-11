@@ -43,7 +43,7 @@ export function PlanUsageCard({ usage, onViewBilling }: PlanUsageCardProps) {
             type="button"
             onClick={onViewBilling}
             aria-label={t('View billing')}
-            className="flex size-8 shrink-0 items-center justify-center rounded-full border border-gray-200 text-muted-foreground transition-colors hover:bg-gray-50 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600/40"
+            className="flex size-8 shrink-0 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:bg-muted/50 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600/40"
           >
             <ArrowUpRight className="size-4" />
           </button>
@@ -72,7 +72,7 @@ export function PlanUsageCard({ usage, onViewBilling }: PlanUsageCardProps) {
             </span>
           </div>
 
-          <div className="h-2.5 w-full overflow-hidden rounded-full bg-gray-100">
+          <div className="h-2.5 w-full overflow-hidden rounded-full bg-muted">
             <div
               className="h-full rounded-full bg-primary-600 transition-[width] duration-700 ease-out motion-reduce:transition-none"
               style={{
@@ -95,7 +95,7 @@ export function PlanUsageCard({ usage, onViewBilling }: PlanUsageCardProps) {
         </div>
       )}
 
-      <div className="mt-auto flex items-center justify-between gap-2 border-t border-gray-100 pt-3.5">
+      <div className="mt-auto flex items-center justify-between gap-2 border-t border-border pt-3.5">
         <span className="text-[12px] text-muted-foreground">
           {isMetered && usage.unitKey === 'AI credits'
             ? t('Resets in {count, plural, =1 {1 day} other {# days}}', {

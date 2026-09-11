@@ -92,7 +92,7 @@ function McpAuthorizePage() {
         <FullLogo />
         <Card className="mt-4 w-full max-w-md rounded-sm drop-shadow-xl">
           <CardContent className="flex flex-col items-center gap-5 pt-8 pb-8">
-            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-success-100">
+            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-success-100 dark:bg-success-950">
               <CheckCircle className="h-7 w-7 text-success" />
             </div>
             <div className="flex flex-col items-center gap-2 text-center">
@@ -188,7 +188,7 @@ function McpAuthorizePage() {
           )}
 
           {approveMutation.isError && (
-            <div className="rounded-md border border-destructive/50 bg-destructive-100 p-3 text-sm text-destructive">
+            <div className="rounded-md border border-destructive/50 bg-destructive-100 p-3 text-sm text-destructive dark:bg-destructive-950">
               {t('Authorization failed. Please try again.')}
             </div>
           )}

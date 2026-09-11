@@ -64,7 +64,7 @@ export function SuccessRateGauge({
       {state === 'loading' ? (
         <div
           aria-hidden="true"
-          className="mx-auto mt-2 h-[120px] w-[220px] animate-pulse rounded-full bg-gray-100"
+          className="mx-auto mt-2 h-[120px] w-[220px] animate-pulse rounded-full bg-muted"
         />
       ) : state === 'error' ? (
         <p className="py-10 text-center text-sm text-muted-foreground">
@@ -125,7 +125,7 @@ export function SuccessRateGauge({
           {hasData ? (
             <span
               data-slot="rnd-gauge-marker"
-              className="absolute z-10 inline-flex -translate-x-1/2 -translate-y-1/2 items-center gap-1 rounded-full border border-gray-200/80 bg-background px-2 py-0.5 text-[11px] font-semibold tabular-nums text-foreground shadow-sm"
+              className="absolute z-10 inline-flex -translate-x-1/2 -translate-y-1/2 items-center gap-1 rounded-full border border-border bg-card px-2 py-0.5 text-[11px] font-semibold tabular-nums text-foreground shadow-sm"
               style={{
                 left: `${(marker.x / VIEW_W) * 100}%`,
                 top: `${(marker.y / VIEW_H) * 100}%`,
@@ -151,7 +151,7 @@ export function SuccessRateGauge({
         </div>
       )}
 
-      <div className="mt-1 grid grid-cols-2 divide-x divide-gray-100 border-t border-gray-100 pt-4">
+      <div className="mt-1 grid grid-cols-2 divide-x divide-border border-t border-border pt-4">
         <GaugeStat
           label={t('Succeeded')}
           value={succeeded}
@@ -179,7 +179,7 @@ function GaugeStat({ label, value, dotClassName, state }: GaugeStatProps) {
       {state === 'loading' ? (
         <span
           aria-hidden="true"
-          className="my-1 inline-block h-6 w-14 animate-pulse rounded-md bg-gray-100"
+          className="my-1 inline-block h-6 w-14 animate-pulse rounded-md bg-muted"
         />
       ) : (
         <span className="text-[22px] font-semibold leading-none tracking-tight tabular-nums text-foreground">

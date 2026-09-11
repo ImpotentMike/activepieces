@@ -177,9 +177,11 @@ function FailureTrendPill({ direction, value }: PfTrend) {
     <span
       className={cn(
         'inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11.5px] font-medium tabular-nums',
-        direction === 'up' && 'bg-warning-100 text-warning-700',
-        direction === 'down' && 'bg-success-100 text-success-700',
-        direction === 'flat' && 'bg-gray-100 text-gray-700',
+        direction === 'up' &&
+          'bg-warning-100 text-warning-700 dark:bg-warning-950 dark:text-warning-300',
+        direction === 'down' &&
+          'bg-success-100 text-success-700 dark:bg-success-950 dark:text-success-300',
+        direction === 'flat' && 'bg-muted text-muted-foreground',
       )}
     >
       <Icon className="size-3" />
@@ -193,7 +195,7 @@ function GaugeSkeleton() {
     <div className="flex flex-1 items-center justify-center">
       <span
         aria-hidden="true"
-        className="h-[110px] w-[188px] max-w-full animate-pulse rounded-t-full bg-gray-100"
+        className="h-[110px] w-[188px] max-w-full animate-pulse rounded-t-full bg-muted"
       />
     </div>
   );
@@ -238,9 +240,9 @@ const ZONES = [
 ] as const;
 
 const LEVEL_VALUE_CLASS = {
-  healthy: 'text-success-700',
-  elevated: 'text-warning-700',
-  high: 'text-destructive-700',
+  healthy: 'text-success-700 dark:text-success-400',
+  elevated: 'text-warning-700 dark:text-warning-400',
+  high: 'text-destructive-700 dark:text-destructive-400',
 } as const;
 
 export type FailureRateGaugeCardProps = {

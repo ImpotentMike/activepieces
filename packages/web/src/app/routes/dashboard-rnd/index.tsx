@@ -73,7 +73,7 @@ export default function DashboardRndPage() {
         title={greeting}
         description={t('Compare dashboard design iterations on showcase data')}
         leftContent={
-          <span className="ms-3 inline-flex items-center gap-1.5 rounded-full border border-warning-100 bg-warning-50 px-2.5 py-1 text-[11.5px] font-medium text-warning-700">
+          <span className="ms-3 inline-flex items-center gap-1.5 rounded-full border border-warning-100 bg-warning-50 px-2.5 py-1 text-[11.5px] font-medium text-warning-700 dark:border-warning-800 dark:bg-warning-950 dark:text-warning-300">
             <span
               aria-hidden="true"
               className="size-1.5 rounded-full bg-warning-500"

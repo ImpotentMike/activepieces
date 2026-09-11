@@ -30,7 +30,7 @@ export function DashboardMetricCard({
         {isLoading ? (
           <span
             aria-hidden="true"
-            className="my-0.5 inline-block h-9 w-24 animate-pulse rounded-md bg-gray-100"
+            className="my-0.5 inline-block h-9 w-24 animate-pulse rounded-md bg-muted"
           />
         ) : (
           <span className="text-[34px] font-bold leading-none tracking-tight tabular-nums text-foreground">
@@ -58,7 +58,7 @@ export function DashboardMetricCard({
               {isLoading ? (
                 <span
                   aria-hidden="true"
-                  className="inline-block h-3.5 w-10 animate-pulse rounded bg-gray-100"
+                  className="inline-block h-3.5 w-10 animate-pulse rounded bg-muted"
                 />
               ) : (
                 <span className="tabular-nums">{row.value}</span>
@@ -92,9 +92,11 @@ function TrendPill({
     <span
       className={cn(
         'inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11.5px] font-medium tabular-nums',
-        isGood === null && 'bg-gray-100 text-gray-700',
-        isGood === true && 'bg-success-100 text-success-700',
-        isGood === false && 'bg-destructive-100 text-destructive-700',
+        isGood === null && 'bg-muted text-muted-foreground',
+        isGood === true &&
+          'bg-success-100 text-success-700 dark:bg-success-950 dark:text-success-300',
+        isGood === false &&
+          'bg-destructive-100 text-destructive-700 dark:bg-destructive-950 dark:text-destructive-300',
       )}
     >
       <Icon className="size-3" />

@@ -329,7 +329,9 @@ export const AutomationsTableRow = ({
 const RowItemIcon = ({ item }: { item: TreeItem }) => {
   switch (item.type) {
     case 'folder':
-      return <Folder className="h-4 w-4 text-gray-400 fill-gray-400" />;
+      return (
+        <Folder className="h-4 w-4 text-muted-foreground fill-muted-foreground" />
+      );
     case 'table':
       return <Table2 className="h-4 w-4 text-emerald-500" />;
     default:

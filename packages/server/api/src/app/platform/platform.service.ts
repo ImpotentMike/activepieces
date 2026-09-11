@@ -17,6 +17,7 @@ import { ActivepiecesError,
     ProjectType,
     spreadIfDefined,
     SsoDomainVerification,
+    TeamProjectsLimit,
     UpdatePlatformRequestBody,
     UserId,
     UserStatus,
@@ -30,6 +31,7 @@ import { invalidateSamlClientCache } from '../ee/authentication/saml-authn/saml-
 import { platformPlanService } from '../ee/platform/platform-plan/platform-plan.service'
 import { defaultTheme } from '../flags/theme'
 import { system } from '../helper/system/system'
+import { AppSystemProp } from '../helper/system/system-props'
 import { projectService } from '../project/project-service'
 import { userService } from '../user/user-service'
 import { PlatformEntity } from './platform.entity'
@@ -237,6 +239,13 @@ async function getPlan(log: FastifyBaseLogger, platform: Platform): Promise<Plat
     if (edition === ApEdition.COMMUNITY) {
         return {
             ...OPEN_SOURCE_PLAN,
+            // Local prototyping escape hatch: OPEN_SOURCE_PLAN caps team projects
+            // at one, which blocks building multi-project UI states by hand. Off
+            // unless AP_SKIP_PROJECT_LIMITS_CHECK is explicitly set, and confined
+            // to the Community branch, so Cloud and Enterprise are untouched.
+            ...(system.getBoolean(AppSystemProp.SKIP_PROJECT_LIMITS_CHECK)
+                ? { teamProjectsLimit: TeamProjectsLimit.UNLIMITED }
+                : {}),
             stripeSubscriptionStartDate: 0,
             stripeSubscriptionEndDate: 0,
         }

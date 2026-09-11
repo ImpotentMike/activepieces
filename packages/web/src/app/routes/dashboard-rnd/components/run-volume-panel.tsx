@@ -47,7 +47,7 @@ export function RunVolumePanel({ series, state }: RunVolumePanelProps) {
           value={range}
           onValueChange={(value) => setRange(normalizeRange(value))}
         >
-          <TabsList className="h-8 rounded-full bg-gray-100 p-0.5">
+          <TabsList className="h-8 rounded-full bg-muted p-0.5">
             {RANGES.map((option) => (
               <TabsTrigger
                 key={option.value}
@@ -86,7 +86,7 @@ export function RunVolumePanel({ series, state }: RunVolumePanelProps) {
           aria-hidden="true"
           className={cn(
             PLOT_HEIGHT,
-            'w-full animate-pulse rounded-xl bg-gray-100',
+            'w-full animate-pulse rounded-xl bg-muted',
           )}
         />
       ) : state === 'error' ? (
@@ -133,8 +133,8 @@ export function RunVolumePanel({ series, state }: RunVolumePanelProps) {
                     className={cn(
                       'h-px w-full',
                       index === ticks.length - 1
-                        ? 'bg-gray-200'
-                        : 'border-t border-dashed border-gray-200/80',
+                        ? 'bg-muted'
+                        : 'border-t border-dashed border-border',
                     )}
                   />
                 ))}
@@ -200,7 +200,7 @@ function Bar({ day, heightPct, active, align, onActivate }: BarProps) {
       {active ? (
         <div
           className={cn(
-            'absolute z-20 rounded-xl border border-gray-200/80 bg-background px-3 py-2 shadow-lg',
+            'absolute z-20 rounded-xl border border-border bg-popover px-3 py-2 shadow-lg',
             align === 'start' && 'left-0',
             align === 'center' && 'left-1/2 -translate-x-1/2',
             align === 'end' && 'right-0',
@@ -219,7 +219,7 @@ function Bar({ day, heightPct, active, align, onActivate }: BarProps) {
       <span
         className={cn(
           'w-full rounded-t-[5px] transition-[height] duration-300 ease-out',
-          active ? 'bg-primary-600' : 'bg-gray-100',
+          active ? 'bg-primary-600' : 'bg-muted',
         )}
         style={{
           height: `${heightPct}%`,
@@ -270,7 +270,7 @@ function HeadlineStat({
         {state === 'loading' ? (
           <span
             aria-hidden="true"
-            className="my-1 inline-block h-7 w-16 animate-pulse rounded-md bg-gray-100"
+            className="my-1 inline-block h-7 w-16 animate-pulse rounded-md bg-muted"
           />
         ) : (
           <span className="text-[28px] font-semibold leading-none tracking-tight tabular-nums text-foreground">

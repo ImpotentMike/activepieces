@@ -156,8 +156,32 @@
   --color-popover: var(--popover);
   --color-popover-foreground: var(--foreground);
 
-  --color-card: var(--background);
+  --color-card: var(--card);
   --color-card-foreground: var(--foreground);
+
+  --color-secondary-color-50: hsl(var(--secondary-color-50));
+  --color-secondary-color-100: hsl(var(--secondary-color-100));
+  --color-secondary-color-200: hsl(var(--secondary-color-200));
+  --color-secondary-color-300: hsl(var(--secondary-color-300));
+  --color-secondary-color-400: hsl(var(--secondary-color-400));
+  --color-secondary-color-500: hsl(var(--secondary-color-500));
+  --color-secondary-color-600: hsl(var(--secondary-color-600));
+  --color-secondary-color-700: hsl(var(--secondary-color-700));
+  --color-secondary-color-800: hsl(var(--secondary-color-800));
+  --color-secondary-color-900: hsl(var(--secondary-color-900));
+  --color-secondary-color-950: hsl(var(--secondary-color-950));
+
+  --color-tertiary-50: hsl(var(--tertiary-50));
+  --color-tertiary-100: hsl(var(--tertiary-100));
+  --color-tertiary-200: hsl(var(--tertiary-200));
+  --color-tertiary-300: hsl(var(--tertiary-300));
+  --color-tertiary-400: hsl(var(--tertiary-400));
+  --color-tertiary-500: hsl(var(--tertiary-500));
+  --color-tertiary-600: hsl(var(--tertiary-600));
+  --color-tertiary-700: hsl(var(--tertiary-700));
+  --color-tertiary-800: hsl(var(--tertiary-800));
+  --color-tertiary-900: hsl(var(--tertiary-900));
+  --color-tertiary-950: hsl(var(--tertiary-950));
 
   --radius-lg: 0.75rem;
   --radius-md: calc(var(--radius) - 2px);
@@ -413,6 +437,7 @@
     --background: theme('colors.white');
     --foreground: theme('colors.neutral.950');
     --popover: theme('colors.white');
+    --card: theme('colors.white');
 
     --secondary: theme('colors.black');
     --secondary-foreground: theme('colors.white');
@@ -472,6 +497,14 @@
     /* Page & sidebar backgrounds (overridden per-theme by JS) */
     --pf-page-bg: #ffffff;
     --pf-sidebar-bg: #fafafa;
+
+    /* Decorative template strip. Indirects through the secondary/tertiary
+       scales so the dev theme switcher still retints it. */
+    --pf-template-gradient: linear-gradient(
+      135deg,
+      hsl(var(--secondary-color-200)),
+      hsl(var(--tertiary-200))
+    );
 
     /* Success — Emerald */
     --success-50: 152 81% 96%;
@@ -542,8 +575,12 @@
   }
 
   .dark {
+    /* Surfaces step up from the shell: shell 950 → content card 900 →
+       popover/muted 800 → accent 700. Keeping them distinct is what gives
+       dark mode its depth; collapsing any two flattens the whole UI. */
     --background: theme('colors.neutral.950');
     --foreground: theme('colors.neutral.50');
+    --card: theme('colors.neutral.900');
     --popover: theme('colors.neutral.800');
     --muted: theme('colors.neutral.800');
     --muted-foreground: theme('colors.neutral.400');
@@ -554,37 +591,50 @@
     --accent: theme('colors.neutral.700');
     --accent-foreground: theme('colors.neutral.50');
 
-    --primary-100: 210 80% 40%;
-    --primary: 210 90% 50%;
-    --primary-300: 210 100% 85%;
-    --primary-foreground: 210 90% 98%;
+    /* Primary stays the brand blue in dark mode for brand continuity. The
+       numeric --primary-* scale is deliberately left at its :root values so
+       that explicit `dark:bg-primary-950` / `dark:text-primary-300` call
+       sites keep addressing the shade they name. */
+    --primary-foreground: 0 0% 100%;
 
     --success: var(--success-400);
     --destructive: var(--destructive-400);
 
     --warning: var(--warning-400);
 
-    --border: hsla(0, 0%, 100%, 0.08);
-    --input: hsla(0, 0%, 100%, 0.08);
+    /* 14% rather than 8% — at 8% dividers disappear against neutral-900. */
+    --border: hsla(0, 0%, 100%, 0.14);
+    --input: hsla(0, 0%, 100%, 0.14);
 
     --ring: theme('colors.neutral.500');
     --radius: 0.5rem;
 
-    --add-button-shadow: 0 0 0 6px hsl(var(--primary-100) / 0.4);
+    --add-button-shadow: 0 0 0 6px hsl(var(--primary) / 0.25);
 
-    --chart-1: 210 85% 55%;
-    --chart-2: 160 80% 50%;
-    --chart-3: 35 90% 55%;
-    --chart-4: 280 75% 65%;
-    --chart-5: 340 80% 60%;
+    --chart-1: 213 94% 68%;
+    --chart-2: 160 60% 52%;
+    --chart-3: 43 97% 56%;
+    --chart-4: 270 95% 75%;
+    --chart-5: 329 86% 70%;
 
-    --sidebar-background: theme('colors.neutral.800');
+    /* Page surface is the floating content card; the sidebar blends into
+       the shell behind it. */
+    --pf-page-bg: theme('colors.neutral.900');
+    --pf-sidebar-bg: theme('colors.neutral.950');
+
+    --pf-template-gradient: linear-gradient(
+      135deg,
+      hsl(var(--secondary-color-900)),
+      hsl(var(--tertiary-900))
+    );
+
+    --sidebar-background: theme('colors.neutral.950');
     --sidebar-foreground: theme('colors.neutral.50');
-    --sidebar-primary: 210 85% 65%;
-    --sidebar-primary-foreground: 210 90% 98%;
-    --sidebar-accent: theme('colors.neutral.700');
+    --sidebar-primary: 213 94% 68%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: theme('colors.neutral.800');
     --sidebar-accent-foreground: theme('colors.neutral.50');
-    --sidebar-border: hsla(0, 0%, 100%, 0.08);
+    --sidebar-border: hsla(0, 0%, 100%, 0.14);
     --sidebar-ring: theme('colors.neutral.600');
     --sidebar-progress: 210 15% 40%;
     --builder-background: hsla(0, 0%, 9%, 1);

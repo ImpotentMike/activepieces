@@ -99,7 +99,7 @@ export function RunsOverTimeChart({ series, state }: RunsOverTimeChartProps) {
           <LegendItem>
             <span
               aria-hidden="true"
-              className="h-0 w-4 border-t-2 border-dashed border-gray-400"
+              className="h-0 w-4 border-t-2 border-dashed border-neutral-400 dark:border-neutral-500"
             />
             {t('Daily average')}
           </LegendItem>
@@ -117,7 +117,7 @@ export function RunsOverTimeChart({ series, state }: RunsOverTimeChartProps) {
           aria-hidden="true"
           className={cn(
             CHART_HEIGHT_CLASS,
-            'w-full animate-pulse rounded-md bg-gray-100',
+            'w-full animate-pulse rounded-md bg-muted',
           )}
         />
       ) : state === 'error' ? (

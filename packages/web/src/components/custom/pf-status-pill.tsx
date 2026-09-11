@@ -14,14 +14,20 @@ const pillVariants = cva(
   {
     variants: {
       status: {
-        running: 'bg-primary-100 text-primary-800',
-        success: 'bg-success-100 text-success-700',
-        failed: 'bg-destructive-100 text-destructive-700',
-        waiting: 'bg-warning-100 text-warning-700',
-        draft: 'bg-background text-gray-700 border-gray-300',
-        published: 'bg-success-100 text-success-700',
-        paused: 'bg-warning-100 text-warning-700',
-        unpublished: 'bg-gray-100 text-gray-600',
+        running:
+          'bg-primary-100 text-primary-800 dark:bg-primary-950 dark:text-primary-300',
+        success:
+          'bg-success-100 text-success-700 dark:bg-success-950 dark:text-success-300',
+        failed:
+          'bg-destructive-100 text-destructive-700 dark:bg-destructive-950 dark:text-destructive-300',
+        waiting:
+          'bg-warning-100 text-warning-700 dark:bg-warning-950 dark:text-warning-300',
+        draft: 'bg-background text-muted-foreground border-border',
+        published:
+          'bg-success-100 text-success-700 dark:bg-success-950 dark:text-success-300',
+        paused:
+          'bg-warning-100 text-warning-700 dark:bg-warning-950 dark:text-warning-300',
+        unpublished: 'bg-muted text-muted-foreground',
       },
       size: {
         md: 'gap-1.5 px-2.5 py-0.5 text-xs leading-[18px]',
@@ -42,10 +48,10 @@ const dotVariants = cva('shrink-0 rounded-full motion-reduce:animate-none', {
       success: 'bg-success-600',
       failed: 'bg-destructive-600',
       waiting: 'bg-warning-600 animate-pf-pulse',
-      draft: 'bg-gray-400',
+      draft: 'bg-muted-foreground',
       published: 'bg-success-600',
       paused: 'bg-warning-600',
-      unpublished: 'bg-gray-400',
+      unpublished: 'bg-muted-foreground',
     },
     size: {
       md: 'size-1.5',
